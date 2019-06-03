@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
+import actionTypes from './constants'
 
 
 const initialState = {
@@ -24,7 +25,7 @@ const initialState = {
 
 const reducers = (state=initialState, action) => {
   switch(action.type) {
-    case 'UPDATE_MARK_FIELD':
+    case actionTypes.UPDATE_MARK_FIELD:
       const newNextMark = Object.assign({}, state.nextMark)
       newNextMark[action.payload.name] = action.payload.value
 
@@ -32,7 +33,7 @@ const reducers = (state=initialState, action) => {
         ...state,
         nextMark: newNextMark,
       }
-    case 'ADD_NEXT_MARK':
+    case actionTypes.ADD_NEXT_MARK:
       const newMarks = state.marks.slice()
 
       newMarks.push(Object.assign({},
