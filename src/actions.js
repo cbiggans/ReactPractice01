@@ -1,4 +1,5 @@
 import actionTypes from './constants'
+import services from './services'
 
 
 // Need to add thunk in order for this to work
@@ -10,6 +11,10 @@ import actionTypes from './constants'
 export const handleSubmit = (e) => dispatch => {
   e.preventDefault()
   console.log('form submitted')
+  console.log(services)
+
+  // services.marks.collection('marks').add
+
   dispatch({
     type: actionTypes.ADD_NEXT_MARK,
   })
@@ -27,7 +32,20 @@ export const handleChange = (e) => dispatch => {
   })
 }
 
+export const fetch = (e) => dispatch => {
+  console.log('Fetching Marks')
+  services.marks.index((marks) => {
+    dispatch({
+      type: actionTypes.LOAD_MARKS,
+      payload: {
+        'marks': marks,
+      }
+    })
+  })
+}
+
 export const markActions = {
   handleChange: handleChange,
   handleSubmit: handleSubmit,
+  fetch: fetch,
 }

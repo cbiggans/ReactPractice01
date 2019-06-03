@@ -25,6 +25,12 @@ const initialState = {
 
 const reducers = (state=initialState, action) => {
   switch(action.type) {
+    case actionTypes.LOAD_MARKS:
+      console.log('Loading Marks')
+      return {
+        ...state,
+        marks: action.payload.marks
+      }
     case actionTypes.UPDATE_MARK_FIELD:
       const newNextMark = Object.assign({}, state.nextMark)
       newNextMark[action.payload.name] = action.payload.value

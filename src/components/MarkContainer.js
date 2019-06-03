@@ -6,6 +6,9 @@ import { markActions } from '../actions'
 
 
 class MarkContainer extends React.Component{
+  componentDidMount() {
+    this.props.fetch()
+  }
   render() {
     return (
       <div>
@@ -27,6 +30,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    fetch: () => dispatch(markActions.fetch()),
     handleSubmit: (e) => dispatch(markActions.handleSubmit(e)),
     handleChange: (e) => dispatch(markActions.handleChange(e)),
   }
