@@ -21,7 +21,38 @@ const initialState = {
 }
 
 const reducers = (state=initialState, action) => {
-  return state
+  switch(action.type) {
+    case 'UPDATE_MARK_FIELD':
+      // make copy of nextMark
+      // Update value
+      // return
+
+      const newNextMark = Object.assign({}, state.nextMark)
+      newNextMark[action.payload.name] = action.payload.value
+      return {
+        ...state,
+        nextMark: newNextMark,
+      }
+    case 'ADD_NEXT_MARK':
+      // create new marks array
+      const newMarks = state.marks.slice()
+
+      // Add nextMark to new marks
+      newMarks.push(Object.assign({},
+                                  state.nextMark,
+                                  {id: (state.marks.length + 1) + ''}))
+      // clear nextMark
+
+      // put new stuff in return
+      console.log('newMarks ' + newMarks)
+      return {
+        ...state,
+        marks: newMarks,
+        nextMark: Object.assign({}, initialState.nextMark),
+      }
+    default:
+      return state
+  }
 }
 
 const store = createStore(reducers)
