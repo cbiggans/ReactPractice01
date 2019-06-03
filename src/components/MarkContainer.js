@@ -8,7 +8,7 @@ class MarkContainer extends React.Component{
   render() {
     return (
       <div>
-        <MarkForm />
+        <MarkForm nextMark={this.props.nextMark} />
         <MarkList marks={this.props.marks} />
       </div>
     )
