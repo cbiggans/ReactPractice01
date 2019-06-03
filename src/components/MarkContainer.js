@@ -2,6 +2,7 @@ import React from 'react'
 import MarkForm from './MarkForm'
 import MarkList from './MarkList'
 import { connect } from 'react-redux'
+import { markActions } from '../actions'
 
 
 class MarkContainer extends React.Component{
@@ -26,24 +27,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleSubmit: (e) => {
-      e.preventDefault()
-      console.log('form submitted')
-      dispatch({
-        type: 'ADD_NEXT_MARK'
-      })
-    },
-    handleChange: (e) => {
-      const { name, value } = e.target
-      console.log('changing ' + name + ' to ' + value)
-      dispatch({
-        type: 'UPDATE_MARK_FIELD',
-        payload: {
-          name: name,
-          value: value,
-        }
-      })
-    }
+    handleSubmit: (e) => dispatch(markActions.handleSubmit(e)),
+    handleChange: (e) => dispatch(markActions.handleChange(e)),
   }
 }
 

@@ -1,4 +1,6 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+
 
 const initialState = {
   marks: [{
@@ -23,27 +25,20 @@ const initialState = {
 const reducers = (state=initialState, action) => {
   switch(action.type) {
     case 'UPDATE_MARK_FIELD':
-      // make copy of nextMark
-      // Update value
-      // return
-
       const newNextMark = Object.assign({}, state.nextMark)
       newNextMark[action.payload.name] = action.payload.value
+
       return {
         ...state,
         nextMark: newNextMark,
       }
     case 'ADD_NEXT_MARK':
-      // create new marks array
       const newMarks = state.marks.slice()
 
-      // Add nextMark to new marks
       newMarks.push(Object.assign({},
                                   state.nextMark,
                                   {id: (state.marks.length + 1) + ''}))
-      // clear nextMark
 
-      // put new stuff in return
       console.log('newMarks ' + newMarks)
       return {
         ...state,
@@ -55,6 +50,6 @@ const reducers = (state=initialState, action) => {
   }
 }
 
-const store = createStore(reducers)
+const store = createStore(reducers, applyMiddleware(thunk))
 
 export default store
