@@ -1,12 +1,11 @@
 import React from 'react'
+import MarkContainer from './components/MarkContainer'
 
 
 class App extends React.Component{
   render() {
     return (
-      <div>
-        Test
-      </div>
+      <MarkContainer />
     )
   }
 }
