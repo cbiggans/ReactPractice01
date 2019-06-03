@@ -9,14 +9,17 @@ class MarkContainer extends React.Component{
     return (
       <div>
         <MarkForm />
-        <MarkList />
+        <MarkList marks={this.props.marks} />
       </div>
     )
   }
 }
 
 function mapStateToProps(state) {
-  return {}
+  return {
+    marks: state.marks,
+    nextMark: state.nextMark,
+  }
 }
 
 function mapDispatchToProps(dispatch) {

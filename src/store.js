@@ -2,6 +2,7 @@ import { createStore } from 'redux'
 
 const initialState = {
   marks: [{
+    'id': '1',
     'category': 'Video',
     'description': 'This is a video',
     'tags': 'react, tutorial, redux',
