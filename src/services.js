@@ -20,21 +20,29 @@ class MarkService {
 	constructor() {
     this.collectionName = 'marks'
     this.db = db
+    this.collection = this.db.collection(this.collectionName)
   }
 
   index(onSuccess) {
-    this.db.collection(this.collectionName).get()
+    this.collection.get()
     .then((snapshotDocs) => {
       console.log('loading ' + snapshotDocs)
       const marks = []
+
       snapshotDocs.forEach((doc) => {
-        const mark = doc.data()
-        mark.id = doc.id
-        marks.push(mark)
+        marks.push(Object.assign({id: doc.id}, doc.data()))
       })
 
-      console.log('Marks Retreived: ' + marks)
+      console.log('Num Marks Retreived: ' + marks.length)
       onSuccess(marks)
+    })
+  }
+
+  create(mark, onSuccess) {
+    this.collection.add(mark)
+    .then((ref) => {
+      mark.id = ref.id
+      onSuccess(mark)
     })
   }
 }

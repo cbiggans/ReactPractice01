@@ -8,15 +8,19 @@ import services from './services'
  *  functions elsewhere and it's cleaner for the mapDispatchToProps if the
  *  dispatch is provided something like this
  */
-export const handleSubmit = (e) => dispatch => {
+export const handleSubmit = (e) => (dispatch, getState) => {
   e.preventDefault()
   console.log('form submitted')
   console.log(services)
 
-  // services.marks.collection('marks').add
-
-  dispatch({
-    type: actionTypes.ADD_NEXT_MARK,
+  const state = getState()
+  services.marks.create(state.nextMark, (mark) => {
+    dispatch({
+      type: actionTypes.ADD_NEXT_MARK,
+      payload: {
+        'mark': mark
+      }
+    })
   })
 }
 
@@ -32,7 +36,7 @@ export const handleChange = (e) => dispatch => {
   })
 }
 
-export const fetch = (e) => dispatch => {
+export const load = (e) => dispatch => {
   console.log('Fetching Marks')
   services.marks.index((marks) => {
     dispatch({
@@ -47,5 +51,5 @@ export const fetch = (e) => dispatch => {
 export const markActions = {
   handleChange: handleChange,
   handleSubmit: handleSubmit,
-  fetch: fetch,
+  load: load,
 }
