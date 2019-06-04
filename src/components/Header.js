@@ -9,9 +9,6 @@ function Header(props) {
         <li>
           <Link to="/">Home</Link>
         </li>
-        <li>
-          <Link to="/take-notes">Take Notes</Link>
-        </li>
       </ul>
     </div>
   )

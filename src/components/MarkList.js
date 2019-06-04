@@ -1,13 +1,14 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 
 function MarkList(props) {
   const marks = props.marks.map((item) => {
     return (
       <div key={item.id}>
-        <a href={item.url} target='_blank' rel="noopener noreferrer">
+        <Link to={'/take-notes/' + item.id}>
           {item.title}
-        </a>
+        </Link>
         <button onClick={() => {props.destroyHandler(item.id)}}>Destroy</button>
       </div>
     )
