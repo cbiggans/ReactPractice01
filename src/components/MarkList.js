@@ -8,6 +8,7 @@ function MarkList(props) {
         <a href={item.url} target='_blank' rel="noopener noreferrer">
           {item.title}
         </a>
+        <button onClick={() => {props.destroyHandler(item.id)}}>Destroy</button>
       </div>
     )
   })

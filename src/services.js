@@ -38,12 +38,33 @@ class MarkService {
     })
   }
 
+  get(id, onSuccess) {
+    this.collection.doc(id)
+    .then((docRef) => {
+      onSuccess(docRef.data())
+    })
+  }
+
   create(mark, onSuccess) {
     this.collection.add(mark)
     .then((ref) => {
       mark.id = ref.id
       onSuccess(mark)
     })
+  }
+
+   update(id, markData, onSuccess) {
+     // Get mark ref, then update it
+     this.collection.doc(id).update(markData)
+     .then((e) => {
+        onSuccess(e)
+     })
+   }
+
+  destroy(id, onSuccess) {
+    // NOTE: Does not delete sub collections
+    this.collection.doc(id).delete()
+    .then((e) => onSuccess(e))
   }
 }
 

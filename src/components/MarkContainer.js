@@ -15,7 +15,8 @@ class MarkContainer extends React.Component{
         <MarkForm nextMark={this.props.nextMark}
                   handleChange={this.props.handleChange}
                   handleSubmit={this.props.handleSubmit} />
-        <MarkList marks={this.props.marks} />
+        <MarkList marks={this.props.marks} 
+                  destroyHandler={this.props.destroyHandler} />
       </div>
     )
   }
@@ -33,6 +34,7 @@ function mapDispatchToProps(dispatch) {
     load: () => dispatch(markActions.load()),
     handleSubmit: (e) => dispatch(markActions.handleSubmit(e)),
     handleChange: (e) => dispatch(markActions.handleChange(e)),
+    destroyHandler: (id) => dispatch(markActions.destroy(id)),
   }
 }
 

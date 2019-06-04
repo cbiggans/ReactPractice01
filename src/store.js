@@ -24,6 +24,8 @@ const initialState = {
 }
 
 const reducers = (state=initialState, action) => {
+  var newMarks = []
+
   switch(action.type) {
     case actionTypes.LOAD_MARKS:
       console.log('Loading Marks')
@@ -40,7 +42,7 @@ const reducers = (state=initialState, action) => {
         nextMark: newNextMark,
       }
     case actionTypes.ADD_NEXT_MARK:
-      const newMarks = state.marks.slice()
+      newMarks = state.marks.slice()
 
       newMarks.push(Object.assign({},
                                   state.nextMark,
@@ -51,6 +53,14 @@ const reducers = (state=initialState, action) => {
         ...state,
         marks: newMarks,
         nextMark: Object.assign({}, initialState.nextMark),
+      }
+    case actionTypes.DESTROY_MARK:
+      newMarks = state.marks.filter((item) => {
+        return item.id !== action.payload.id
+      })
+      return {
+        ...state,
+        marks: newMarks
       }
     default:
       return state
