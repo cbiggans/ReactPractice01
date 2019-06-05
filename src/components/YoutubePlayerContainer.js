@@ -25,6 +25,8 @@ class YoutubePlayerContainer extends React.Component {
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
+
+    this.handleKeypress = this.handleKeypress.bind(this)
   }
 
 	onPlayerStateChange(event) {
@@ -50,18 +52,12 @@ class YoutubePlayerContainer extends React.Component {
     };
   };
 
-  // When a currentMark has been loaded in, we then want to load the youtube api
-  //  Should detect when currentMark has been changed & has proper url value
   componentDidMount() {
     // Add event listeners
     window.addEventListener('keypress', this.handleKeypress, false)
-
-
     // Set an instance variable when done mounting so YoutubeAPI can render
     console.log('componentHasMounted: ' + this.componentHasMounted + '->true')
     this.componentHasMounted = true
-
-
   }
 
   componentWillUnmount() {
@@ -71,13 +67,67 @@ class YoutubePlayerContainer extends React.Component {
     this.componentHasMounted = false
   }
 
+  togglePlayback() {
+    if(!this.player)
+      return
+
+    if(this.player.getPlayerState() === 1) {
+      // pause
+      this.player.pauseVideo()
+    } else {
+      // play
+      this.player.playVideo()
+    }
+  }
+
+  jumpForward(seconds) {
+    this.jump(seconds)
+  }
+
+  jumpBack(seconds) {
+    this.jump(seconds * -1)
+  }
+
+  jump(seconds) {
+    if(!this.player)
+      return
+
+    var currentTime = this.player.getCurrentTime()
+    console.log(currentTime)
+    this.player.seekTo(currentTime + seconds)
+  }
+
   handleKeypress(e) {
     var keyCode = e.which;
-    console.log(e, keyCode, e.which)
+    // console.log(e, keyCode, e.which)
     switch(keyCode) {
-      case(105):
+      case(59):  //  h
+        // Jump Forward 10 seconds
+        this.jumpForward(10)
+        break
+      case(104):  //  h
+        // Jump Back 10 seconds
+        this.jumpBack(10)
+        break
+      case(105):  //  i
         // Add New comment
         console.log('you pressed i')
+        break
+      case(106):  // j
+        // Jump back 2 seconds
+        this.jumpBack(2)
+        break
+      case(107):  //  k
+        // Toggle Video
+        // console.log(this.player.getCurrentTime())
+        this.togglePlayback()
+        break
+      case(108):  //  l
+        // Jump Forward 2 seconds
+        this.jumpForward(2)
+        break
+      default:
+        break
     }
     // n -> Add new comment
     // k -> pause video
@@ -191,4 +241,15 @@ export default connect(mapStateToProps)(YoutubePlayerContainer)
           height="390"
           src={youtubeVidURL}
           frameBorder="0"></iframe>
+*/
+
+/*
+https://developers.google.com/youtube/iframe_api_reference#loadVideoById
+
+this.player.loadVideoById({
+  'videoId': 'bHQqvYy5KYo',
+  'startSeconds': 5,
+  'endSeconds': 60,
+  'suggestedQuality': 'large'
+})
 */
