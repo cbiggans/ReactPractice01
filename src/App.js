@@ -14,7 +14,7 @@ class App extends React.Component{
         <Provider store={store}>
           <Header />
           <Route exact path="/" component={MarkContainer} />
-          <Route path="/take-notes" component={NoteTakerContainer} />
+          <Route path="/take-notes/:id" component={NoteTakerContainer} />
         </Provider>
       </Router>
     )

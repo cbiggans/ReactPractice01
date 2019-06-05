@@ -39,7 +39,7 @@ class MarkService {
   }
 
   get(id, onSuccess) {
-    this.collection.doc(id)
+    this.collection.doc(id).get()
     .then((docRef) => {
       onSuccess(docRef.data())
     })

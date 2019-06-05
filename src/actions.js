@@ -48,6 +48,19 @@ export const load = (e) => dispatch => {
   })
 }
 
+export const loadMark = (id) => dispatch => {
+  console.log('Getting Mark: ' + id)
+  services.marks.get(id, (mark) => {
+    dispatch({
+      type: actionTypes.LOAD_MARK,
+      payload: {
+        mark: mark,
+      }
+    })
+  })
+}
+  
+
 export const destroy = (id) => dispatch => {
   console.log('Destroying Mark: ' + id)
   services.marks.destroy(id, (e) => {
@@ -55,7 +68,7 @@ export const destroy = (id) => dispatch => {
     dispatch({
       type: actionTypes.DESTROY_MARK,
       payload: {
-        'id': id,
+        id: id,
       }
     })
   })
@@ -65,5 +78,6 @@ export const markActions = {
   handleChange: handleChange,
   handleSubmit: handleSubmit,
   load: load,
+  loadMark: loadMark,
   destroy: destroy,
 }
