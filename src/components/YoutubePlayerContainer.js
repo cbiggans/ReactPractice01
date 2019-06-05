@@ -97,20 +97,40 @@ class YoutubePlayerContainer extends React.Component {
     this.player.seekTo(currentTime + seconds)
   }
 
+  setPlaybackSpeed(delta) {
+    // console.log('Available Playback Rates' + this.player.getAvailablePlaybackRates())
+    if(!this.player)
+      return
+
+    let currentPlaybackRate = this.player.getPlaybackRate()
+    // console.log(currentPlaybackRate)
+
+    let newSpeed = currentPlaybackRate + delta
+    this.player.setPlaybackRate(newSpeed)
+    console.log(newSpeed)
+
+    return newSpeed
+  }
+
   handleKeypress(e) {
     var keyCode = e.which;
-    // console.log(e, keyCode, e.which)
+    console.log(e, keyCode, e.which)
     switch(keyCode) {
       case(59):  //  h
         // Jump Forward 10 seconds
         this.jumpForward(10)
+        break
+      case(102):  //  f
+        // Go Faster
+        this.setPlaybackSpeed(.25)
         break
       case(104):  //  h
         // Jump Back 10 seconds
         this.jumpBack(10)
         break
       case(105):  //  i
-        // Add New comment
+        // Add New note
+        this.props.openNewNote()
         console.log('you pressed i')
         break
       case(106):  // j
@@ -125,6 +145,10 @@ class YoutubePlayerContainer extends React.Component {
       case(108):  //  l
         // Jump Forward 2 seconds
         this.jumpForward(2)
+        break
+      case(115):  //  s
+        // Go slower
+        this.setPlaybackSpeed(-.25)
         break
       default:
         break

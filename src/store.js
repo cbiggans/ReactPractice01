@@ -24,6 +24,19 @@ const initialState = {
     'type': 'Youtube',
     'url': 'https://www.youtube.com/watch?v=93p3LxR9xfM&t=2467s',
   }],
+  videoNoteTakerSettings: {
+    newNoteEditorOpen: false,
+    currentVideoId: '',
+    type: '',
+    playback: {
+      currentTime: 0,
+      shortJumpBackSeconds: -2,
+      shortJumpForwardSeconds: 2,
+      longJumpBackSeconds: -10,
+      longJumpForwardSeconds: 10,
+      playbackQuality: 'highres',
+    }
+  },
   nextMark: Object.assign({}, emptyMark),
   currentMark: Object.assign({}, emptyMark),
 }
@@ -32,6 +45,15 @@ const reducers = (state=initialState, action) => {
   var newMarks = []
 
   switch(action.type) {
+    case actionTypes.NEW_NOTE_OPEN:
+      console.log('Open New Note')
+      return {
+        ...state,
+        videoNoteTakerSettings: {
+          ...state.videoNoteTakerSettings,
+          newNoteEditorOpen: true,
+        }
+      }
     case actionTypes.LOAD_MARKS:
       console.log('Loading Marks')
       return {

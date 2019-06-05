@@ -74,10 +74,18 @@ export const destroy = (id) => dispatch => {
   })
 }
 
+export const openNewNote = () => dispatch => {
+  console.log('Open Note Editor')
+  dispatch({
+    type: actionTypes.NEW_NOTE_OPEN
+  })
+}
+
 export const markActions = {
   handleChange: handleChange,
   handleSubmit: handleSubmit,
   load: load,
   loadMark: loadMark,
   destroy: destroy,
+  openNewNote: openNewNote,
 }

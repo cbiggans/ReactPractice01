@@ -13,10 +13,23 @@ class NoteTakerContainer extends React.Component {
   }
 
   render() {
+    var note;
+    if(this.props.settings.newNoteEditorOpen) {
+      note = <p>NEW NOTE</p>
+    } else {
+      note = <p>Note</p>
+    }
+
     return (
       <div>
         <h1>Note Taking</h1>
-        <YoutubePlayerContainer currentMark={this.props.currentMark} />
+        <YoutubePlayerContainer currentMark={this.props.currentMark}
+                                settings={this.props.settings}
+                                openNewNote={this.props.openNewNote} />
+        <div>
+          <h1>Notes</h1>
+          {note}
+        </div>
       </div>
     )
   }
@@ -24,13 +37,15 @@ class NoteTakerContainer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    currentMark: state.currentMark
+    currentMark: state.currentMark,
+    settings: state.videoNoteTakerSettings,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     loadMark: (id) => dispatch(markActions.loadMark(id)),
+    openNewNote: () => dispatch(markActions.openNewNote()),
   }
 }
 
