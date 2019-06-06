@@ -1,5 +1,5 @@
 import actionTypes from './constants'
-import services from './services'
+import services from './services/'
 
 
 // Need to add thunk in order for this to work
@@ -10,11 +10,11 @@ import services from './services'
  */
 export const handleSubmit = (e) => (dispatch, getState) => {
   e.preventDefault()
-  console.log('form submitted')
-  console.log(services)
+  // console.log('form submitted')
+  // console.log(services)
 
   const state = getState()
-  services.marks.create(state.nextMark, (mark) => {
+  services.marks.create(state.marks.nextMark, (mark) => {
     dispatch({
       type: actionTypes.ADD_NEXT_MARK,
       payload: {
@@ -26,7 +26,7 @@ export const handleSubmit = (e) => (dispatch, getState) => {
 
 export const handleChange = (e) => dispatch => {
   const { name, value } = e.target
-  console.log('changing ' + name + ' to ' + value)
+  // console.log('changing ' + name + ' to ' + value)
   dispatch({
     type: actionTypes.UPDATE_MARK_FIELD,
     payload: {
@@ -37,22 +37,37 @@ export const handleChange = (e) => dispatch => {
 }
 
 export const load = (e) => dispatch => {
-  console.log('Fetching Marks')
+  // console.log('Fetching Marks')
   services.marks.index((marks) => {
-    dispatch({
-      type: actionTypes.LOAD_MARKS,
-      payload: {
-        'marks': marks,
-      }
+    marks.map(mark => {
+      dispatch({
+        type: actionTypes.LOAD_MARK,
+        payload: {
+          mark: mark,
+        }
+      })
     })
   })
 }
 
-export const loadMark = (id) => dispatch => {
-  console.log('Getting Mark: ' + id)
+export const fetchNotes = (markId) => dispatch => {
+  services.notes.index([markId], (notes) => {
+    notes.map(note => {
+      dispatch({
+        type: actionTypes.LOAD_NOTE,
+        payload: {
+          note: note
+        }
+      })
+    })
+  })
+}
+
+export const setCurrentMark = (id) => dispatch => {
+  // console.log('Getting Mark: ' + id)
   services.marks.get(id, (mark) => {
     dispatch({
-      type: actionTypes.LOAD_MARK,
+      type: actionTypes.SET_CURRENT_MARK,
       payload: {
         mark: mark,
       }
@@ -62,7 +77,7 @@ export const loadMark = (id) => dispatch => {
   
 
 export const destroy = (id) => dispatch => {
-  console.log('Destroying Mark: ' + id)
+  // console.log('Destroying Mark: ' + id)
   services.marks.destroy(id, (e) => {
     console.log('Mark Destroyed: ' + id)
     dispatch({
@@ -75,15 +90,20 @@ export const destroy = (id) => dispatch => {
 }
 
 export const openNewNote = () => dispatch => {
-  console.log('Open Note Editor')
+  var timestamp = window['YT'].get('player').getCurrentTime()
+
+  // console.log('Open Note Editor')
   dispatch({
-    type: actionTypes.NEW_NOTE_OPEN
+    type: actionTypes.OPEN_NEW_NOTE,
+    payload: {
+      timestamp: timestamp,
+    }
   })
 }
 
 export const handleNewNoteChange = (e) => dispatch => {
   const { name, value } = e.target
-  console.log('NEW NOTE CHANGE: ' + 'name: ' + name + ' value: ' + value)
+  // console.log('NEW NOTE CHANGE: ' + 'name: ' + name + ' value: ' + value)
 
   dispatch({
     type: actionTypes.CHANGE_NEW_NOTE,
@@ -99,12 +119,15 @@ export const handleNewNoteSubmit = (e) => (dispatch, getState) => {
   e.preventDefault()
 
   const state = getState()
-  console.log(state.currentMark)
-  services.marks.createNote(state.currentMark.id, state.newNote, (note) => {
+  console.log(state.marks.currentMark)
+  services.notes.create(state.marks.currentMark.id,
+                        state.notes.newNote,
+                        (note) => {
     dispatch({
       type: actionTypes.CREATE_NEW_NOTE,
       payload: {
-        'note': note
+        'markId': state.marks.currentMark.id,
+        'note': note,
       }
     })
   })
@@ -115,7 +138,8 @@ export const markActions = {
   handleChange: handleChange,
   handleSubmit: handleSubmit,
   load: load,
-  loadMark: loadMark,
+  fetchNotes: fetchNotes,
+  setCurrentMark: setCurrentMark,
   destroy: destroy,
   openNewNote: openNewNote,
   handleNewNoteChange: handleNewNoteChange,

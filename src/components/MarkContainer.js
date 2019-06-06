@@ -6,8 +6,13 @@ import { markActions } from '../actions'
 
 
 class MarkContainer extends React.Component{
+  constructor(props) {
+    super(props)
+  }
   componentDidMount() {
-    this.props.load()
+    if(this.props.marks.length ===  0) {
+      this.props.load()
+    }
   }
   render() {
     return (
@@ -24,8 +29,8 @@ class MarkContainer extends React.Component{
 
 function mapStateToProps(state) {
   return {
-    marks: state.marks,
-    nextMark: state.nextMark,
+    marks: state.marks.list,
+    nextMark: state.marks.nextMark,
   }
 }
 

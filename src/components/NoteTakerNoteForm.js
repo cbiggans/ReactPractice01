@@ -7,6 +7,10 @@ function NoteTakerNoteForm(props) {
       <h3>Test NOTE</h3>
       <form onSubmit={props.handleSubmit}>
         <input type='text'
+               name='timestamp'
+               readOnly // Put this here for now to prevent warnings, change later
+               value={props.settings.playback.currentTime} />
+        <input type='text'
                name='newNoteText'
                autoFocus
                value={props.newNote.text}

@@ -1,28 +1,10 @@
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-
-
-const firebaseConfig = {
-	apiKey: "AIzaSyBQbPqLqlmMEmI6vPQvIbCO44d_OES8YhI",
-	authDomain: "test-project-02-cd5ac.firebaseapp.com",
-	databaseURL: "https://test-project-02-cd5ac.firebaseio.com",
-	projectId: "test-project-02-cd5ac",
-	storageBucket: "test-project-02-cd5ac.appspot.com",
-	messagingSenderId: "621754166314",
-	appId: "1:621754166314:web:2b20b2a0231b243a"
-};
-
-firebase.initializeApp(firebaseConfig)
-
-const db = firebase.firestore()
+import { db } from './'
 
 class MarkService {
 	constructor() {
     this.collectionName = 'marks'
     this.db = db
     this.collection = this.db.collection(this.collectionName)
-
-    // this.index = this.index.bind(this)
   }
 
   getNotes(doc) {
@@ -59,11 +41,15 @@ class MarkService {
       //  all the promises in an array then wait for all of them to resolve
       //  before continuing. This is needed because we're trying to retreive
       //  all of the data we need before continuing to simulate a relational db
+      // I probably shouldn't sync the data, but instead just get the data as needed then send it
+      // Call from the action to load in the notes separately
+      //  Can do conditional rendering from there
       let promises = []
       snapshotDocs.forEach((doc) => {
         promises.push(new Promise(resolve => {
           this.getNotes(doc)
           .then((mark) => {
+            mark.id = doc.id
             console.log('Mark: ', mark)
             resolve(mark)
             marks.push(mark)
@@ -99,14 +85,6 @@ class MarkService {
     })
   }
 
-  createNote(markId, note, onSuccess) {
-    this.collection.doc(markId).collection('notes').add(note)
-    .then((ref) => {
-      note.id = ref.id
-      onSuccess(note)
-    })
-  }
-
   update(id, markData, onSuccess) {
     // Get mark ref, then update it
     this.collection.doc(id).update(markData)
@@ -122,9 +100,4 @@ class MarkService {
   }
 }
 
-
-const services = {
-	marks: new MarkService()
-}
-
-export default services
+export default MarkService
