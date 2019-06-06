@@ -5,6 +5,8 @@ const actionTypes = {
   LOAD_MARK: 'LOAD_MARK',
   DESTROY_MARK: 'DESTROY_MARK',
   NEW_NOTE_OPEN: 'NEW_NOTE_OPEN',
+  CHANGE_NEW_NOTE: 'CHANGE_NEW_NOTE',
+  CREATE_NEW_NOTE: 'CREATE_NEW_NOTE',
 }
 
 export default actionTypes

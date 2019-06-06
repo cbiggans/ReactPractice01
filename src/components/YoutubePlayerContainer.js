@@ -47,6 +47,8 @@ class YoutubePlayerContainer extends React.Component {
       case window['YT'].PlayerState.ENDED:
         console.log('ended ');
         break;
+      // case window['YT'].PlayerState.BUFFERING:
+      //   break
 			default:
 				return
     };
@@ -54,7 +56,9 @@ class YoutubePlayerContainer extends React.Component {
 
   componentDidMount() {
     // Add event listeners
-    window.addEventListener('keypress', this.handleKeypress, false)
+    // window.addEventListener('keypress', this.handleKeypress, false)
+    // Keydown handler needs to be used if want to use ctrl/alt
+    window.addEventListener('keydown', this.handleKeypress, false)
     // Set an instance variable when done mounting so YoutubeAPI can render
     console.log('componentHasMounted: ' + this.componentHasMounted + '->true')
     this.componentHasMounted = true
@@ -62,9 +66,18 @@ class YoutubePlayerContainer extends React.Component {
 
   componentWillUnmount() {
     console.log('Remove keypress event')
-    window.removeEventListener('keypress', this.handleKeypress)
+    // window.removeEventListener('keypress', this.handleKeypress)
+    window.removeEventListener('keydown', this.handleKeypress)
 
     this.componentHasMounted = false
+  }
+
+  pauseVideo() {
+    if(!this.player) {
+      return
+    }
+
+    this.player.pauseVideo()
   }
 
   togglePlayback() {
@@ -73,7 +86,7 @@ class YoutubePlayerContainer extends React.Component {
 
     if(this.player.getPlayerState() === 1) {
       // pause
-      this.player.pauseVideo()
+      this.pauseVideo()
     } else {
       // play
       this.player.playVideo()
@@ -102,57 +115,68 @@ class YoutubePlayerContainer extends React.Component {
     if(!this.player)
       return
 
+    const availablePlaybackRates = this.player.getAvailablePlaybackRates()
+
     let currentPlaybackRate = this.player.getPlaybackRate()
     // console.log(currentPlaybackRate)
 
     let newSpeed = currentPlaybackRate + delta
     this.player.setPlaybackRate(newSpeed)
-    console.log(newSpeed)
+
+    // console.log(availablePlaybackRates)
+    if(availablePlaybackRates.includes(newSpeed)) {
+      console.log(newSpeed)
+      return newSpeed
+    }
 
     return newSpeed
   }
 
-  handleKeypress(e) {
-    var keyCode = e.which;
-    console.log(e, keyCode, e.which)
-    switch(keyCode) {
-      case(59):  //  h
-        // Jump Forward 10 seconds
-        this.jumpForward(10)
-        break
-      case(102):  //  f
-        // Go Faster
-        this.setPlaybackSpeed(.25)
-        break
-      case(104):  //  h
-        // Jump Back 10 seconds
-        this.jumpBack(10)
-        break
-      case(105):  //  i
-        // Add New note
-        this.props.openNewNote()
-        console.log('you pressed i')
-        break
-      case(106):  // j
-        // Jump back 2 seconds
-        this.jumpBack(2)
-        break
-      case(107):  //  k
-        // Toggle Video
-        // console.log(this.player.getCurrentTime())
-        this.togglePlayback()
-        break
-      case(108):  //  l
-        // Jump Forward 2 seconds
-        this.jumpForward(2)
-        break
-      case(115):  //  s
-        // Go slower
-        this.setPlaybackSpeed(-.25)
-        break
-      default:
-        break
+  changeVideoSize(direction) {
+    if(!this.player)
+      return
+    const suggestedPlaybackSizes = [{
+        width: 320,
+        height: 240,
+      }, {
+        width: 640,
+        height: 360,
+      }, {
+        width: 853,
+        height: 480,
+      }, {
+        width: 1280,
+        height: 720,
+      }, {
+        width: 1920,
+        height: 1080,
+      }, {
+        width: 1920,
+        height: 1080,
+      }
+    ]
+
+    if(!this.currentSize) {
+      this.currentSize = 1
     }
+
+    console.log(suggestedPlaybackSizes[this.currentSize])
+
+    if(direction === 'bigger' && this.currentSize < suggestedPlaybackSizes.length - 1) {
+        this.currentSize++;
+    } else if(direction === 'smaller' && this.currentSize > 0) {
+        this.currentSize--;
+    }
+
+    const newSize = {
+      width: suggestedPlaybackSizes[this.currentSize].width,
+      height: suggestedPlaybackSizes[this.currentSize].height,
+    }
+    this.player.setSize(newSize.width, newSize.height)
+    console.log(newSize)
+  }
+
+  videoPlaybackKeypressMode(e) {
     // n -> Add new comment
     // k -> pause video
     // j -> back predefined # of seconds (2 seconds by default)
@@ -161,8 +185,90 @@ class YoutubePlayerContainer extends React.Component {
     // h -> back longer predefined # of seconds (10 seconds by default)
     // f -> faster .25X
     // s -> slower .25X
-    // esc -> exit out of write mode & back to video play mode
+    // esc -> exit out of write mode & back to video play control mode
+    // b -> bigger
+    // m -> smaller
     // 
+    var keyCode = e.which;
+    console.log(e, keyCode, e.which)
+    switch(e.key) {
+      case(';'):  //  ;
+        // Jump Forward 10 seconds
+        this.jumpForward(10)
+        break
+      case('b'):  //  b
+        // Make the video bigger
+        if(!this.player)
+          return
+
+        this.changeVideoSize('bigger')
+        break
+      case('f'):  //  f
+        // Go Faster
+        this.setPlaybackSpeed(.25)
+        break
+      case('h'):  //  h
+        // Jump Back 10 seconds
+        this.jumpBack(10)
+        break
+      case('i'):  //  i
+        // Add New note
+        this.props.openNewNote()
+        this.pauseVideo()
+        e.preventDefault()
+        break
+      case('j'):  // j
+        // Jump back 2 seconds
+        this.jumpBack(2)
+        break
+      case('k'):  //  k
+        // Toggle Video
+        // console.log(this.player.getCurrentTime())
+        this.togglePlayback()
+        break
+      case('l'):  //  l
+        // Jump Forward 2 seconds
+        this.jumpForward(2)
+        break
+      case('m'):  //  m (minimize)
+        // Make the Video Smaller
+        this.changeVideoSize('smaller')
+        break
+      case('s'):  //  s
+        // Go slower
+        this.setPlaybackSpeed(-.25)
+        break
+      default:
+        break
+    }
+  }
+
+  newNoteKeypressMode(e) {
+    var keyCode = e.which;
+    console.log(e, keyCode, e.which)
+
+    // If the alt key is pressed down, use videoPlaybackKeypress handler
+    if(e.altKey) {
+      this.videoPlaybackKeypressMode(e)
+      return
+    }
+
+    switch(keyCode) {
+      case(13): // Enter
+        if(e.shiftKey) {  // Shift Key down as well
+          console.log('Shift Key Down')
+        }
+      default:
+        break
+    }
+  }
+
+  handleKeypress(e) {
+    if(this.props.settings.eventMode === 'videoPlayback') {
+      this.videoPlaybackKeypressMode(e)
+    } else if(this.props.settings.eventMode == 'newNote') {
+      this.newNoteKeypressMode(e)
+    }
   }
 
 	cleanTime() {
@@ -188,6 +294,8 @@ class YoutubePlayerContainer extends React.Component {
     this.YT = window['YT'];
     this.player = new window['YT'].Player('player', {
       videoId: videoId,
+      modestbranding: 1,
+      start: 45,
       events: {
         'onStateChange': this.onPlayerStateChange.bind(this),
         'onError': this.onPlayerError.bind(this),

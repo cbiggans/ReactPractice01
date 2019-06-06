@@ -12,6 +12,7 @@ const emptyMark = {
   'title': '',
   'type': '',
   'url': '',
+  'id': '',
 }
 
 const initialState = {
@@ -23,11 +24,13 @@ const initialState = {
     'title': 'This is a React Tutorial',
     'type': 'Youtube',
     'url': 'https://www.youtube.com/watch?v=93p3LxR9xfM&t=2467s',
+    'notes': []
   }],
   videoNoteTakerSettings: {
     newNoteEditorOpen: false,
     currentVideoId: '',
-    type: '',
+    type: '',   // values like 'youtube' or other sites
+    eventMode: 'videoPlayback',   // Current mode for keypress events and such
     playback: {
       currentTime: 0,
       shortJumpBackSeconds: -2,
@@ -37,6 +40,12 @@ const initialState = {
       playbackQuality: 'highres',
     }
   },
+  newNote: {
+    type: '',
+    text: '',
+    category: '',
+    timestamp: 0, // Time in seconds
+  },
   nextMark: Object.assign({}, emptyMark),
   currentMark: Object.assign({}, emptyMark),
 }
@@ -45,15 +54,29 @@ const reducers = (state=initialState, action) => {
   var newMarks = []
 
   switch(action.type) {
-    case actionTypes.NEW_NOTE_OPEN:
+    case actionTypes.NEW_NOTE_OPEN: // Maybe add 'FLOW'?
       console.log('Open New Note')
+      console.log('Entering newNote key mode')
       return {
         ...state,
         videoNoteTakerSettings: {
           ...state.videoNoteTakerSettings,
           newNoteEditorOpen: true,
+          eventMode: 'newNote'
         }
       }
+    case actionTypes.CHANGE_NEW_NOTE:
+      console.log('CHANGING NEW NOTE--------')
+      return {
+        ...state,
+        newNote: {
+          ...state.newNote,
+          text: action.payload.text,
+        }
+      }
+    case actionTypes.CREATE_NEW_NOTE:
+      console.log('CREATING_NEW_NOTE-------')
+      return state
     case actionTypes.LOAD_MARKS:
       console.log('Loading Marks')
       return {

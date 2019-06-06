@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { markActions } from '../actions'
 import YoutubePlayerContainer from './YoutubePlayerContainer'
+import NoteTakerNoteForm from './NoteTakerNoteForm'
 
 class NoteTakerContainer extends React.Component {
 
@@ -15,7 +16,9 @@ class NoteTakerContainer extends React.Component {
   render() {
     var note;
     if(this.props.settings.newNoteEditorOpen) {
-      note = <p>NEW NOTE</p>
+      note = <NoteTakerNoteForm newNote={this.props.newNote}
+                                handleChange={this.props.handleNewNoteChange}
+                                handleSubmit={this.props.handleNewNoteSubmit} />
     } else {
       note = <p>Note</p>
     }
@@ -39,6 +42,7 @@ function mapStateToProps(state) {
   return {
     currentMark: state.currentMark,
     settings: state.videoNoteTakerSettings,
+    newNote: state.newNote,
   }
 }
 
@@ -46,6 +50,8 @@ function mapDispatchToProps(dispatch) {
   return {
     loadMark: (id) => dispatch(markActions.loadMark(id)),
     openNewNote: () => dispatch(markActions.openNewNote()),
+    handleNewNoteChange: (e) => dispatch(markActions.handleNewNoteChange(e)),
+    handleNewNoteSubmit: (e) => dispatch(markActions.handleNewNoteSubmit(e)),
   }
 }
 

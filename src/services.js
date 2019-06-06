@@ -21,27 +21,73 @@ class MarkService {
     this.collectionName = 'marks'
     this.db = db
     this.collection = this.db.collection(this.collectionName)
+
+    // this.index = this.index.bind(this)
+  }
+
+  getNotes(doc) {
+    // Returns a Promise
+    let note
+    let notes = []
+
+    return new Promise(resolve => {
+      this.collection.doc(doc.id).collection('notes').get()
+      .then((noteSnapshotDocs) => {
+        if(noteSnapshotDocs && noteSnapshotDocs.docs.length > 0) {
+          noteSnapshotDocs.forEach((noteDoc) => {
+            note = noteDoc.data()
+            note.id = noteDoc.id
+            notes.push(note)
+          })
+        }
+        return notes
+      })
+      .then((notes) => {
+        let mark = Object.assign({id: doc.id, notes: notes}, doc.data())
+        resolve(mark)
+      })
+    })
   }
 
   index(onSuccess) {
+    const marks = []
+
     this.collection.get()
     .then((snapshotDocs) => {
-      console.log('loading ' + snapshotDocs)
-      const marks = []
-
+      // Need to wait for this to completely finish, resolve only on last one
+      // Because the function getNotes runs asynchronously, this needs to store
+      //  all the promises in an array then wait for all of them to resolve
+      //  before continuing. This is needed because we're trying to retreive
+      //  all of the data we need before continuing to simulate a relational db
+      let promises = []
       snapshotDocs.forEach((doc) => {
-        marks.push(Object.assign({id: doc.id}, doc.data()))
+        promises.push(new Promise(resolve => {
+          this.getNotes(doc)
+          .then((mark) => {
+            console.log('Mark: ', mark)
+            resolve(mark)
+            marks.push(mark)
+          })
+        }))
       })
 
-      console.log('Num Marks Retreived: ' + marks.length)
-      onSuccess(marks)
+      Promise.all(promises).then(() => {
+        console.log('Promise.all COMPLETE------------------------------')
+        console.log('Marks: ', marks)
+        onSuccess(marks)
+      })
+
+    })
+    .then(() => {
+      // return marks
     })
   }
 
   get(id, onSuccess) {
     this.collection.doc(id).get()
     .then((docRef) => {
-      onSuccess(docRef.data())
+      const mark = Object.assign({id: id}, docRef.data())
+      onSuccess(mark)
     })
   }
 
@@ -53,13 +99,21 @@ class MarkService {
     })
   }
 
-   update(id, markData, onSuccess) {
-     // Get mark ref, then update it
-     this.collection.doc(id).update(markData)
-     .then((e) => {
-        onSuccess(e)
-     })
-   }
+  createNote(markId, note, onSuccess) {
+    this.collection.doc(markId).collection('notes').add(note)
+    .then((ref) => {
+      note.id = ref.id
+      onSuccess(note)
+    })
+  }
+
+  update(id, markData, onSuccess) {
+    // Get mark ref, then update it
+    this.collection.doc(id).update(markData)
+    .then((e) => {
+       onSuccess(e)
+    })
+  }
 
   destroy(id, onSuccess) {
     // NOTE: Does not delete sub collections

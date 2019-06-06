@@ -81,6 +81,36 @@ export const openNewNote = () => dispatch => {
   })
 }
 
+export const handleNewNoteChange = (e) => dispatch => {
+  const { name, value } = e.target
+  console.log('NEW NOTE CHANGE: ' + 'name: ' + name + ' value: ' + value)
+
+  dispatch({
+    type: actionTypes.CHANGE_NEW_NOTE,
+    payload: {
+      name: name,
+      text: value,
+    }
+  })
+}
+
+export const handleNewNoteSubmit = (e) => (dispatch, getState) => {
+  const { name, value } = e.target
+  e.preventDefault()
+
+  const state = getState()
+  console.log(state.currentMark)
+  services.marks.createNote(state.currentMark.id, state.newNote, (note) => {
+    dispatch({
+      type: actionTypes.CREATE_NEW_NOTE,
+      payload: {
+        'note': note
+      }
+    })
+  })
+
+}
+
 export const markActions = {
   handleChange: handleChange,
   handleSubmit: handleSubmit,
@@ -88,4 +118,6 @@ export const markActions = {
   loadMark: loadMark,
   destroy: destroy,
   openNewNote: openNewNote,
+  handleNewNoteChange: handleNewNoteChange,
+  handleNewNoteSubmit: handleNewNoteSubmit,
 }
