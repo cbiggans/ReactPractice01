@@ -29,8 +29,6 @@ const notes = (state = initialState, action) => {
     case actionTypes.CHANGE_NOTE_ORDER:
       // NEED markId to get into mapping
       notesList = state.mapping[action.payload.markId].slice()
-      // console.log('Payload: ', action.payload)
-      // console.log('notesList: ', notesList)
 
       notesList.sort((a, b) => {
         if(action.payload.order === 'descending') {
@@ -39,7 +37,6 @@ const notes = (state = initialState, action) => {
           return a.timestamp - b.timestamp
         }
       })
-      // console.log('notesList: ', notesList)
 
       var newState = {
         ...state,
@@ -52,8 +49,6 @@ const notes = (state = initialState, action) => {
           listOrder: action.payload.order,
         }
       }
-
-      console.log(newState)
 
       return newState
     case actionTypes.OPEN_NEW_NOTE: // Maybe add 'FLOW'?
@@ -70,7 +65,6 @@ const notes = (state = initialState, action) => {
         newNote: Object.assign({}, initialState.newNote)
       }
     case actionTypes.LOAD_NOTE:
-      console.log('LOADING NEW NOTE--------')
       note = action.payload.note
       markId = note.markId
 
@@ -87,14 +81,12 @@ const notes = (state = initialState, action) => {
           return a.timestamp - b.timestamp
         }
       })
-      console.log('Notes: ', notesMap)
 
       return {
         ...state,
         mapping: notesMap,
       }
     case actionTypes.CHANGE_NEW_NOTE:
-      console.log('CHANGING NEW NOTE--------')
       return {
         ...state,
         newNote: {
@@ -105,7 +97,6 @@ const notes = (state = initialState, action) => {
     // Maybe characterize this as SUBMIT? Create may give impression
     //  that it's just being created in database and not from a form
     case actionTypes.CREATE_NEW_NOTE:
-      console.log('CREATING_NEW_NOTE-------')
       
       notesMap = Object.assign({}, state.mapping)
 
@@ -123,7 +114,6 @@ const notes = (state = initialState, action) => {
         }
       })
 
-      console.log('Notes: ', notesMap)
       return {
         ...state,
         mapping: notesMap,

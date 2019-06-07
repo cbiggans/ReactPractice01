@@ -9,8 +9,6 @@ import services from '../services/'
  */
 export const handleSubmit = (e) => (dispatch, getState) => {
   e.preventDefault()
-  // console.log('form submitted')
-  // console.log(services)
 
   const state = getState()
   services.marks.create(state.marks.nextMark, (mark) => {
@@ -25,7 +23,6 @@ export const handleSubmit = (e) => (dispatch, getState) => {
 
 export const handleChange = (e) => dispatch => {
   const { name, value } = e.target
-  // console.log('changing ' + name + ' to ' + value)
   dispatch({
     type: actionTypes.UPDATE_MARK_FIELD,
     payload: {
@@ -36,7 +33,6 @@ export const handleChange = (e) => dispatch => {
 }
 
 export const load = (e) => dispatch => {
-  // console.log('Fetching Marks')
   services.marks.index((marks) => {
     marks.map(mark => {
       dispatch({
@@ -51,7 +47,6 @@ export const load = (e) => dispatch => {
 }
 
 export const setCurrentMark = (id) => dispatch => {
-  // console.log('Getting Mark: ' + id)
   services.marks.get(id, (mark) => {
     dispatch({
       type: actionTypes.SET_CURRENT_MARK,
@@ -63,9 +58,7 @@ export const setCurrentMark = (id) => dispatch => {
 }
 
 export const destroy = (id) => dispatch => {
-  // console.log('Destroying Mark: ' + id)
   services.marks.destroy(id, (e) => {
-    console.log('Mark Destroyed: ' + id)
     dispatch({
       type: actionTypes.DESTROY_MARK,
       payload: {

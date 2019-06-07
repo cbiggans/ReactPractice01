@@ -9,7 +9,6 @@ class NoteTakerContainer extends React.Component {
 
   componentDidMount() {
     var markId = this.props.match.params.id
-    console.log('Mark ID: ' + markId)
     
     this.props.setCurrentMark(markId)
     this.props.fetch(markId)
@@ -17,7 +16,7 @@ class NoteTakerContainer extends React.Component {
 
   render() {
     var noteTakerForm;
-    console.log('settings: ', this.props.settings)
+
     if(this.props.settings.newNoteEditorOpen) {
       noteTakerForm = <NoteTakerNoteForm newNote={this.props.newNote}
                                          settings={this.props.settings}

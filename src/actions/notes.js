@@ -17,10 +17,6 @@ export const fetch = (markId) => dispatch => {
 }
 
 export const openNew = (currentTime) => dispatch => {
-  // var timestamp = window['YT'].get('player').getCurrentTime()
-
-  // console.log('Open Note Editor')
-  console.log('Current Time: ', currentTime)
   dispatch({
     type: actionTypes.OPEN_NEW_NOTE,
     payload: {
@@ -30,14 +26,10 @@ export const openNew = (currentTime) => dispatch => {
 }
 
 export const createBookmark = (currentTime) => (dispatch, getState) => {
-  console.log('Current Time: ', currentTime)
-
   const state = getState()
-  console.log(state.marks.currentMark)
   const newBookmark = Object.assign({},
                                     state.notes.newBookmark, 
                                     {timestamp: currentTime})
-  console.log('New Bookmark: ', newBookmark)
   services.notes.create(state.marks.currentMark.id, newBookmark, (note) => {
     dispatch({
       type: actionTypes.CREATE_NEW_NOTE,
@@ -50,9 +42,6 @@ export const createBookmark = (currentTime) => (dispatch, getState) => {
 }
 
 export const closeNew = () => dispatch => {
-  // var timestamp = window['YT'].get('player').getCurrentTime()
-
-  console.log('Closing Note Editor')
   dispatch({
     type: actionTypes.CLOSE_NEW_NOTE
   })
@@ -60,8 +49,6 @@ export const closeNew = () => dispatch => {
 
 export const handleChange = (e) => dispatch => {
   const { name, value } = e.target
-  // console.log('NEW NOTE CHANGE: ' + 'name: ' + name + ' value: ' + value)
-
   dispatch({
     type: actionTypes.CHANGE_NEW_NOTE,
     payload: {
@@ -75,7 +62,6 @@ export const handleSubmit = (e) => (dispatch, getState) => {
   e.preventDefault()
 
   const state = getState()
-  console.log(state.marks.currentMark)
   services.notes.create(state.marks.currentMark.id,
                         state.notes.newNote,
                         (note) => {
@@ -100,10 +86,7 @@ export const changeNoteOrder = (markId, order) => dispatch => {
 }
 
 export const destroy = (id, markId) => dispatch => {
-  // console.log('Destroying Mark: ' + id)
   services.notes.destroy(id, (e) => {
-    console.log('NOTE Destroyed: ' + id)
-    console.log('NOTE FOR MarkId: '. markId)
     dispatch({
       type: actionTypes.DESTROY_NOTE,
       payload: {

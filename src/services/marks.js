@@ -44,13 +44,14 @@ class MarkService {
       // I probably shouldn't sync the data, but instead just get the data as needed then send it
       // Call from the action to load in the notes separately
       //  Can do conditional rendering from there
+      // TODO XXX: Want to remove most of this, call the notes service to grab the notes
+      //  Call action to grab the notes, should do this asynchronously
       let promises = []
       snapshotDocs.forEach((doc) => {
         promises.push(new Promise(resolve => {
           this.getNotes(doc)
           .then((mark) => {
             mark.id = doc.id
-            console.log('Mark: ', mark)
             resolve(mark)
             marks.push(mark)
           })
@@ -58,8 +59,7 @@ class MarkService {
       })
 
       Promise.all(promises).then(() => {
-        console.log('Promise.all COMPLETE------------------------------')
-        console.log('Marks: ', marks)
+        // console.log('Promise.all COMPLETE------------------------------')
         onSuccess(marks)
       })
 

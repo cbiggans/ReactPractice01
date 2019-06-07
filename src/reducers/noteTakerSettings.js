@@ -20,7 +20,6 @@ const initialState = {
 const noteTakerSettings = (state = initialState, action) => {
   switch(action.type) {
     case actionTypes.SET_VIDEO_TIME:
-      console.log('Setting Video Time: ', action.payload.currentTime)
       return {
         ...state,
         playback: {
@@ -30,7 +29,6 @@ const noteTakerSettings = (state = initialState, action) => {
         }
       }
     case actionTypes.COMPLETED_TIME_UPDATE:
-      console.log('Completed Time Update: ')
       return {
         ...state,
         playback: {
@@ -39,9 +37,6 @@ const noteTakerSettings = (state = initialState, action) => {
         }
       }
     case actionTypes.OPEN_NEW_NOTE: // Maybe add 'FLOW'?
-      console.log('Open New Note')
-      console.log('Entering newNote key mode')
-      console.log(state)
       return {
         ...state,
         newNoteEditorOpen: true,

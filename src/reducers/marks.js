@@ -22,7 +22,6 @@ const marks = (state = initialState, action) => {
 
   switch(action.type) {
     case actionTypes.LOAD_MARK:
-      // console.log(state)
       newMarks = state.list.slice()
       newMarks.push(action.payload.mark)
 
@@ -32,13 +31,11 @@ const marks = (state = initialState, action) => {
       }
     case actionTypes.LOAD_MARKS:
       // DEPRECATED currently
-      // console.log('Loading Marks')
       return {
         ...state,
         list: action.payload.marks
       }
     case actionTypes.SET_CURRENT_MARK:
-      // console.log('Current Mark: ', action.payload.mark)
       return {
         ...state,
         currentMark: action.payload.mark,
@@ -58,15 +55,6 @@ const marks = (state = initialState, action) => {
       newMarks.push(Object.assign({},
                                   state.nextMark,
                                   {id: action.payload.mark.id}))
-                                  // Should update key instead of id here, id
-                                  //  should be restricted to actual id in
-                                  //  database
-
-      // newMarks.push(Object.assign({},
-      //                             state.nextMark,
-      //                             {id: (newMarks.length + 1) + ''}))
-
-      // console.log('newMarks ' + newMarks)
       return {
         ...state,
         list: newMarks,

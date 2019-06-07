@@ -6,8 +6,6 @@ class YoutubePlayerContainer extends React.Component {
   constructor(props) {
     super(props)
 
-    console.log("CREATED")
-
     // TODO XXX: This should be part of state or find a different way to do this
     //  This is not a perfect way because the render method is only called
     //  if the store/state changes, so this isn't a great way to keep state
@@ -30,28 +28,28 @@ class YoutubePlayerContainer extends React.Component {
   }
 
 	onPlayerStateChange(event) {
-    console.log(event)
-    switch (event.data) {
-      case window['YT'].PlayerState.PLAYING:
-        if (this.cleanTime() === 0) {
-          console.log('started ' + this.cleanTime());
-        } else {
-          console.log('playing ' + this.cleanTime())
-        };
-        break;
-      case window['YT'].PlayerState.PAUSED:
-        if (this.player.getDuration() - this.getCurrentTime() !== 0) {
-          console.log('paused @ ' + this.cleanTime());
-        };
-        break;
-      case window['YT'].PlayerState.ENDED:
-        console.log('ended ');
-        break;
-      // case window['YT'].PlayerState.BUFFERING:
-      //   break
-			default:
-				return
-    };
+    // console.log(event)
+    // switch (event.data) {
+    //   case window['YT'].PlayerState.PLAYING:
+    //     if (this.cleanTime() === 0) {
+    //       console.log('started ' + this.cleanTime());
+    //     } else {
+    //       console.log('playing ' + this.cleanTime())
+    //     };
+    //     break;
+    //   case window['YT'].PlayerState.PAUSED:
+    //     if (this.player.getDuration() - this.getCurrentTime() !== 0) {
+    //       console.log('paused @ ' + this.cleanTime());
+    //     };
+    //     break;
+    //   case window['YT'].PlayerState.ENDED:
+    //     console.log('ended ');
+    //     break;
+    //   // case window['YT'].PlayerState.BUFFERING:
+    //   //   break
+		// 	default:
+		// 		return
+    // };
   };
 
   componentDidMount() {
@@ -60,12 +58,10 @@ class YoutubePlayerContainer extends React.Component {
     // Keydown handler needs to be used if want to use ctrl/alt
     window.addEventListener('keydown', this.handleKeypress, false)
     // Set an instance variable when done mounting so YoutubeAPI can render
-    console.log('componentHasMounted: ' + this.componentHasMounted + '->true')
     this.componentHasMounted = true
   }
 
   componentWillUnmount() {
-    console.log('Remove keypress event')
     // window.removeEventListener('keypress', this.handleKeypress)
     window.removeEventListener('keydown', this.handleKeypress)
 
@@ -113,7 +109,6 @@ class YoutubePlayerContainer extends React.Component {
       return
 
     var currentTime = this.getCurrentTime()
-    console.log(currentTime)
     this.player.seekTo(currentTime + seconds)
   }
 
@@ -125,21 +120,17 @@ class YoutubePlayerContainer extends React.Component {
   }
 
   setPlaybackSpeed(delta) {
-    // console.log('Available Playback Rates' + this.player.getAvailablePlaybackRates())
     if(!this.player)
       return
 
     const availablePlaybackRates = this.player.getAvailablePlaybackRates()
 
     let currentPlaybackRate = this.player.getPlaybackRate()
-    // console.log(currentPlaybackRate)
 
     let newSpeed = currentPlaybackRate + delta
     this.player.setPlaybackRate(newSpeed)
 
-    // console.log(availablePlaybackRates)
     if(availablePlaybackRates.includes(newSpeed)) {
-      console.log(newSpeed)
       return newSpeed
     }
 
@@ -174,8 +165,6 @@ class YoutubePlayerContainer extends React.Component {
       this.currentSize = 1
     }
 
-    console.log(suggestedPlaybackSizes[this.currentSize])
-
     if(direction === 'bigger' && this.currentSize < suggestedPlaybackSizes.length - 1) {
         this.currentSize++;
     } else if(direction === 'smaller' && this.currentSize > 0) {
@@ -187,7 +176,6 @@ class YoutubePlayerContainer extends React.Component {
       height: suggestedPlaybackSizes[this.currentSize].height,
     }
     this.player.setSize(newSize.width, newSize.height)
-    console.log(newSize)
   }
 
   videoPlaybackKeypressMode(e) {
@@ -204,7 +192,7 @@ class YoutubePlayerContainer extends React.Component {
     // m -> smaller
     // 
     var keyCode = e.which;
-    console.log(e, keyCode, e.which)
+    // console.log(e, keyCode, e.which)
     switch(e.key) {
       case(';'):  //  ;
         // Jump Forward 10 seconds
@@ -216,7 +204,6 @@ class YoutubePlayerContainer extends React.Component {
         break
       case('i'):  //  i
         // Add New note
-        console.log(this.getCurrentTime())
         this.props.openNewNote(this.getCurrentTime())
         this.pauseVideo()
         e.preventDefault()
@@ -227,7 +214,6 @@ class YoutubePlayerContainer extends React.Component {
         break
       case('k'):  //  k
         // Toggle Video
-        // console.log(this.player.getCurrentTime())
         this.togglePlayback()
         break
       case('l'):  //  l
@@ -261,7 +247,7 @@ class YoutubePlayerContainer extends React.Component {
 
   newNoteKeypressMode(e) {
     var keyCode = e.which;
-    console.log(e, keyCode, e.which)
+    // console.log(e, keyCode, e.which)
 
     // If the alt key is pressed down, use videoPlaybackKeypress handler
     if(e.altKey) {
@@ -332,9 +318,8 @@ class YoutubePlayerContainer extends React.Component {
 
   render() {
     // if(this.props.currentMark.url.contains('youtube.com')
-    console.log('===================RENDER()====================')
+    // console.log('===================RENDER()====================')
     var videoId = extractVideoId(this.props.currentMark.url)
-    console.log(videoId)
 
     if(this.player && this.props.settings.playback.hasNewCurrentTime) {
       this.setTime(this.props.settings.playback.currentTime)
@@ -345,7 +330,6 @@ class YoutubePlayerContainer extends React.Component {
 
     if (videoId && this.componentHasMounted) {
       if (videoId !== this.currentVideoId) {
-        console.log("render()")
         this.currentVideoId = videoId
 
         // Currently having issue where this is running before component is mounted
@@ -374,8 +358,6 @@ class YoutubePlayerContainer extends React.Component {
 
 function extractVideoId(url) {
     // e.g. url = https://www.youtube.com/watch?v=VUyBY72mwrQ
-    console.log('URL:' + url)
-
     if(url && url.includes('youtube.com')) {
       return url.split('?v=')[1]
     }
