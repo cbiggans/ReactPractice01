@@ -210,17 +210,6 @@ class YoutubePlayerContainer extends React.Component {
         // Jump Forward 10 seconds
         this.jumpForward(10)
         break
-      case('b'):  //  b
-        // Make the video bigger
-        if(!this.player)
-          return
-
-        this.changeVideoSize('bigger')
-        break
-      case('f'):  //  f
-        // Go Faster
-        this.setPlaybackSpeed(.25)
-        break
       case('h'):  //  h
         // Jump Back 10 seconds
         this.jumpBack(10)
@@ -245,13 +234,25 @@ class YoutubePlayerContainer extends React.Component {
         // Jump Forward 2 seconds
         this.jumpForward(2)
         break
-      case('m'):  //  m (minimize)
-        // Make the Video Smaller
-        this.changeVideoSize('smaller')
+      case('b'):  //  l
+        // Jump Forward 2 seconds
+        this.props.bookmark(this.getCurrentTime())
         break
-      case('s'):  //  s
+      case('S'):  //  S
         // Go slower
         this.setPlaybackSpeed(-.25)
+        break
+      case('F'):  //  f
+        // Go Faster
+        this.setPlaybackSpeed(.25)
+        break
+      case('B'):  //  b
+        // Make the video bigger
+        this.changeVideoSize('bigger')
+        break
+      case('M'):  //  m (minimize)
+        // Make the Video Smaller
+        this.changeVideoSize('smaller')
         break
       default:
         break

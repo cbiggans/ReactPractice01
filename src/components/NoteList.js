@@ -34,6 +34,7 @@ function NoteList(props) {
         <button onClick={() => {props.handleTimestampClicked(note.timestamp)}}>
           {cleanTime(note.timestamp)}
         </button>: {note.text}
+        <button onClick={() => {props.handleDestroyNote(note.id, props.currentMark.id)}}>Destroy</button>
       </div>
     )
   })

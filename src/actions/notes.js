@@ -29,6 +29,26 @@ export const openNew = (currentTime) => dispatch => {
   })
 }
 
+export const createBookmark = (currentTime) => (dispatch, getState) => {
+  console.log('Current Time: ', currentTime)
+
+  const state = getState()
+  console.log(state.marks.currentMark)
+  const newBookmark = Object.assign({},
+                                    state.notes.newBookmark, 
+                                    {timestamp: currentTime})
+  console.log('New Bookmark: ', newBookmark)
+  services.notes.create(state.marks.currentMark.id, newBookmark, (note) => {
+    dispatch({
+      type: actionTypes.CREATE_NEW_NOTE,
+      payload: {
+        'markId': state.marks.currentMark.id,
+        'note': note,
+      }
+    })
+  })
+}
+
 export const closeNew = () => dispatch => {
   // var timestamp = window['YT'].get('player').getCurrentTime()
 
@@ -79,14 +99,31 @@ export const changeNoteOrder = (markId, order) => dispatch => {
   })
 }
 
+export const destroy = (id, markId) => dispatch => {
+  // console.log('Destroying Mark: ' + id)
+  services.notes.destroy(id, (e) => {
+    console.log('NOTE Destroyed: ' + id)
+    console.log('NOTE FOR MarkId: '. markId)
+    dispatch({
+      type: actionTypes.DESTROY_NOTE,
+      payload: {
+        id: id,
+        markId: markId,
+      }
+    })
+  })
+}
+
 
 const noteActions = {
   fetch: fetch,
   openNew: openNew,
+  createBookmark: createBookmark,
   closeNew: closeNew,
   handleChange: handleChange,
   handleSubmit: handleSubmit,
-  changeNoteOrder: changeNoteOrder
+  changeNoteOrder: changeNoteOrder,
+  destroy: destroy,
 }
 
 export default noteActions

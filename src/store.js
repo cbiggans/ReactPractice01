@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux'
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import thunk from 'redux-thunk'
 import marks from './reducers/marks'
 import notes from './reducers/notes'
@@ -11,6 +11,8 @@ const rootReducer = combineReducers({
   noteTakerSettings,
 })
 
-const store = createStore(rootReducer, applyMiddleware(thunk))
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(rootReducer,
+                          composeEnhancers(applyMiddleware(thunk)))
 
 export default store

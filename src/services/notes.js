@@ -31,6 +31,12 @@ class NoteService {
       onSuccess(note)
     })
   }
+
+  destroy(id, onSuccess) {
+    // NOTE: Does not delete sub collections
+    this.collection.doc(id).delete()
+    .then((e) => onSuccess(e))
+  }
 }
 
 export default NoteService

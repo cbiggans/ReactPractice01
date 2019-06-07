@@ -7,8 +7,14 @@ const initialState = {
     category: '',
     timestamp: 0, // Time in seconds
   }, 
+  newBookmark: {
+    type: 'bookmark',
+    text: 'BOOKMARK',
+    category: 'bookmark',
+    timestamp: 0, // Time in seconds
+  }, 
   settings: {
-    listOrder: 'ascending',   // Other value is descending
+    listOrder: 'descending',   // Other value is descending
   },
   mapping: {},    // key: markId, value: array
               //  This is done to help with Lazy-Loading & the NoSQL database relations
@@ -122,6 +128,19 @@ const notes = (state = initialState, action) => {
         ...state,
         mapping: notesMap,
         newNote: Object.assign({}, initialState.newNote)
+      }
+    case actionTypes.DESTROY_NOTE:
+      notesMap = Object.assign({}, state.mapping)
+      notesList = notesMap[action.payload.markId]
+
+      notesList = notesList.filter((item) => {
+        return item.id !== action.payload.id
+      })
+      notesMap[action.payload.markId] = notesList
+
+      return {
+        ...state,
+        mapping: notesMap
       }
     default:
       return state
