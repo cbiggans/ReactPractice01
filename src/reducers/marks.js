@@ -1,4 +1,4 @@
-import actionTypes from '../constants'
+import actionTypes from '../actions/constants'
 
 const emptyMark = {
   'category': '',
@@ -19,7 +19,6 @@ const initialState = {
 
 const marks = (state = initialState, action) => {
   var newMarks = []
-  var newMark
 
   switch(action.type) {
     case actionTypes.LOAD_MARK:

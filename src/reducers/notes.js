@@ -1,4 +1,4 @@
-import actionTypes from '../constants'
+import actionTypes from '../actions/constants'
 
 const initialState = {
   newNote: {
@@ -12,7 +12,6 @@ const initialState = {
 }
 
 const notes = (state = initialState, action) => {
-  var newNotes = {}
   var notesMap = {}
   var note, markId
 
@@ -24,6 +23,11 @@ const notes = (state = initialState, action) => {
           ...state.newNote,
           timestamp: action.payload.timestamp,
         }
+      }
+    case actionTypes.CLOSE_NEW_NOTE:
+      return {
+        ...state,
+        newNote: Object.assign({}, initialState.newNote)
       }
     case actionTypes.LOAD_NOTE:
       console.log('LOADING NEW NOTE--------')
@@ -51,6 +55,8 @@ const notes = (state = initialState, action) => {
           text: action.payload.text,
         }
       }
+    // Maybe characterize this as SUBMIT? Create may give impression
+    //  that it's just being created in database and not from a form
     case actionTypes.CREATE_NEW_NOTE:
       console.log('CREATING_NEW_NOTE-------')
       
@@ -66,6 +72,7 @@ const notes = (state = initialState, action) => {
       return {
         ...state,
         mapping: notesMap,
+        newNote: Object.assign({}, initialState.newNote)
       }
     default:
       return state

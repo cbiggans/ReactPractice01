@@ -1,8 +1,7 @@
 import actionTypes from './constants'
-import services from './services/'
+import services from '../services/'
 
 
-// Need to add thunk in order for this to work
 /*
  *  See the importance of thunk here because we wantto be able to define these
  *  functions elsewhere and it's cleaner for the mapDispatchToProps if the
@@ -46,19 +45,7 @@ export const load = (e) => dispatch => {
           mark: mark,
         }
       })
-    })
-  })
-}
-
-export const fetchNotes = (markId) => dispatch => {
-  services.notes.index([markId], (notes) => {
-    notes.map(note => {
-      dispatch({
-        type: actionTypes.LOAD_NOTE,
-        payload: {
-          note: note
-        }
-      })
+      return mark
     })
   })
 }
@@ -74,7 +61,6 @@ export const setCurrentMark = (id) => dispatch => {
     })
   })
 }
-  
 
 export const destroy = (id) => dispatch => {
   // console.log('Destroying Mark: ' + id)
@@ -89,59 +75,12 @@ export const destroy = (id) => dispatch => {
   })
 }
 
-export const openNewNote = () => dispatch => {
-  var timestamp = window['YT'].get('player').getCurrentTime()
-
-  // console.log('Open Note Editor')
-  dispatch({
-    type: actionTypes.OPEN_NEW_NOTE,
-    payload: {
-      timestamp: timestamp,
-    }
-  })
-}
-
-export const handleNewNoteChange = (e) => dispatch => {
-  const { name, value } = e.target
-  // console.log('NEW NOTE CHANGE: ' + 'name: ' + name + ' value: ' + value)
-
-  dispatch({
-    type: actionTypes.CHANGE_NEW_NOTE,
-    payload: {
-      name: name,
-      text: value,
-    }
-  })
-}
-
-export const handleNewNoteSubmit = (e) => (dispatch, getState) => {
-  const { name, value } = e.target
-  e.preventDefault()
-
-  const state = getState()
-  console.log(state.marks.currentMark)
-  services.notes.create(state.marks.currentMark.id,
-                        state.notes.newNote,
-                        (note) => {
-    dispatch({
-      type: actionTypes.CREATE_NEW_NOTE,
-      payload: {
-        'markId': state.marks.currentMark.id,
-        'note': note,
-      }
-    })
-  })
-
-}
-
-export const markActions = {
+const markActions = {
   handleChange: handleChange,
   handleSubmit: handleSubmit,
   load: load,
-  fetchNotes: fetchNotes,
   setCurrentMark: setCurrentMark,
   destroy: destroy,
-  openNewNote: openNewNote,
-  handleNewNoteChange: handleNewNoteChange,
-  handleNewNoteSubmit: handleNewNoteSubmit,
 }
+
+export default markActions

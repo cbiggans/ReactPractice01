@@ -2,13 +2,10 @@ import React from 'react'
 import MarkForm from './MarkForm'
 import MarkList from './MarkList'
 import { connect } from 'react-redux'
-import { markActions } from '../actions'
+import actions from '../actions/'
 
 
 class MarkContainer extends React.Component{
-  constructor(props) {
-    super(props)
-  }
   componentDidMount() {
     if(this.props.marks.length ===  0) {
       this.props.load()
@@ -36,10 +33,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    load: () => dispatch(markActions.load()),
-    handleSubmit: (e) => dispatch(markActions.handleSubmit(e)),
-    handleChange: (e) => dispatch(markActions.handleChange(e)),
-    destroyHandler: (id) => dispatch(markActions.destroy(id)),
+    load: () => dispatch(actions.marks.load()),
+    handleSubmit: (e) => dispatch(actions.marks.handleSubmit(e)),
+    handleChange: (e) => dispatch(actions.marks.handleChange(e)),
+    destroyHandler: (id) => dispatch(actions.marks.destroy(id)),
   }
 }
 

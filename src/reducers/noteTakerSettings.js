@@ -1,4 +1,4 @@
-import actionTypes from '../constants'
+import actionTypes from '../actions/constants'
 
 
 const initialState = {
@@ -30,6 +30,18 @@ const noteTakerSettings = (state = initialState, action) => {
           ...state.playback,
           currentTime: action.payload.timestamp,
         }
+      }
+    case actionTypes.CLOSE_NEW_NOTE: // Maybe add 'FLOW'?
+      return {
+        ...state,
+        newNoteEditorOpen: false,
+        eventMode: 'videoPlayback',
+      }
+    case actionTypes.CREATE_NEW_NOTE:
+      return {
+        ...state,
+        newNoteEditorOpen: false,
+        eventMode: 'videoPlayback',
       }
     default:
       return state

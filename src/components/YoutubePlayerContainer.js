@@ -40,7 +40,7 @@ class YoutubePlayerContainer extends React.Component {
         };
         break;
       case window['YT'].PlayerState.PAUSED:
-        if (this.player.getDuration() - this.player.getCurrentTime() !== 0) {
+        if (this.player.getDuration() - this.getCurrentTime() !== 0) {
           console.log('paused @ ' + this.cleanTime());
         };
         break;
@@ -93,6 +93,13 @@ class YoutubePlayerContainer extends React.Component {
     }
   }
 
+  getCurrentTime() {
+    if(!this.player)
+      return 0
+
+    return this.player.getCurrentTime()
+  }
+
   jumpForward(seconds) {
     this.jump(seconds)
   }
@@ -105,7 +112,7 @@ class YoutubePlayerContainer extends React.Component {
     if(!this.player)
       return
 
-    var currentTime = this.player.getCurrentTime()
+    var currentTime = this.getCurrentTime()
     console.log(currentTime)
     this.player.seekTo(currentTime + seconds)
   }
@@ -213,7 +220,8 @@ class YoutubePlayerContainer extends React.Component {
         break
       case('i'):  //  i
         // Add New note
-        this.props.openNewNote()
+        console.log(this.getCurrentTime())
+        this.props.openNewNote(this.getCurrentTime())
         this.pauseVideo()
         e.preventDefault()
         break
@@ -253,11 +261,15 @@ class YoutubePlayerContainer extends React.Component {
       return
     }
 
-    switch(keyCode) {
+    switch(e.key) {
       case(13): // Enter
         if(e.shiftKey) {  // Shift Key down as well
           console.log('Shift Key Down')
         }
+        break
+      case('Escape'):
+        this.props.closeNewNote()
+        break
       default:
         break
     }
@@ -266,13 +278,13 @@ class YoutubePlayerContainer extends React.Component {
   handleKeypress(e) {
     if(this.props.settings.eventMode === 'videoPlayback') {
       this.videoPlaybackKeypressMode(e)
-    } else if(this.props.settings.eventMode == 'newNote') {
+    } else if(this.props.settings.eventMode === 'newNote') {
       this.newNoteKeypressMode(e)
     }
   }
 
 	cleanTime() {
-    return Math.round(this.player.getCurrentTime())
+    return Math.round(this.getCurrentTime())
   }
 
   onPlayerError(event) {
