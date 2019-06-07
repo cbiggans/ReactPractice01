@@ -11,7 +11,11 @@ function NoteList(props) {
 
   notes = notes.map((note) => {
     return (
-      <div key={note.key}>{note.timestamp}: {note.text}</div>
+      <div key={note.key}>
+        <button onClick={() => {props.handleTimestampClicked(note.timestamp)}}>
+          {note.timestamp}
+        </button>: {note.text}
+      </div>
     )
   })
   return (

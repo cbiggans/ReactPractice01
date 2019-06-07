@@ -33,10 +33,12 @@ class NoteTakerContainer extends React.Component {
         <YoutubePlayerContainer currentMark={this.props.currentMark}
                                 settings={this.props.settings}
                                 openNewNote={this.props.openNewNote}
-                                closeNewNote={this.props.closeNewNote} />
+                                closeNewNote={this.props.closeNewNote}
+                                completedTimeUpdate={this.props.completedTimeUpdate} />
         {noteTakerForm}
         <NoteList notes={this.props.notes}
-                  currentMark={this.props.currentMark} />
+                  currentMark={this.props.currentMark}
+                  handleTimestampClicked={this.props.setVideoTime} />
       </div>
     )
   }
@@ -59,6 +61,8 @@ function mapDispatchToProps(dispatch) {
     fetch: (markId) => dispatch(actions.notes.fetch(markId)),
     handleChange: (e) => dispatch(actions.notes.handleChange(e)),
     handleSubmit: (e) => dispatch(actions.notes.handleSubmit(e)),
+    setVideoTime: (timestamp) => dispatch(actions.videos.setVideoTime(timestamp)),
+    completedTimeUpdate: () => dispatch(actions.videos.completedTimeUpdate()),
   }
 }
 

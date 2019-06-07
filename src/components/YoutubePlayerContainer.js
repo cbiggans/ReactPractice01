@@ -117,6 +117,13 @@ class YoutubePlayerContainer extends React.Component {
     this.player.seekTo(currentTime + seconds)
   }
 
+  setTime(seconds) {
+    if(!this.player)
+      return
+
+    this.player.seekTo(seconds)
+  }
+
   setPlaybackSpeed(delta) {
     // console.log('Available Playback Rates' + this.player.getAvailablePlaybackRates())
     if(!this.player)
@@ -327,6 +334,11 @@ class YoutubePlayerContainer extends React.Component {
     console.log('===================RENDER()====================')
     var videoId = extractVideoId(this.props.currentMark.url)
     console.log(videoId)
+
+    if(this.player && this.props.settings.playback.hasNewCurrentTime) {
+      this.setTime(this.props.settings.playback.currentTime)
+      this.props.completedTimeUpdate()
+    }
 
     // this.videoId = '1cH2cerUpMQ' //video id
 
