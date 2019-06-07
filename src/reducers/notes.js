@@ -7,15 +7,49 @@ const initialState = {
     category: '',
     timestamp: 0, // Time in seconds
   }, 
+  settings: {
+    listOrder: 'ascending',   // Other value is descending
+  },
   mapping: {},    // key: markId, value: array
               //  This is done to help with Lazy-Loading & the NoSQL database relations
 }
 
 const notes = (state = initialState, action) => {
   var notesMap = {}
+  var notesList = []
   var note, markId
 
   switch(action.type) {
+    case actionTypes.CHANGE_NOTE_ORDER:
+      // NEED markId to get into mapping
+      notesList = state.mapping[action.payload.markId].slice()
+      // console.log('Payload: ', action.payload)
+      // console.log('notesList: ', notesList)
+
+      notesList.sort((a, b) => {
+        if(action.payload.order === 'descending') {
+          return b.timestamp - a.timestamp
+        } else {
+          return a.timestamp - b.timestamp
+        }
+      })
+      // console.log('notesList: ', notesList)
+
+      var newState = {
+        ...state,
+        mapping: {
+          ...state.mapping,
+          [action.payload.markId]: notesList,
+        },
+        settings: {
+          ...state.settings,
+          listOrder: action.payload.order,
+        }
+      }
+
+      console.log(newState)
+
+      return newState
     case actionTypes.OPEN_NEW_NOTE: // Maybe add 'FLOW'?
       return {
         ...state,
@@ -40,6 +74,13 @@ const notes = (state = initialState, action) => {
         notesMap[markId] = []
       }
       notesMap[markId].push(note)
+      notesMap[markId].sort((a, b) => {
+        if(state.settings.listOrder === 'descending') {
+          return b.timestamp - a.timestamp
+        } else {
+          return a.timestamp - b.timestamp
+        }
+      })
       console.log('Notes: ', notesMap)
 
       return {
@@ -66,7 +107,15 @@ const notes = (state = initialState, action) => {
         notesMap[action.payload.markId] = []
       }
 
+      // This needs to be put into a function, it's written at least 3 times
       notesMap[action.payload.markId].push(action.payload.note)
+      notesMap[action.payload.markId].sort((a, b) => {
+        if(state.settings.listOrder === 'descending') {
+          return b.timestamp - a.timestamp
+        } else {
+          return a.timestamp - b.timestamp
+        }
+      })
 
       console.log('Notes: ', notesMap)
       return {

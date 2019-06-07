@@ -69,6 +69,16 @@ export const handleSubmit = (e) => (dispatch, getState) => {
   })
 }
 
+export const changeNoteOrder = (markId, order) => dispatch => {
+  dispatch({
+    type: actionTypes.CHANGE_NOTE_ORDER,
+    payload: {
+      markId: markId,
+      order: order,
+    }
+  })
+}
+
 
 const noteActions = {
   fetch: fetch,
@@ -76,6 +86,7 @@ const noteActions = {
   closeNew: closeNew,
   handleChange: handleChange,
   handleSubmit: handleSubmit,
+  changeNoteOrder: changeNoteOrder
 }
 
 export default noteActions

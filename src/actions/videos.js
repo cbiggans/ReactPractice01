@@ -1,5 +1,4 @@
 import actionTypes from './constants'
-import { dispatch } from 'redux'
 
 
 export const setVideoTime = (timestamp) => (dispatch) => {

@@ -38,7 +38,8 @@ class NoteTakerContainer extends React.Component {
         {noteTakerForm}
         <NoteList notes={this.props.notes}
                   currentMark={this.props.currentMark}
-                  handleTimestampClicked={this.props.setVideoTime} />
+                  handleTimestampClicked={this.props.setVideoTime} 
+                  changeNoteOrder={this.props.changeNoteOrder} />
       </div>
     )
   }
@@ -63,6 +64,7 @@ function mapDispatchToProps(dispatch) {
     handleSubmit: (e) => dispatch(actions.notes.handleSubmit(e)),
     setVideoTime: (timestamp) => dispatch(actions.videos.setVideoTime(timestamp)),
     completedTimeUpdate: () => dispatch(actions.videos.completedTimeUpdate()),
+    changeNoteOrder: (markId, order) => dispatch(actions.notes.changeNoteOrder(markId, order)),
   }
 }
 
