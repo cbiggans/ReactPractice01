@@ -54,11 +54,10 @@ class YoutubePlayerContainer extends React.Component {
 
   timedUpdateLoop() {
     var self = this
-    window.setTimeout(() => {
+    return window.setInterval(() => {
       var currentTime = self.getCurrentTime()
       console.debug(currentTime)
       self.props.updateSettings({currentTime: currentTime})
-      self.timedUpdateLoop()
     }, 5000)
   }
 
@@ -69,14 +68,14 @@ class YoutubePlayerContainer extends React.Component {
     window.addEventListener('keydown', this.handleKeypress, false)
     // Set an instance variable when done mounting so YoutubeAPI can render
     this.componentHasMounted = true
-    var self = this
 
-    this.timedUpdateLoop()
+    this.updateTimeInterval = this.timedUpdateLoop()
   }
 
   componentWillUnmount() {
     // window.removeEventListener('keypress', this.handleKeypress)
     window.removeEventListener('keydown', this.handleKeypress)
+    window.clearInterval(this.updateTimeInterval)
 
     this.componentHasMounted = false
   }

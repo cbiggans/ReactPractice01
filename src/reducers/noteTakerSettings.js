@@ -4,7 +4,7 @@ import actionTypes from '../actions/constants'
 const initialState = {
   newNoteEditorOpen: false,
   currentVideoId: '',
-  type: '',   // values like 'youtube' or other sites
+  markType: '',   // values like 'youtube' or other sites
   eventMode: 'videoPlayback',   // Current mode for keypress events and such
   playback: {
     currentTime: 0,

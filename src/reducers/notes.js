@@ -76,14 +76,18 @@ const notes = (state = initialState, action) => {
       } else {
         notesMap[markId] = notesMap[markId].slice()
       }
-      notesMap[markId].push(note)
-      notesMap[markId].sort((a, b) => {
-        if(state.settings.listOrder === 'descending') {
-          return b.timestamp - a.timestamp
-        } else {
-          return a.timestamp - b.timestamp
-        }
-      })
+
+      if(notesMap[markId].filter((item) => {return item.id === note.id}).length === 0) {
+        notesMap[markId].push(note)
+
+        notesMap[markId].sort((a, b) => {
+          if(state.settings.listOrder === 'descending') {
+            return b.timestamp - a.timestamp
+          } else {
+            return a.timestamp - b.timestamp
+          }
+        })
+      }
 
       return {
         ...state,
