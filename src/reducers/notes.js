@@ -66,12 +66,15 @@ const notes = (state = initialState, action) => {
       }
     case actionTypes.LOAD_NOTE:
       note = action.payload.note
+      note.key = note.id
       markId = note.markId
 
       notesMap = Object.assign({}, state.mapping)
 
       if(!(markId in notesMap)) {
         notesMap[markId] = []
+      } else {
+        notesMap[markId] = notesMap[markId].slice()
       }
       notesMap[markId].push(note)
       notesMap[markId].sort((a, b) => {

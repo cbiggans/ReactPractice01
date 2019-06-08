@@ -191,7 +191,7 @@ class YoutubePlayerContainer extends React.Component {
     // b -> bigger
     // m -> smaller
     // 
-    var keyCode = e.which;
+    // var keyCode = e.which;
     // console.log(e, keyCode, e.which)
     switch(e.key) {
       case(';'):  //  ;
@@ -246,7 +246,7 @@ class YoutubePlayerContainer extends React.Component {
   }
 
   newNoteKeypressMode(e) {
-    var keyCode = e.which;
+    // var keyCode = e.which;
     // console.log(e, keyCode, e.which)
 
     // If the alt key is pressed down, use videoPlaybackKeypress handler
@@ -296,7 +296,7 @@ class YoutubePlayerContainer extends React.Component {
   }
 
   loadNewVideo(videoId, e) {
-    console.log("-------------------CREATE YOUTUBE VIDEO PLAYER-------------------")
+    console.debug("-------------------CREATE YOUTUBE VIDEO PLAYER-------------------")
     this.YT = window['YT'];
     this.player = new window['YT'].Player('player', {
       videoId: videoId,
@@ -318,7 +318,7 @@ class YoutubePlayerContainer extends React.Component {
 
   render() {
     // if(this.props.currentMark.url.contains('youtube.com')
-    // console.log('===================RENDER()====================')
+    console.debug('===================RENDER()====================')
     var videoId = extractVideoId(this.props.currentMark.url)
 
     if(this.player && this.props.settings.playback.hasNewCurrentTime) {
