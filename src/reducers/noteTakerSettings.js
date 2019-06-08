@@ -19,6 +19,15 @@ const initialState = {
 
 const noteTakerSettings = (state = initialState, action) => {
   switch(action.type) {
+    case actionTypes.UPDATE_SETTINGS:
+      var playback = Object.assign({}, state.playback)
+      if('currentTime' in action.payload.data) {
+        playback.currentTime = action.payload.data.currentTime
+      }
+      return {
+        ...state,
+        playback: playback
+      }
     case actionTypes.SET_VIDEO_TIME:
       return {
         ...state,

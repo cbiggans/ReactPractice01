@@ -10,6 +10,15 @@ export const setVideoTime = (timestamp) => (dispatch) => {
   })
 }
 
+export const updateSettings = (data) => (dispatch) => {
+  dispatch({
+    type: actionTypes.UPDATE_SETTINGS,
+    payload: {
+      data: data,
+    }
+  })
+}
+
 export const completedTimeUpdate = () => (dispatch) => {
   dispatch({
     type: actionTypes.COMPLETED_TIME_UPDATE
@@ -19,6 +28,7 @@ export const completedTimeUpdate = () => (dispatch) => {
 const videoActions = {
   setVideoTime: setVideoTime,
   completedTimeUpdate: completedTimeUpdate,
+  updateSettings: updateSettings,
 }
 
 export default videoActions

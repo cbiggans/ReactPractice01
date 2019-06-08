@@ -9,7 +9,7 @@ function NoteTakerNoteForm(props) {
         <input type='text'
                name='timestamp'
                readOnly // Put this here for now to prevent warnings, change later
-               value={props.settings.playback.currentTime} />
+               value={props.newNote.timestamp} />
         <input type='text'
                name='newNoteText'
                autoFocus
