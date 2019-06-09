@@ -81,11 +81,19 @@ class YoutubePlayerContainer extends React.Component {
   }
 
   pauseVideo() {
-    if(!this.player) {
+    if(!this.player || !this.player.pauseVideo) {
       return
     }
 
     this.player.pauseVideo()
+  }
+
+  playVideo() {
+    if(!this.player || !this.player.playVideo) {
+      return
+    }
+
+    this.player.playVideo()
   }
 
   togglePlayback() {
@@ -97,7 +105,7 @@ class YoutubePlayerContainer extends React.Component {
       this.pauseVideo()
     } else {
       // play
-      this.player.playVideo()
+      this.playVideo()
     }
   }
 
@@ -258,19 +266,47 @@ class YoutubePlayerContainer extends React.Component {
   }
 
   newNoteKeypressMode(e) {
-    // var keyCode = e.which;
-    // console.log(e, keyCode, e.which)
+    var keyCode = e.which;
+    console.log(e, keyCode, e.which)
 
     // If the alt key is pressed down, use videoPlaybackKeypress handler
     if(e.altKey) {
+      switch(e.key) {
+        case('u'):
+        case('U'):
+          this.props.updateNewNote({
+            target: {
+              name: 'timestamp',
+              value: this.getCurrentTime()
+            }
+          })
+          return
+        case('P'):
+          this.setTime(this.props.newNote.timestamp)
+          this.playVideo()
+          // this.play()
+          return
+        default:
+          break
+      }
+
       this.videoPlaybackKeypressMode(e)
       return
     }
 
     switch(e.key) {
-      case(13): // Enter
-        if(e.shiftKey) {  // Shift Key down as well
-          console.log('Shift Key Down')
+      case('Enter'): // Enter
+        if(!e.shiftKey) {  // Shift Key down as well
+          console.log('Shift Key is not Down')
+          // TODO XXX: This is needed to submit the form, I should pass in the
+          //  id of the form to this event creation to make this better
+          // There could be a better way of doing this, could instead just call
+          //  the actual submit action (handleSubmit) instead probably to achieve
+          //  the exact same thing with less hack. Because I'm using react this is possible
+          // document.getElementById('newNoteForm').dispatchEvent(
+          //   new Event('submit')
+          // )
+          this.props.createNewNote(e)
         }
         break
       case('Escape'):

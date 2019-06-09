@@ -94,11 +94,12 @@ const notes = (state = initialState, action) => {
         mapping: notesMap,
       }
     case actionTypes.CHANGE_NEW_NOTE:
+      {}
       return {
         ...state,
         newNote: {
           ...state.newNote,
-          text: action.payload.text,
+          [action.payload.name]: action.payload.value,
         }
       }
     // Maybe characterize this as SUBMIT? Create may give impression

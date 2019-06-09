@@ -31,7 +31,10 @@ class NoteTakerContainer extends React.Component {
         <h1>Note Taking</h1>
         <YoutubePlayerContainer currentMark={this.props.currentMark}
                                 settings={this.props.settings}
+                                newNote={this.props.newNote}
                                 openNewNote={this.props.openNewNote}
+                                updateNewNote={this.props.handleChange}
+                                createNewNote={this.props.handleSubmit}
                                 bookmark={this.props.bookmark}
                                 closeNewNote={this.props.closeNewNote}
                                 updateSettings={this.props.updateSettings}

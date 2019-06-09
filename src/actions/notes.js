@@ -53,7 +53,7 @@ export const handleChange = (e) => dispatch => {
     type: actionTypes.CHANGE_NEW_NOTE,
     payload: {
       name: name,
-      text: value,
+      value: value,
     }
   })
 }
