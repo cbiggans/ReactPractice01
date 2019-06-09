@@ -2,6 +2,7 @@ import actionTypes from '../actions/constants'
 
 const initialState = {
   newNote: {
+    id: null,
     type: '',
     text: '',
     category: '',
@@ -20,6 +21,7 @@ const initialState = {
               //  This is done to help with Lazy-Loading & the NoSQL database relations
 }
 
+// TODO XXX: Refactor
 const notes = (state = initialState, action) => {
   var notesMap = {}
   var notesList = []
@@ -56,8 +58,16 @@ const notes = (state = initialState, action) => {
         ...state,
         newNote: {
           ...state.newNote,
+          // TODO XXX: Should take out setting timestamp here,
+          //  Should have an Update method dispatch separately for that
           timestamp: action.payload.timestamp,
         }
+      }
+    case actionTypes.EDIT_NOTE:
+      note = Object.assign({}, action.payload.note)
+      return {
+        ...state,
+        newNote: Object.assign({}, action.payload.note)
       }
     case actionTypes.CLOSE_NEW_NOTE:
       return {
@@ -94,7 +104,6 @@ const notes = (state = initialState, action) => {
         mapping: notesMap,
       }
     case actionTypes.CHANGE_NEW_NOTE:
-      {}
       return {
         ...state,
         newNote: {
@@ -126,6 +135,24 @@ const notes = (state = initialState, action) => {
         ...state,
         mapping: notesMap,
         newNote: Object.assign({}, initialState.newNote)
+      }
+    case actionTypes.UPDATE_NOTE:
+      notesList = state.mapping[action.payload.markId].slice()
+      notesList = notesList.map((item) => {
+        if(item.id === action.payload.note.id) {
+          return action.payload.note
+        }
+        return item
+      })
+      // TODO XXX: sort the list (Am able to change the timestamp)
+
+      return {
+        ...state,
+        mapping: {
+          ...state.mapping,
+          [action.payload.markId]: notesList,
+        },
+        newNote: Object.assign({}, initialState.newNote),
       }
     case actionTypes.DESTROY_NOTE:
       notesMap = Object.assign({}, state.mapping)

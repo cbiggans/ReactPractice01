@@ -8,7 +8,7 @@ function NoteTakerNoteForm(props) {
   return(
     <div>
       <h3>Test NOTE</h3>
-      <form onSubmit={props.handleSubmit} id="newNoteForm">
+      <form onSubmit={props.handleSubmit}>
         <input type='text'
                name='timestamp'
                readOnly // Put this here for now to prevent warnings, change later

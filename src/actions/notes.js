@@ -25,6 +25,15 @@ export const openNew = (currentTime) => dispatch => {
   })
 }
 
+export const edit = (note) => (dispatch, getState) => {
+  dispatch({
+    type: actionTypes.EDIT_NOTE,
+    payload: {
+      note: note,
+    }
+  })
+}
+
 export const createBookmark = (currentTime) => (dispatch, getState) => {
   const state = getState()
   const newBookmark = Object.assign({},
@@ -62,17 +71,30 @@ export const handleSubmit = (e) => (dispatch, getState) => {
   e.preventDefault()
 
   const state = getState()
-  services.notes.create(state.marks.currentMark.id,
-                        state.notes.newNote,
-                        (note) => {
-    dispatch({
-      type: actionTypes.CREATE_NEW_NOTE,
-      payload: {
-        'markId': state.marks.currentMark.id,
-        'note': note,
-      }
+  if(state.notes.newNote.id) {
+    services.notes.update(state.notes.newNote,
+                          (note) => {
+      dispatch({
+        type: actionTypes.UPDATE_NOTE,
+        payload: {
+          'markId': state.marks.currentMark.id,
+          'note': state.notes.newNote,
+        }
+      })
     })
-  })
+  } else {
+    services.notes.create(state.marks.currentMark.id,
+                          state.notes.newNote,
+                          (note) => {
+      dispatch({
+        type: actionTypes.CREATE_NEW_NOTE,
+        payload: {
+          'markId': state.marks.currentMark.id,
+          'note': note,
+        }
+      })
+    })
+  }
 }
 
 export const changeNoteOrder = (markId, order) => dispatch => {
@@ -101,6 +123,7 @@ export const destroy = (id, markId) => dispatch => {
 const noteActions = {
   fetch: fetch,
   openNew: openNew,
+  edit: edit,
   createBookmark: createBookmark,
   closeNew: closeNew,
   handleChange: handleChange,

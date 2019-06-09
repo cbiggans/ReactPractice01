@@ -1,5 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import EventKeyMapper from '../lib/eventKeyMapper'
+import VideoPlayerWrapper from '../lib/VideoPlayerWrapper'
 
 
 class YoutubePlayerContainer extends React.Component {
@@ -14,6 +16,12 @@ class YoutubePlayerContainer extends React.Component {
     this.componentHasMounted = false
     this.currentVideoId = ''
 
+    // var videoId = extractVideoId(this.props.currentMark.url)
+    console.log('CurrentURL: ', this.props.currentMark)
+    this.playerWrapper = new VideoPlayerWrapper({
+      url: this.props.currentMark.url})
+
+    this.eventKeyMapper = new EventKeyMapper(this, this.playerWrapper)
     // Check if this has been loaded yet.
     //  If it has, don't add this again
     if(!document.getElementById('youtube_iframe_api')) {
@@ -23,39 +31,12 @@ class YoutubePlayerContainer extends React.Component {
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
-
-    this.handleKeypress = this.handleKeypress.bind(this)
   }
-
-	onPlayerStateChange(event) {
-    // console.log(event)
-    // switch (event.data) {
-    //   case window['YT'].PlayerState.PLAYING:
-    //     if (this.cleanTime() === 0) {
-    //       console.log('started ' + this.cleanTime());
-    //     } else {
-    //       console.log('playing ' + this.cleanTime())
-    //     };
-    //     break;
-    //   case window['YT'].PlayerState.PAUSED:
-    //     if (this.player.getDuration() - this.getCurrentTime() !== 0) {
-    //       console.log('paused @ ' + this.cleanTime());
-    //     };
-    //     break;
-    //   case window['YT'].PlayerState.ENDED:
-    //     console.log('ended ');
-    //     break;
-    //   // case window['YT'].PlayerState.BUFFERING:
-    //   //   break
-		// 	default:
-		// 		return
-    // };
-  };
 
   timedUpdateLoop() {
     var self = this
     return window.setInterval(() => {
-      var currentTime = self.getCurrentTime()
+      var currentTime = self.playerWrapper.getCurrentTime()
       console.debug(currentTime)
       self.props.updateSettings({currentTime: currentTime})
     }, 5000)
@@ -65,316 +46,35 @@ class YoutubePlayerContainer extends React.Component {
     // Add event listeners
     // window.addEventListener('keypress', this.handleKeypress, false)
     // Keydown handler needs to be used if want to use ctrl/alt
-    window.addEventListener('keydown', this.handleKeypress, false)
+    // window.addEventListener('keydown', this.handleKeypress, false)
     // Set an instance variable when done mounting so YoutubeAPI can render
     this.componentHasMounted = true
+    this.eventKeyMapper.addEventListener()
 
     this.updateTimeInterval = this.timedUpdateLoop()
   }
 
   componentWillUnmount() {
     // window.removeEventListener('keypress', this.handleKeypress)
-    window.removeEventListener('keydown', this.handleKeypress)
+    // window.removeEventListener('keydown', this.handleKeypress)
+    this.eventKeyMapper.removeEventListener()
     window.clearInterval(this.updateTimeInterval)
 
     this.componentHasMounted = false
   }
 
-  pauseVideo() {
-    if(!this.player || !this.player.pauseVideo) {
-      return
-    }
-
-    this.player.pauseVideo()
-  }
-
-  playVideo() {
-    if(!this.player || !this.player.playVideo) {
-      return
-    }
-
-    this.player.playVideo()
-  }
-
-  togglePlayback() {
-    if(!this.player)
-      return
-
-    if(this.player.getPlayerState() === 1) {
-      // pause
-      this.pauseVideo()
-    } else {
-      // play
-      this.playVideo()
-    }
-  }
-
-  getCurrentTime() {
-    if(!this.player || !this.player.getCurrentTime)
-      return 0
-
-    return this.player.getCurrentTime()
-  }
-
-  jumpForward(seconds) {
-    this.jump(seconds)
-  }
-
-  jumpBack(seconds) {
-    this.jump(seconds * -1)
-  }
-
-  jump(seconds) {
-    if(!this.player)
-      return
-
-    var currentTime = this.getCurrentTime()
-    this.player.seekTo(currentTime + seconds)
-  }
-
-  setTime(seconds) {
-    if(!this.player)
-      return
-
-    this.player.seekTo(seconds)
-  }
-
-  setPlaybackSpeed(delta) {
-    if(!this.player)
-      return
-
-    const availablePlaybackRates = this.player.getAvailablePlaybackRates()
-
-    let currentPlaybackRate = this.player.getPlaybackRate()
-
-    let newSpeed = currentPlaybackRate + delta
-    this.player.setPlaybackRate(newSpeed)
-
-    if(availablePlaybackRates.includes(newSpeed)) {
-      return newSpeed
-    }
-
-    return newSpeed
-  }
-
-  changeVideoSize(direction) {
-    if(!this.player)
-      return
-    const suggestedPlaybackSizes = [{
-        width: 320,
-        height: 240,
-      }, {
-        width: 640,
-        height: 360,
-      }, {
-        width: 853,
-        height: 480,
-      }, {
-        width: 1280,
-        height: 720,
-      }, {
-        width: 1920,
-        height: 1080,
-      }, {
-        width: 1920,
-        height: 1080,
-      }
-    ]
-
-    if(!this.currentSize) {
-      this.currentSize = 1
-    }
-
-    if(direction === 'bigger' && this.currentSize < suggestedPlaybackSizes.length - 1) {
-        this.currentSize++;
-    } else if(direction === 'smaller' && this.currentSize > 0) {
-        this.currentSize--;
-    }
-
-    const newSize = {
-      width: suggestedPlaybackSizes[this.currentSize].width,
-      height: suggestedPlaybackSizes[this.currentSize].height,
-    }
-    this.player.setSize(newSize.width, newSize.height)
-  }
-
-  videoPlaybackKeypressMode(e) {
-    // n -> Add new comment
-    // k -> pause video
-    // j -> back predefined # of seconds (2 seconds by default)
-    // l -> forward predefined # of seconds (2 seconds by default)
-    // ; -> forward longer predefined # of seconds (10 seconds by default)
-    // h -> back longer predefined # of seconds (10 seconds by default)
-    // f -> faster .25X
-    // s -> slower .25X
-    // esc -> exit out of write mode & back to video play control mode
-    // b -> bigger
-    // m -> smaller
-    // 
-    // var keyCode = e.which;
-    // console.log(e, keyCode, e.which)
-    switch(e.key) {
-      case(';'):  //  ;
-        // Jump Forward 10 seconds
-        this.jumpForward(10)
-        break
-      case('h'):  //  h
-        // Jump Back 10 seconds
-        this.jumpBack(10)
-        break
-      case('i'):  //  i
-        // Add New note
-        this.props.openNewNote(this.getCurrentTime())
-        this.pauseVideo()
-        e.preventDefault()
-        break
-      case('j'):  // j
-        // Jump back 2 seconds
-        this.jumpBack(2)
-        break
-      case('k'):  //  k
-        // Toggle Video
-        this.togglePlayback()
-        break
-      case('l'):  //  l
-        // Jump Forward 2 seconds
-        this.jumpForward(2)
-        break
-      case('b'):  //  l
-        // Jump Forward 2 seconds
-        this.props.bookmark(this.getCurrentTime())
-        break
-      case('S'):  //  S
-        // Go slower
-        this.setPlaybackSpeed(-.25)
-        break
-      case('F'):  //  f
-        // Go Faster
-        this.setPlaybackSpeed(.25)
-        break
-      case('B'):  //  b
-        // Make the video bigger
-        this.changeVideoSize('bigger')
-        break
-      case('M'):  //  m (minimize)
-        // Make the Video Smaller
-        this.changeVideoSize('smaller')
-        break
-      default:
-        break
-    }
-  }
-
-  newNoteKeypressMode(e) {
-    var keyCode = e.which;
-    console.log(e, keyCode, e.which)
-
-    // If the alt key is pressed down, use videoPlaybackKeypress handler
-    if(e.altKey) {
-      switch(e.key) {
-        case('u'):
-        case('U'):
-          this.props.updateNewNote({
-            target: {
-              name: 'timestamp',
-              value: this.getCurrentTime()
-            }
-          })
-          return
-        case('P'):
-          this.setTime(this.props.newNote.timestamp)
-          this.playVideo()
-          // this.play()
-          return
-        default:
-          break
-      }
-
-      this.videoPlaybackKeypressMode(e)
-      return
-    }
-
-    switch(e.key) {
-      case('Enter'): // Enter
-        if(!e.shiftKey) {  // Shift Key down as well
-          console.log('Shift Key is not Down')
-          // TODO XXX: This is needed to submit the form, I should pass in the
-          //  id of the form to this event creation to make this better
-          // There could be a better way of doing this, could instead just call
-          //  the actual submit action (handleSubmit) instead probably to achieve
-          //  the exact same thing with less hack. Because I'm using react this is possible
-          // document.getElementById('newNoteForm').dispatchEvent(
-          //   new Event('submit')
-          // )
-          this.props.createNewNote(e)
-        }
-        break
-      case('Escape'):
-        this.props.closeNewNote()
-        break
-      default:
-        break
-    }
-  }
-
-  handleKeypress(e) {
-    if(this.props.settings.eventMode === 'videoPlayback') {
-      this.videoPlaybackKeypressMode(e)
-    } else if(this.props.settings.eventMode === 'newNote') {
-      this.newNoteKeypressMode(e)
-    }
-  }
-
 	cleanTime() {
-    return Math.round(this.getCurrentTime())
-  }
-
-  onPlayerError(event) {
-    switch (event.data) {
-      case 2:
-        console.log('' + this.currentVideoId)
-        break;
-      case 100:
-        break;
-      case 101 || 150:
-        break;
-      default:
-        break;
-    };
-  }
-
-  loadNewVideo(videoId, e) {
-    console.debug("-------------------CREATE YOUTUBE VIDEO PLAYER-------------------")
-    this.YT = window['YT'];
-    this.player = new window['YT'].Player('player', {
-      videoId: videoId,
-      modestbranding: 1,
-      start: 45,
-      events: {
-        'onStateChange': this.onPlayerStateChange.bind(this),
-        'onError': this.onPlayerError.bind(this),
-        'onReady': (e) => {
-          return true;
-          // if (!this.reframed) {
-          //   this.reframed = true;
-          //   reframe(e.target.a);
-          // }
-        }
-      }
-    });
+    return Math.round(this.playerWrapper.getCurrentTime())
   }
 
   render() {
-    // if(this.props.currentMark.url.contains('youtube.com')
     console.debug('===================RENDER()====================')
     var videoId = extractVideoId(this.props.currentMark.url)
 
-    if(this.player && this.props.settings.playback.hasNewCurrentTime) {
+    if(this.playerWrapper && this.props.settings.playback.hasNewCurrentTime) {
       this.setTime(this.props.settings.playback.currentTime)
       this.props.completedTimeUpdate()
     }
-
-    // this.videoId = '1cH2cerUpMQ' //video id
 
     if (videoId && this.componentHasMounted) {
       if (videoId !== this.currentVideoId) {
@@ -384,15 +84,17 @@ class YoutubePlayerContainer extends React.Component {
         //  This should only mount if component is mounted, but I need to make sure
         //  that we have the videoId, so there needs to be an action run, or we need
         //  to check if the video has been created
+        this.playerWrapper.loadNewData({url: this.props.currentMark.url})
         if(window.YT) {
-          this.loadNewVideo(videoId)
+          this.playerWrapper.loadNewVideo()
         } else {
           window['onYouTubeIframeAPIReady'] = (e) => {
-            this.loadNewVideo(videoId, e)
+            this.playerWrapper.loadNewVideo(e)
           }
         }
       }
     }
+    console.log('Other CurrentMark: ', this.props.currentMark)
 
     return (
       <div>
@@ -404,6 +106,7 @@ class YoutubePlayerContainer extends React.Component {
 
 }
 
+// TODO XXX: Remove this and import
 function extractVideoId(url) {
     // e.g. url = https://www.youtube.com/watch?v=VUyBY72mwrQ
     if(url && url.includes('youtube.com')) {
@@ -418,25 +121,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(YoutubePlayerContainer)
-
-/*
-
-  var youtubeVidURL = 'http://www.youtube.com/embed/' + this.videoId + '?enablejsapi=1'
-  <iframe id='player'
-          type='text/html'
-          width="640"
-          height="390"
-          src={youtubeVidURL}
-          frameBorder="0"></iframe>
-*/
-
-/*
-https://developers.google.com/youtube/iframe_api_reference#loadVideoById
-
-this.player.loadVideoById({
-  'videoId': 'bHQqvYy5KYo',
-  'startSeconds': 5,
-  'endSeconds': 60,
-  'suggestedQuality': 'large'
-})
-*/

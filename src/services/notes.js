@@ -32,6 +32,13 @@ class NoteService {
     })
   }
 
+  update(note, onSuccess) {
+    this.collection.doc(note.id).update(note)
+    .then((e) => {
+      onSuccess(e)
+    })
+  }
+
   destroy(id, onSuccess) {
     // NOTE: Does not delete sub collections
     this.collection.doc(id).delete()

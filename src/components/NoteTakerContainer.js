@@ -29,6 +29,9 @@ class NoteTakerContainer extends React.Component {
     return (
       <div>
         <h1>Note Taking</h1>
+        <h3>Source: </h3><a href={this.props.currentMark.url} target='blank'>{this.props.currentMark.title}</a>
+        <p>Description: {this.props.currentMark.description}</p>
+        <iframe src={this.props.currentMark.url} title={this.props.currentMark.title}></iframe>
         <YoutubePlayerContainer currentMark={this.props.currentMark}
                                 settings={this.props.settings}
                                 newNote={this.props.newNote}
@@ -43,6 +46,7 @@ class NoteTakerContainer extends React.Component {
         <NoteList notes={this.props.notes}
                   currentMark={this.props.currentMark}
                   handleTimestampClicked={this.props.setVideoTime} 
+                  editNote={this.props.editNote}
                   changeNoteOrder={this.props.changeNoteOrder}
                   handleDestroyNote={this.props.destroyNote} />
       </div>
@@ -63,6 +67,7 @@ function mapDispatchToProps(dispatch) {
   return {
     setCurrentMark: (id) => dispatch(actions.marks.setCurrentMark(id)),
     openNewNote: (currentTime) => dispatch(actions.notes.openNew(currentTime)),
+    editNote: (note) => dispatch(actions.notes.edit(note)),
     bookmark: (currentTime) => dispatch(actions.notes.createBookmark(currentTime)),
     closeNewNote: () => dispatch(actions.notes.closeNew()),
     destroyNote: (id, markId) => dispatch(actions.notes.destroy(id, markId)),

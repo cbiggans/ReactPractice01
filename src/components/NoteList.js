@@ -1,24 +1,6 @@
 import React from 'react'
+import NoteItem from './NoteItem'
 
-function cleanTime(timestamp) {
-  // Verified this w/ this stackoverflow: https://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
-  var num = Math.round(timestamp)
-  var hours = Math.floor(num/3600)
-  var minutes = Math.floor((num%3600)/60)
-  var seconds = num%60
-
-  let result = ''
-  if(hours > 0 ) {
-    if(hours < 10) {hours = "0" + hours}
-    result = hours + ':'
-  }
-
-  if(minutes < 10) {minutes = "0" + minutes}
-  if(seconds < 10) {seconds = "0" + seconds}
-
-  result = result + minutes + ':' + seconds
-  return result
-}
 
 function NoteList(props) {
   const notesMapping = props.notes.mapping
@@ -28,15 +10,14 @@ function NoteList(props) {
     notes = notesMapping[props.currentMark.id]
   }
 
+  // TODO XXX: The elements need to be put in their own component NoteItem
   notes = notes.map((note) => {
-    return (
-      <div key={note.key}>
-        <button onClick={() => {props.handleTimestampClicked(note.timestamp)}}>
-          {cleanTime(note.timestamp)}
-        </button>: {note.text}
-        <button onClick={() => {props.handleDestroyNote(note.id, props.currentMark.id)}}>Destroy</button>
-      </div>
-    )
+    return <NoteItem key={note.key}
+                     note={note}
+                     currentMark={props.currentMark}
+                     handleTimestampClicked={props.handleTimestampClicked}
+                     editNote={props.editNote}
+                     handleDestroyNote={props.handleDestroyNote} />
   })
   return (
     <div>

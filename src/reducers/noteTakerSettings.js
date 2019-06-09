@@ -55,6 +55,12 @@ const noteTakerSettings = (state = initialState, action) => {
           currentTime: action.payload.timestamp,
         }
       }
+    case actionTypes.EDIT_NOTE: // Maybe add 'FLOW'?
+      return {
+        ...state,
+        newNoteEditorOpen: true,
+        eventMode: 'newNote', // TODO XXX: Make the value editNote mode instead
+      }
     case actionTypes.CLOSE_NEW_NOTE: // Maybe add 'FLOW'?
       return {
         ...state,
@@ -62,6 +68,7 @@ const noteTakerSettings = (state = initialState, action) => {
         eventMode: 'videoPlayback',
       }
     case actionTypes.CREATE_NEW_NOTE:
+    case actionTypes.UPDATE_NOTE:
       return {
         ...state,
         newNoteEditorOpen: false,
