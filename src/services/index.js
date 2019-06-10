@@ -24,7 +24,30 @@ const services = {
   notes: new NoteService(),
 }
 
-// const updateFields = () => {
+// const updateMarkFields = () => {
+//   var mark
+// 
+//   services.marks.collection.get()
+//   .then((markSnapshotDocs) => {
+//     markSnapshotDocs.forEach((markDoc) => {
+//       mark = markDoc.data()
+// 
+//       mark.accessTimes = []
+//       mark.CreatedAt = Date.now()
+//       mark.ModifiedAt = Date.now()
+//       mark.DeletedAt = null
+// 
+//       console.log('Mark To Update: ', mark)
+//       services.marks.update(markDoc.id, mark, (mark) => {
+//         console.log('Mark Updated: ', mark)
+//       })
+//     })
+//   })
+// }
+// 
+// updateMarkFields()
+
+// const updateNoteFields = () => {
 //   var note
 // 
 //   services.notes.collection.get()
@@ -47,7 +70,7 @@ const services = {
 //   })
 // }
 // 
-// updateFields()
+// updateNoteFields()
 
 // Update the markId on notes
 // var newMarkId = 'bbw0qvi8TWizol1iojFq'
