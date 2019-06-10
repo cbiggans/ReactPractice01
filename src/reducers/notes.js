@@ -103,19 +103,12 @@ const notes = (state = initialState, action) => {
         ...state,
         mapping: notesMap,
       }
-    case actionTypes.CHANGE_NEW_NOTE:
-      return {
-        ...state,
-        newNote: {
-          ...state.newNote,
-          [action.payload.name]: action.payload.value,
-        }
-      }
     // Maybe characterize this as SUBMIT? Create may give impression
     //  that it's just being created in database and not from a form
     case actionTypes.CREATE_NEW_NOTE:
       
       notesMap = Object.assign({}, state.mapping)
+      action.payload.note.key = action.payload.note.id
 
       if(!(action.payload.markId in notesMap)) {
         notesMap[action.payload.markId] = []
@@ -135,6 +128,14 @@ const notes = (state = initialState, action) => {
         ...state,
         mapping: notesMap,
         newNote: Object.assign({}, initialState.newNote)
+      }
+    case actionTypes.CHANGE_NEW_NOTE:
+      return {
+        ...state,
+        newNote: {
+          ...state.newNote,
+          [action.payload.name]: action.payload.value,
+        }
       }
     case actionTypes.UPDATE_NOTE:
       notesList = state.mapping[action.payload.markId].slice()

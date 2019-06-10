@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import EventKeyMapper from '../lib/eventKeyMapper'
-import VideoPlayerWrapper from '../lib/VideoPlayerWrapper'
 
 
 class YoutubePlayerContainer extends React.Component {
@@ -18,8 +17,7 @@ class YoutubePlayerContainer extends React.Component {
 
     // var videoId = extractVideoId(this.props.currentMark.url)
     console.log('CurrentURL: ', this.props.currentMark)
-    this.playerWrapper = new VideoPlayerWrapper({
-      url: this.props.currentMark.url})
+    this.playerWrapper = this.props.playerWrapper
 
     this.eventKeyMapper = new EventKeyMapper(this, this.playerWrapper)
     // Check if this has been loaded yet.
@@ -37,7 +35,6 @@ class YoutubePlayerContainer extends React.Component {
     var self = this
     return window.setInterval(() => {
       var currentTime = self.playerWrapper.getCurrentTime()
-      console.debug(currentTime)
       self.props.updateSettings({currentTime: currentTime})
     }, 5000)
   }
@@ -55,8 +52,6 @@ class YoutubePlayerContainer extends React.Component {
   }
 
   componentWillUnmount() {
-    // window.removeEventListener('keypress', this.handleKeypress)
-    // window.removeEventListener('keydown', this.handleKeypress)
     this.eventKeyMapper.removeEventListener()
     window.clearInterval(this.updateTimeInterval)
 
@@ -68,9 +63,12 @@ class YoutubePlayerContainer extends React.Component {
   }
 
   render() {
-    console.debug('===================RENDER()====================')
     var videoId = extractVideoId(this.props.currentMark.url)
 
+    // TODO XXX: It would be nice if this were update player settings instead of just
+    //  hasNewCurrentTime so that it could be reused to control more than just currentTime
+    //  Would be good to control stepping/jumping time with this as well so the
+    //  Key event class wouldn't have to modify this instance directly
     if(this.playerWrapper && this.props.settings.playback.hasNewCurrentTime) {
       this.setTime(this.props.settings.playback.currentTime)
       this.props.completedTimeUpdate()
@@ -94,11 +92,9 @@ class YoutubePlayerContainer extends React.Component {
         }
       }
     }
-    console.log('Other CurrentMark: ', this.props.currentMark)
 
     return (
       <div>
-        <div>Let's take some notes!</div>
         <div id='player'></div>
       </div>
     )

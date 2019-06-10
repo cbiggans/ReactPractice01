@@ -24,4 +24,38 @@ const services = {
   notes: new NoteService(),
 }
 
+// const updateFields = () => {
+//   var note
+// 
+//   services.notes.collection.get()
+//   .then((noteSnapshotDocs) => {
+//     noteSnapshotDocs.forEach((noteDoc) => {
+//       note = noteDoc.data()
+// 
+//       note.id = noteDoc.id
+//       note.timestampStart = note.timestamp
+//       note.timestampEnd = null
+//       note.timestampCreatedAt = Date.now()
+//       note.timestampModifiedAt = Date.now()
+//       note.timestampDeletedAt = null
+// 
+//       console.log('Note To Update: ', note)
+//       services.notes.update(note, (note) => {
+//         console.log('Note Updated: ', note)
+//       })
+//     })
+//   })
+// }
+// 
+// updateFields()
+
+// Update the markId on notes
+// var newMarkId = 'bbw0qvi8TWizol1iojFq'
+// services.notes.index(["C2TWsbjQ0nEoUk4UMVQ2"], (notes) => {
+//   notes.map((note) => {
+//     note.markId = newMarkId
+//     services.notes.update(note, () => {})
+//   })
+// })
+
 export default services

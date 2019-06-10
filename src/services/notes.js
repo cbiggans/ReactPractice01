@@ -1,4 +1,5 @@
 import { db } from './'
+import { currentUTCTime } from '../lib/time'
 
 class NoteService {
 	constructor() {
@@ -25,6 +26,8 @@ class NoteService {
 
   create(markId, note, onSuccess) {
     note.markId = markId
+    note.timestampCreatedAt = currentUTCTime()
+    note.timestampModifiedAt = currentUTCTime()
     this.collection.add(note)
     .then((ref) => {
       note.id = ref.id

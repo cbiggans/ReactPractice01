@@ -31,10 +31,7 @@ class VideoPlayerWrapper extends Object {
   }
 
   loadNewVideo(e) {
-    console.debug("-------------------CREATE YOUTUBE VIDEO PLAYER-------------------")
     this.YT = window['YT'];
-    console.debug('URL: ', this.url)
-    console.debug('VideoID: ', this.videoId)
     this.player = new window['YT'].Player('player', {
       videoId: this.videoId,
       modestbranding: 1,

@@ -48,6 +48,7 @@ export const load = (e) => dispatch => {
 
 export const setCurrentMark = (id) => dispatch => {
   services.marks.get(id, (mark) => {
+    mark.id = id
     dispatch({
       type: actionTypes.SET_CURRENT_MARK,
       payload: {

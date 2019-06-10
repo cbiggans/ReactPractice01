@@ -4,8 +4,17 @@ import actions from '../actions/'
 import YoutubePlayerContainer from './YoutubePlayerContainer'
 import NoteTakerNoteForm from './NoteTakerNoteForm'
 import NoteList from './NoteList'
+import VideoPlayerWrapper from '../lib/VideoPlayerWrapper'
 
 class NoteTakerContainer extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.playerWrapper = new VideoPlayerWrapper({
+      url: props.currentMark.url
+    })
+  }
 
   componentDidMount() {
     var markId = this.props.match.params.id
@@ -23,7 +32,7 @@ class NoteTakerContainer extends React.Component {
                                          handleChange={this.props.handleChange}
                                          handleSubmit={this.props.handleSubmit} />
     } else {
-      noteTakerForm = <p>Note</p>
+      noteTakerForm = <button onClick={() => this.props.openNewNote(this.playerWrapper.getCurrentTime())}>ADD NOTE</button>
     }
 
     return (
@@ -31,7 +40,6 @@ class NoteTakerContainer extends React.Component {
         <h1>Note Taking</h1>
         <h3>Source: </h3><a href={this.props.currentMark.url} target='blank'>{this.props.currentMark.title}</a>
         <p>Description: {this.props.currentMark.description}</p>
-        <iframe src={this.props.currentMark.url} title={this.props.currentMark.title}></iframe>
         <YoutubePlayerContainer currentMark={this.props.currentMark}
                                 settings={this.props.settings}
                                 newNote={this.props.newNote}
@@ -41,7 +49,8 @@ class NoteTakerContainer extends React.Component {
                                 bookmark={this.props.bookmark}
                                 closeNewNote={this.props.closeNewNote}
                                 updateSettings={this.props.updateSettings}
-                                completedTimeUpdate={this.props.completedTimeUpdate} />
+                                completedTimeUpdate={this.props.completedTimeUpdate}
+                                playerWrapper={this.playerWrapper} />
         {noteTakerForm}
         <NoteList notes={this.props.notes}
                   currentMark={this.props.currentMark}
