@@ -1,5 +1,6 @@
 import actionTypes from './constants'
 import services from '../services/'
+import { currentUTCTime } from '../lib/time'
 
 
 /*
@@ -19,6 +20,72 @@ export const handleSubmit = (e) => (dispatch, getState) => {
       }
     })
   })
+}
+
+export const handleOpenManyMarkInput = () => (dispatch) => {
+  dispatch({
+    type: actionTypes.OPEN_MANY_MARK_INPUT,
+  })
+}
+
+export const handleCloseManyMarkInput = () => (dispatch) => {
+  dispatch({
+    type: actionTypes.CLEAR_MANY_MARK_INPUT,
+  })
+  dispatch({
+    type: actionTypes.CLOSE_MANY_MARK_INPUT,
+  })
+}
+
+export const handleMarkInputterChange = (e) => dispatch => {
+  const { name, value } = e.target
+
+  dispatch({
+    type: actionTypes.UPDATE_MANY_MARK_INPUT,
+    payload: {
+      name: name,
+      value: value,
+    }
+  })
+}
+
+export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
+  e.preventDefault()
+
+  var newMark
+  const state = getState()
+  const createdAt = currentUTCTime()
+  const modifiedAt = currentUTCTime()
+
+  const urls = state.marks.markInputter.split('\n')
+
+  urls.map(url => {
+    newMark = {
+      'createdAt': createdAt,
+      'modifiedAt': modifiedAt,
+      'category': '',
+      'description': '',
+      'tags': '',
+      'title': 'TMP NAME',
+      'type': '',
+      'url': url,
+    }
+    services.marks.create(newMark, (mark) => {
+      dispatch({
+        type: actionTypes.ADD_MARK,
+        payload: {
+          'mark': mark
+        }
+      })
+    })
+  })
+
+  dispatch({
+    type: actionTypes.SUBMIT_MANY_MARK_INPUT,
+  })
+  // dispatch({
+  //   type: actionTypes.CLEAR_MANY_MARK_INPUT,
+  // })
 }
 
 export const handleChange = (e) => dispatch => {
@@ -75,6 +142,9 @@ const markActions = {
   load: load,
   setCurrentMark: setCurrentMark,
   destroy: destroy,
+  handleOpenManyMarkInput: handleOpenManyMarkInput,
+  handleMarkInputterChange: handleMarkInputterChange,
+  handleManyMarkInputterSubmit: handleManyMarkInputterSubmit,
 }
 
 export default markActions

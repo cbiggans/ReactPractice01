@@ -14,13 +14,48 @@ const initialState = {
   list: [],
   nextMark: Object.assign({}, emptyMark),
   currentMark: Object.assign({}, emptyMark),
+  markInputter: '',
+  displaySettings: {
+    manyMarkInputIsOpen: false,
+  }
 }
 
 
 const marks = (state = initialState, action) => {
   var newMarks = []
+  var urls
 
   switch(action.type) {
+    case actionTypes.OPEN_MANY_MARK_INPUT:
+      return {
+        ...state,
+        displaySettings: {
+          ...state.displaySettings,
+          manyMarkInputIsOpen: true,
+        }
+      }
+    case actionTypes.CLOSE_MANY_MARK_INPUT:
+      return {
+        ...state,
+        displaySettings: {
+          ...state.displaySettings,
+          manyMarkInputIsOpen: false,
+        }
+      }
+    case actionTypes.CLEAR_MANY_MARK_INPUT:
+      return {
+        ...state,
+        markInputter: '',
+      }
+    case actionTypes.UPDATE_MANY_MARK_INPUT:
+      return {
+        ...state,
+        markInputter: action.payload.value,
+      }
+    case actionTypes.SUBMIT_MANY_MARK_INPUT:
+      return {
+        ...state
+      }
     case actionTypes.LOAD_MARK:
       newMarks = state.list.slice()
       newMarks.push(action.payload.mark)
@@ -49,6 +84,15 @@ const marks = (state = initialState, action) => {
         nextMark: newNextMark,
       }
     // UPDATE_MARK
+    case actionTypes.ADD_MARK:
+      newMarks = state.list.slice()
+
+      newMarks.push(Object.assign({},
+                                  action.payload.mark))
+      return {
+        ...state,
+        list: newMarks,
+      }
     case actionTypes.ADD_NEXT_MARK:
       newMarks = state.list.slice()
 

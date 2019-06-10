@@ -11,12 +11,33 @@ class MarkContainer extends React.Component{
       this.props.load()
     }
   }
+
   render() {
+    var manyMarkInputter
+    if(this.props.displaySettings.manyMarkInputIsOpen) {
+      manyMarkInputter = (
+        <div>
+          <form onSubmit={this.props.handleManyMarkInputterSubmit}>
+            <textarea type='text'
+                      name='markInputter'
+                      autoFocus
+                      value={this.props.markInputter}
+                      onChange={this.props.handleMarkInputterChange} />
+            <button type='submit'>SUBMIT</button>
+          </form>
+          <button onClick={this.props.handleCloseManyMarkInput}>CLOSE</button>
+        </div>
+      )
+    } else {
+      manyMarkInputter = <button onClick={this.props.handleOpenManyMarkInput}>ADD MANY MARKS</button>
+    }
+
     return (
       <div>
         <MarkForm nextMark={this.props.nextMark}
                   handleChange={this.props.handleChange}
                   handleSubmit={this.props.handleSubmit} />
+        {manyMarkInputter}
         <MarkList marks={this.props.marks} 
                   destroyHandler={this.props.destroyHandler} />
       </div>
@@ -28,6 +49,8 @@ function mapStateToProps(state) {
   return {
     marks: state.marks.list,
     nextMark: state.marks.nextMark,
+    displaySettings: state.marks.displaySettings,
+    markInputter: state.marks.markInputter,
   }
 }
 
@@ -37,6 +60,10 @@ function mapDispatchToProps(dispatch) {
     handleSubmit: (e) => dispatch(actions.marks.handleSubmit(e)),
     handleChange: (e) => dispatch(actions.marks.handleChange(e)),
     destroyHandler: (id) => dispatch(actions.marks.destroy(id)),
+    handleOpenManyMarkInput: () => dispatch(actions.marks.handleOpenManyMarkInput()),
+    handleCloseManyMarkInput: () => dispatch(actions.marks.handleCloseManyMarkInput()),
+    handleMarkInputterChange: (e) => dispatch(actions.marks.handleMarkInputterChange(e)),
+    handleManyMarkInputterSubmit: (e) => dispatch(actions.marks.handleManyMarkInputterSubmit(e)),
   }
 }
 
