@@ -3,6 +3,8 @@ import MarkForm from './MarkForm'
 import MarkList from './MarkList'
 import { connect } from 'react-redux'
 import actions from '../actions/'
+// I'll have to probably create a node server w/ a simple route that scrapes the data
+// import { load } from 'cheerio'
 
 
 class MarkContainer extends React.Component{
@@ -10,6 +12,10 @@ class MarkContainer extends React.Component{
     if(this.props.marks.length ===  0) {
       this.props.load()
     }
+    // var $ = load('https://github.com/')
+    // var $ = load('https://medium.com/data-scraper-tips-tricks/scraping-data-with-javascript-in-3-minutes-8a7cf8275b31')
+    // debugger
+    // var a = 10
   }
 
   render() {
