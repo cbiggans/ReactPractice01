@@ -9,37 +9,22 @@ import { get } from 'request'
 
 
 function getWebsiteTitle(url) {
-  fetch('https://localhost.local.dev/scrape_url/', {
+  fetch('/scrape_url/', {
     method: 'POST',
     headers: {
-      // 'Accept': 'text/plain',
       'Accept': 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded', // Important
-      // 'Content-Type': 'text/plain'
     },
-    mode: 'no-cors',
-    // body: 'url=' + url,
     body: JSON.stringify({
         url: url,
     })
   })
   .then((response) => {
-    console.log('Response: ', response)
-    // response.blob()
-    // .then((b) => {
-    //   // debugger
-    //   console.log('Blob: ', b)
-    // })
-    // response.text()
-    // .then((t) => {
-    //   // debugger
-    //   console.log('Text: ', t)
-    // })
     return response.json()
   })
-  // .then((data) => {
-  //   console.log(data)
-  // })
+  .then((data) => {
+    console.log(data)
+  })
 }
 
 
@@ -49,8 +34,8 @@ class MarkContainer extends React.Component{
       this.props.load()
     }
     // var url = 'https://medium.com/data-scraper-tips-tricks/scraping-data-with-javascript-in-3-minutes-8a7cf8275b31'
-    // var url = 'https://github.com/'
-    // getWebsiteTitle(url)
+    var url = 'https://github.com/'
+    getWebsiteTitle(url)
   }
 
   render() {

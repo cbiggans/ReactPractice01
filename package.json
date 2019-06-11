@@ -2,6 +2,7 @@
   "name": "tutorial_17_01_note_site_react_redux",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "firebase": "^6.1.0",
