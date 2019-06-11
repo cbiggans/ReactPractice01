@@ -4,7 +4,43 @@ import MarkList from './MarkList'
 import { connect } from 'react-redux'
 import actions from '../actions/'
 // I'll have to probably create a node server w/ a simple route that scrapes the data
-// import { load } from 'cheerio'
+import { load } from 'cheerio'
+import { get } from 'request'
+
+
+function getWebsiteTitle(url) {
+  fetch('https://localhost.local.dev/scrape_url/', {
+    method: 'POST',
+    headers: {
+      // 'Accept': 'text/plain',
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded', // Important
+      // 'Content-Type': 'text/plain'
+    },
+    mode: 'no-cors',
+    // body: 'url=' + url,
+    body: JSON.stringify({
+        url: url,
+    })
+  })
+  .then((response) => {
+    console.log('Response: ', response)
+    // response.blob()
+    // .then((b) => {
+    //   // debugger
+    //   console.log('Blob: ', b)
+    // })
+    // response.text()
+    // .then((t) => {
+    //   // debugger
+    //   console.log('Text: ', t)
+    // })
+    return response.json()
+  })
+  // .then((data) => {
+  //   console.log(data)
+  // })
+}
 
 
 class MarkContainer extends React.Component{
@@ -12,10 +48,9 @@ class MarkContainer extends React.Component{
     if(this.props.marks.length ===  0) {
       this.props.load()
     }
-    // var $ = load('https://github.com/')
-    // var $ = load('https://medium.com/data-scraper-tips-tricks/scraping-data-with-javascript-in-3-minutes-8a7cf8275b31')
-    // debugger
-    // var a = 10
+    // var url = 'https://medium.com/data-scraper-tips-tricks/scraping-data-with-javascript-in-3-minutes-8a7cf8275b31'
+    // var url = 'https://github.com/'
+    // getWebsiteTitle(url)
   }
 
   render() {
