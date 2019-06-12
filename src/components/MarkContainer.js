@@ -23,6 +23,8 @@ class MarkContainer extends React.Component{
           <form onSubmit={this.props.handleManyMarkInputterSubmit}>
             <textarea type='text'
                       name='markInputter'
+                      rows='10'
+                      cols='50'
                       autoFocus
                       value={this.props.markInputter}
                       onChange={this.props.handleMarkInputterChange} />
@@ -45,6 +47,7 @@ class MarkContainer extends React.Component{
                   displaySettings={this.props.displaySettings}
                   destroyHandler={this.props.destroyHandler}
                   editMark={this.props.editMark}
+                  closeForm={this.props.closeForm}
                   handleChange={this.props.handleChange}
                   handleSubmit={this.props.handleSubmit} />
       </div>
@@ -68,6 +71,7 @@ function mapDispatchToProps(dispatch) {
     handleChange: (e, markId) => dispatch(actions.marks.handleChange(e, markId)),
     destroyHandler: (id) => dispatch(actions.marks.destroy(id)),
     editMark: (id) => dispatch(actions.marks.editMark(id)),
+    closeForm: (id) => dispatch(actions.marks.closeForm(id)),
     handleOpenManyMarkInput: () => dispatch(actions.marks.handleOpenManyMarkInput()),
     handleCloseManyMarkInput: () => dispatch(actions.marks.handleCloseManyMarkInput()),
     handleMarkInputterChange: (e) => dispatch(actions.marks.handleMarkInputterChange(e)),

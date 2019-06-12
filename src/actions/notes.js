@@ -6,7 +6,7 @@ export const fetch = (markId) => dispatch => {
   services.notes.index([markId], (notes) => {
     notes.map(note => {
       dispatch({
-        type: actionTypes.LOAD_NOTE,
+        type: actionTypes.NOTES.LOAD_NOTE,
         payload: {
           note: note
         }
@@ -18,7 +18,7 @@ export const fetch = (markId) => dispatch => {
 
 export const openNew = (currentTime) => dispatch => {
   dispatch({
-    type: actionTypes.OPEN_NEW_NOTE,
+    type: actionTypes.NOTES.OPEN_NEW_NOTE,
     payload: {
       timestamp: currentTime,
     }
@@ -27,7 +27,7 @@ export const openNew = (currentTime) => dispatch => {
 
 export const edit = (note) => (dispatch, getState) => {
   dispatch({
-    type: actionTypes.EDIT_NOTE,
+    type: actionTypes.NOTES.EDIT_NOTE,
     payload: {
       note: note,
     }
@@ -41,7 +41,7 @@ export const createBookmark = (currentTime) => (dispatch, getState) => {
                                     {timestamp: currentTime})
   services.notes.create(state.marks.currentMark.id, newBookmark, (note) => {
     dispatch({
-      type: actionTypes.CREATE_NEW_NOTE,
+      type: actionTypes.NOTES.CREATE_NEW_NOTE,
       payload: {
         'markId': state.marks.currentMark.id,
         'note': note,
@@ -52,14 +52,14 @@ export const createBookmark = (currentTime) => (dispatch, getState) => {
 
 export const closeNew = () => dispatch => {
   dispatch({
-    type: actionTypes.CLOSE_NEW_NOTE
+    type: actionTypes.NOTES.CLOSE_NEW_NOTE
   })
 }
 
 export const handleChange = (e) => dispatch => {
   const { name, value } = e.target
   dispatch({
-    type: actionTypes.CHANGE_NEW_NOTE,
+    type: actionTypes.NOTES.CHANGE_NEW_NOTE,
     payload: {
       name: name,
       value: value,
@@ -75,7 +75,7 @@ export const handleSubmit = (e) => (dispatch, getState) => {
     services.notes.update(state.notes.newNote,
                           (note) => {
       dispatch({
-        type: actionTypes.UPDATE_NOTE,
+        type: actionTypes.NOTES.UPDATE_NOTE,
         payload: {
           'markId': state.marks.currentMark.id,
           'note': state.notes.newNote,
@@ -87,7 +87,7 @@ export const handleSubmit = (e) => (dispatch, getState) => {
                           state.notes.newNote,
                           (note) => {
       dispatch({
-        type: actionTypes.CREATE_NEW_NOTE,
+        type: actionTypes.NOTES.CREATE_NEW_NOTE,
         payload: {
           'markId': state.marks.currentMark.id,
           'note': note,
@@ -99,7 +99,7 @@ export const handleSubmit = (e) => (dispatch, getState) => {
 
 export const changeNoteOrder = (markId, order) => dispatch => {
   dispatch({
-    type: actionTypes.CHANGE_NOTE_ORDER,
+    type: actionTypes.NOTES.CHANGE_NOTE_ORDER,
     payload: {
       markId: markId,
       order: order,
@@ -110,7 +110,7 @@ export const changeNoteOrder = (markId, order) => dispatch => {
 export const destroy = (id, markId) => dispatch => {
   services.notes.destroy(id, (e) => {
     dispatch({
-      type: actionTypes.DESTROY_NOTE,
+      type: actionTypes.NOTES.DESTROY_NOTE,
       payload: {
         id: id,
         markId: markId,

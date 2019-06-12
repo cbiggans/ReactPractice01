@@ -3,7 +3,7 @@ import actionTypes from './constants'
 
 export const setVideoTime = (timestamp) => (dispatch) => {
   dispatch({
-    type: actionTypes.SET_VIDEO_TIME,
+    type: actionTypes.NOTE_TAKER.SET_VIDEO_TIME,
     payload: {
       currentTime: timestamp,
     }
@@ -12,7 +12,7 @@ export const setVideoTime = (timestamp) => (dispatch) => {
 
 export const updateSettings = (data) => (dispatch) => {
   dispatch({
-    type: actionTypes.UPDATE_SETTINGS,
+    type: actionTypes.NOTE_TAKER.UPDATE_SETTINGS,
     payload: {
       data: data,
     }
@@ -21,7 +21,7 @@ export const updateSettings = (data) => (dispatch) => {
 
 export const completedTimeUpdate = () => (dispatch) => {
   dispatch({
-    type: actionTypes.COMPLETED_TIME_UPDATE
+    type: actionTypes.NOTE_TAKER.COMPLETED_TIME_UPDATE
   })
 }
 

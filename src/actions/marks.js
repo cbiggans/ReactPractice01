@@ -33,7 +33,16 @@ function scrapeWebsite(url) {
 
 export const editMark = (markId) => dispatch => {
   dispatch({
-    type: actionTypes.EDIT_MARK,
+    type: actionTypes.MARKS.EDIT_MARK,
+    payload: {
+      markId: markId,
+    }
+  })
+}
+
+export const closeForm = (markId) => dispatch => {
+  dispatch({
+    type: actionTypes.MARKS.CLOSE_MARK_FORM,
     payload: {
       markId: markId,
     }
@@ -42,16 +51,16 @@ export const editMark = (markId) => dispatch => {
 
 export const handleOpenManyMarkInput = () => (dispatch) => {
   dispatch({
-    type: actionTypes.OPEN_MANY_MARK_INPUT,
+    type: actionTypes.MARKS.OPEN_MANY_MARK_INPUT,
   })
 }
 
 export const handleCloseManyMarkInput = () => (dispatch) => {
   dispatch({
-    type: actionTypes.CLEAR_MANY_MARK_INPUT,
+    type: actionTypes.MARKS.CLEAR_MANY_MARK_INPUT,
   })
   dispatch({
-    type: actionTypes.CLOSE_MANY_MARK_INPUT,
+    type: actionTypes.MARKS.CLOSE_MANY_MARK_INPUT,
   })
 }
 
@@ -59,7 +68,7 @@ export const handleMarkInputterChange = (e) => dispatch => {
   const { name, value } = e.target
 
   dispatch({
-    type: actionTypes.UPDATE_MANY_MARK_INPUT,
+    type: actionTypes.MARKS.UPDATE_MANY_MARK_INPUT,
     payload: {
       name: name,
       value: value,
@@ -92,28 +101,32 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
       }
       services.marks.create(newMark, (mark) => {
         dispatch({
-          type: actionTypes.ADD_MARK,
+          type: actionTypes.MARKS.ADD_MARK,
           payload: {
             'mark': mark
           }
         })
+        return mark
       })
     })
   })
 
   dispatch({
-    type: actionTypes.SUBMIT_MANY_MARK_INPUT,
+    type: actionTypes.MARKS.SUBMIT_MANY_MARK_INPUT,
   })
-  // dispatch({
-  //   type: actionTypes.CLEAR_MANY_MARK_INPUT,
-  // })
+  dispatch({
+    type: actionTypes.MARKS.CLEAR_MANY_MARK_INPUT,
+  })
+  dispatch({
+    type: actionTypes.MARKS.CLOSE_MANY_MARK_INPUT,
+  })
 }
 
 export const handleChange = (e, markId) => dispatch => {
   const { name, value } = e.target
 
   dispatch({
-    type: actionTypes.UPDATE_MARK_FIELD,
+    type: actionTypes.MARKS.UPDATE_MARK_FIELD,
     payload: {
       name: name,
       value: value,
@@ -131,7 +144,7 @@ export const handleSubmit = (e, markId) => (dispatch, getState) => {
   if(!markId) {
     services.marks.create(state.marks.nextMark, (mark) => {
       dispatch({
-        type: actionTypes.ADD_NEXT_MARK,
+        type: actionTypes.MARKS.ADD_NEXT_MARK,
         payload: {
           'mark': mark
         }
@@ -145,7 +158,7 @@ export const handleSubmit = (e, markId) => (dispatch, getState) => {
     })
     services.marks.update(markId, marksData[0], (mark) => {
       dispatch({
-        type: actionTypes.UPDATE_MARK,
+        type: actionTypes.MARKS.UPDATE_MARK,
         payload: {
           'mark': mark
         }
@@ -158,7 +171,7 @@ export const load = (e) => dispatch => {
   services.marks.index((marks) => {
     marks.map(mark => {
       dispatch({
-        type: actionTypes.LOAD_MARK,
+        type: actionTypes.MARKS.LOAD_MARK,
         payload: {
           mark: mark,
         }
@@ -172,7 +185,7 @@ export const setCurrentMark = (id) => dispatch => {
   services.marks.get(id, (mark) => {
     mark.id = id
     dispatch({
-      type: actionTypes.SET_CURRENT_MARK,
+      type: actionTypes.MARKS.SET_CURRENT_MARK,
       payload: {
         mark: mark,
       }
@@ -183,7 +196,7 @@ export const setCurrentMark = (id) => dispatch => {
 export const destroy = (id) => dispatch => {
   services.marks.destroy(id, (e) => {
     dispatch({
-      type: actionTypes.DESTROY_MARK,
+      type: actionTypes.MARKS.DESTROY_MARK,
       payload: {
         id: id,
       }
@@ -198,9 +211,11 @@ const markActions = {
   setCurrentMark: setCurrentMark,
   destroy: destroy,
   editMark: editMark,
+  closeForm: closeForm,
   handleOpenManyMarkInput: handleOpenManyMarkInput,
   handleMarkInputterChange: handleMarkInputterChange,
   handleManyMarkInputterSubmit: handleManyMarkInputterSubmit,
+  handleCloseManyMarkInput: handleCloseManyMarkInput,
 }
 
 export default markActions

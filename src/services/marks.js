@@ -1,4 +1,5 @@
 import { db } from './'
+import { currentUTCTime } from '../lib/time'
 
 class MarkService {
 	constructor() {
@@ -32,10 +33,9 @@ class MarkService {
   }
 
   index(onSuccess) {
-    const marks = []
-
     this.collection.get()
     .then((snapshotDocs) => {
+      const marks = []
       // Need to wait for this to completely finish, resolve only on last one
       // Because the function getNotes runs asynchronously, this needs to store
       //  all the promises in an array then wait for all of them to resolve
@@ -46,25 +46,28 @@ class MarkService {
       //  Can do conditional rendering from there
       // TODO XXX: Want to remove most of this, call the notes service to grab the notes
       //  Call action to grab the notes, should do this asynchronously
-      let promises = []
+      // let promises = []
       snapshotDocs.forEach((doc) => {
-        promises.push(new Promise(resolve => {
-          this.getNotes(doc)
-          .then((mark) => {
-            mark.id = doc.id
-            resolve(mark)
-            marks.push(mark)
-          })
-        }))
+        marks.push(Object.assign({id: doc.id}, doc.data()))
+        // promises.push(new Promise(resolve => {
+        //   this.getNotes(doc)
+        //   .then((mark) => {
+        //     mark.id = doc.id
+        //     resolve(mark)
+        //     marks.push(mark)
+        //   })
+        // }))
       })
-
-      Promise.all(promises).then(() => {
-        // console.log('Promise.all COMPLETE------------------------------')
-        onSuccess(marks)
-      })
+      return marks
+      // Promise.all(promises).then(() => {
+      //   // console.log('Promise.all COMPLETE------------------------------')
+      //   onSuccess(marks)
+      // })
 
     })
-    .then(() => {
+    .then((marks) => {
+      onSuccess(marks)
+      return marks
       // return marks
     })
   }
@@ -86,6 +89,8 @@ class MarkService {
   }
 
   update(id, markData, onSuccess) {
+    markData.modifiedAt = currentUTCTime()
+
     // Get mark ref, then update it
     this.collection.doc(id).update(markData)
     .then((e) => {

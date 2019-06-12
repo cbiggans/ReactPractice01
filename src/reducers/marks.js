@@ -17,7 +17,8 @@ const initialState = {
   markInputter: '',
   displaySettings: {
     manyMarkInputIsOpen: false,
-    editing: new Set(),
+    // Recommend not using state for redux: https://github.com/reduxjs/redux/issues/1499
+    editing: {},
   }
 }
 
@@ -28,7 +29,7 @@ const marks = (state = initialState, action) => {
   // var urls
 
   switch(action.type) {
-    case actionTypes.OPEN_MANY_MARK_INPUT:
+    case actionTypes.MARKS.OPEN_MANY_MARK_INPUT:
       return {
         ...state,
         displaySettings: {
@@ -36,7 +37,7 @@ const marks = (state = initialState, action) => {
           manyMarkInputIsOpen: true,
         }
       }
-    case actionTypes.CLOSE_MANY_MARK_INPUT:
+    case actionTypes.MARKS.CLOSE_MANY_MARK_INPUT:
       return {
         ...state,
         displaySettings: {
@@ -44,24 +45,23 @@ const marks = (state = initialState, action) => {
           manyMarkInputIsOpen: false,
         }
       }
-    case actionTypes.CLEAR_MANY_MARK_INPUT:
+    case actionTypes.MARKS.CLEAR_MANY_MARK_INPUT:
       return {
         ...state,
         markInputter: '',
       }
-    case actionTypes.UPDATE_MANY_MARK_INPUT:
+    case actionTypes.MARKS.UPDATE_MANY_MARK_INPUT:
       return {
         ...state,
         markInputter: action.payload.value,
       }
-    case actionTypes.SUBMIT_MANY_MARK_INPUT:
+    case actionTypes.MARKS.SUBMIT_MANY_MARK_INPUT:
       return {
         ...state
       }
-    case actionTypes.EDIT_MARK:
-      editingDisplaySetting = new Set(state.displaySettings.editing)
-      editingDisplaySetting.add(action.payload.markId)
-      console.log(editingDisplaySetting)
+    case actionTypes.MARKS.CLOSE_MARK_FORM:
+      editingDisplaySetting = Object.assign({}, state.displaySettings.editing)
+      editingDisplaySetting[action.payload.markId] = false
 
       return {
         ...state,
@@ -70,7 +70,18 @@ const marks = (state = initialState, action) => {
           editing: editingDisplaySetting,
         }
       }
-    case actionTypes.LOAD_MARK:
+    case actionTypes.MARKS.EDIT_MARK:
+      editingDisplaySetting = Object.assign({}, state.displaySettings.editing)
+      editingDisplaySetting[action.payload.markId] = true
+
+      return {
+        ...state,
+        displaySettings: {
+          ...state.displaySettings,
+          editing: editingDisplaySetting,
+        }
+      }
+    case actionTypes.MARKS.LOAD_MARK:
       newMarks = state.list.slice()
       newMarks.push(action.payload.mark)
 
@@ -78,18 +89,18 @@ const marks = (state = initialState, action) => {
         ...state,
         list: newMarks,
       }
-    case actionTypes.LOAD_MARKS:
+    case actionTypes.MARKS.LOAD_MARKS:
       // DEPRECATED currently
       return {
         ...state,
         list: action.payload.marks
       }
-    case actionTypes.SET_CURRENT_MARK:
+    case actionTypes.MARKS.SET_CURRENT_MARK:
       return {
         ...state,
         currentMark: action.payload.mark,
       }
-    case actionTypes.UPDATE_MARK_FIELD:
+    case actionTypes.MARKS.UPDATE_MARK_FIELD:
       if(!action.payload.markId) {
         const newNextMark = Object.assign({}, state.nextMark)
         newNextMark[action.payload.name] = action.payload.value
@@ -112,7 +123,7 @@ const marks = (state = initialState, action) => {
         ...state,
         list: newMarks,
       }
-    case actionTypes.UPDATE_MARK:
+    case actionTypes.MARKS.UPDATE_MARK:
       newMarks = state.list.slice()
 
       newMarks = newMarks.map((mark) => {
@@ -122,8 +133,8 @@ const marks = (state = initialState, action) => {
         return mark
       })
 
-      editingDisplaySetting = new Set(state.displaySettings.editing)
-      editingDisplaySetting.delete(action.payload.mark.id)
+      editingDisplaySetting = Object.assign({}, state.displaySettings.editing)
+      editingDisplaySetting[action.payload.mark.id] = false
 
       return {
         ...state,
@@ -133,7 +144,7 @@ const marks = (state = initialState, action) => {
           editing: editingDisplaySetting,
         }
       }
-    case actionTypes.ADD_MARK:
+    case actionTypes.MARKS.ADD_MARK:
       newMarks = state.list.slice()
 
       newMarks.push(Object.assign({},
@@ -142,7 +153,7 @@ const marks = (state = initialState, action) => {
         ...state,
         list: newMarks,
       }
-    case actionTypes.ADD_NEXT_MARK:
+    case actionTypes.MARKS.ADD_NEXT_MARK:
       newMarks = state.list.slice()
 
       console.log(action.payload.mark)
@@ -154,7 +165,7 @@ const marks = (state = initialState, action) => {
         list: newMarks,
         nextMark: Object.assign({}, initialState.nextMark),
       }
-    case actionTypes.DESTROY_MARK:
+    case actionTypes.MARKS.DESTROY_MARK:
       newMarks = state.list.filter((item) => {
         return item.id !== action.payload.id
       })

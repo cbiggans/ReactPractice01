@@ -28,7 +28,7 @@ const notes = (state = initialState, action) => {
   var note, markId
 
   switch(action.type) {
-    case actionTypes.CHANGE_NOTE_ORDER:
+    case actionTypes.NOTES.CHANGE_NOTE_ORDER:
       // NEED markId to get into mapping
       notesList = state.mapping[action.payload.markId].slice()
 
@@ -53,7 +53,7 @@ const notes = (state = initialState, action) => {
       }
 
       return newState
-    case actionTypes.OPEN_NEW_NOTE: // Maybe add 'FLOW'?
+    case actionTypes.NOTES.OPEN_NEW_NOTE: // Maybe add 'FLOW'?
       return {
         ...state,
         newNote: {
@@ -63,18 +63,18 @@ const notes = (state = initialState, action) => {
           timestamp: action.payload.timestamp,
         }
       }
-    case actionTypes.EDIT_NOTE:
+    case actionTypes.NOTES.EDIT_NOTE:
       note = Object.assign({}, action.payload.note)
       return {
         ...state,
         newNote: Object.assign({}, action.payload.note)
       }
-    case actionTypes.CLOSE_NEW_NOTE:
+    case actionTypes.NOTES.CLOSE_NEW_NOTE:
       return {
         ...state,
         newNote: Object.assign({}, initialState.newNote)
       }
-    case actionTypes.LOAD_NOTE:
+    case actionTypes.NOTES.LOAD_NOTE:
       note = action.payload.note
       note.key = note.id
       markId = note.markId
@@ -105,7 +105,7 @@ const notes = (state = initialState, action) => {
       }
     // Maybe characterize this as SUBMIT? Create may give impression
     //  that it's just being created in database and not from a form
-    case actionTypes.CREATE_NEW_NOTE:
+    case actionTypes.NOTES.CREATE_NEW_NOTE:
       
       notesMap = Object.assign({}, state.mapping)
       action.payload.note.key = action.payload.note.id
@@ -129,7 +129,7 @@ const notes = (state = initialState, action) => {
         mapping: notesMap,
         newNote: Object.assign({}, initialState.newNote)
       }
-    case actionTypes.CHANGE_NEW_NOTE:
+    case actionTypes.NOTES.CHANGE_NEW_NOTE:
       return {
         ...state,
         newNote: {
@@ -137,7 +137,7 @@ const notes = (state = initialState, action) => {
           [action.payload.name]: action.payload.value,
         }
       }
-    case actionTypes.UPDATE_NOTE:
+    case actionTypes.NOTES.UPDATE_NOTE:
       notesList = state.mapping[action.payload.markId].slice()
       notesList = notesList.map((item) => {
         if(item.id === action.payload.note.id) {
@@ -155,7 +155,7 @@ const notes = (state = initialState, action) => {
         },
         newNote: Object.assign({}, initialState.newNote),
       }
-    case actionTypes.DESTROY_NOTE:
+    case actionTypes.NOTES.DESTROY_NOTE:
       notesMap = Object.assign({}, state.mapping)
       notesList = notesMap[action.payload.markId]
 

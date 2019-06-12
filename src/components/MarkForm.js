@@ -9,6 +9,7 @@ function MarkForm(props) {
       <div>
         <button type='submit'>UPDATE</button>
         <button onClick={() => {props.destroyHandler(props.mark.id)}}>DESTROY</button>
+        <button onClick={() => {props.closeForm(props.mark.id)}}>CLOSE</button>
       </div>
     )
   } else {

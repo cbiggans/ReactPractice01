@@ -19,7 +19,7 @@ const initialState = {
 
 const noteTakerSettings = (state = initialState, action) => {
   switch(action.type) {
-    case actionTypes.UPDATE_SETTINGS:
+    case actionTypes.NOTE_TAKER.UPDATE_SETTINGS:
       var playback = Object.assign({}, state.playback)
       if('currentTime' in action.payload.data) {
         playback.currentTime = action.payload.data.currentTime
@@ -28,7 +28,7 @@ const noteTakerSettings = (state = initialState, action) => {
         ...state,
         playback: playback
       }
-    case actionTypes.SET_VIDEO_TIME:
+    case actionTypes.NOTE_TAKER.SET_VIDEO_TIME:
       return {
         ...state,
         playback: {
@@ -37,7 +37,7 @@ const noteTakerSettings = (state = initialState, action) => {
           hasNewCurrentTime: true,
         }
       }
-    case actionTypes.COMPLETED_TIME_UPDATE:
+    case actionTypes.NOTE_TAKER.COMPLETED_TIME_UPDATE:
       return {
         ...state,
         playback: {
@@ -45,7 +45,7 @@ const noteTakerSettings = (state = initialState, action) => {
           hasNewCurrentTime: false,
         }
       }
-    case actionTypes.OPEN_NEW_NOTE: // Maybe add 'FLOW'?
+    case actionTypes.NOTES.OPEN_NEW_NOTE: // Maybe add 'FLOW'?
       return {
         ...state,
         newNoteEditorOpen: true,
@@ -55,20 +55,20 @@ const noteTakerSettings = (state = initialState, action) => {
           currentTime: action.payload.timestamp,
         }
       }
-    case actionTypes.EDIT_NOTE: // Maybe add 'FLOW'?
+    case actionTypes.NOTES.EDIT_NOTE: // Maybe add 'FLOW'?
       return {
         ...state,
         newNoteEditorOpen: true,
         eventMode: 'newNote', // TODO XXX: Make the value editNote mode instead
       }
-    case actionTypes.CLOSE_NEW_NOTE: // Maybe add 'FLOW'?
+    case actionTypes.NOTES.CLOSE_NEW_NOTE: // Maybe add 'FLOW'?
       return {
         ...state,
         newNoteEditorOpen: false,
         eventMode: 'videoPlayback',
       }
-    case actionTypes.CREATE_NEW_NOTE:
-    case actionTypes.UPDATE_NOTE:
+    case actionTypes.NOTES.CREATE_NEW_NOTE:
+    case actionTypes.NOTES.UPDATE_NOTE:
       return {
         ...state,
         newNoteEditorOpen: false,
