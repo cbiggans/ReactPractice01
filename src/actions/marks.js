@@ -8,17 +8,35 @@ import { currentUTCTime } from '../lib/time'
  *  functions elsewhere and it's cleaner for the mapDispatchToProps if the
  *  dispatch is provided something like this
  */
-export const handleSubmit = (e) => (dispatch, getState) => {
-  e.preventDefault()
 
-  const state = getState()
-  services.marks.create(state.marks.nextMark, (mark) => {
-    dispatch({
-      type: actionTypes.ADD_NEXT_MARK,
-      payload: {
-        'mark': mark
-      }
+function scrapeWebsite(url) {
+  // Have Update button for doing a new scrape of the mark and updating
+  //  it with newer data
+
+  return fetch('/scrape_url/', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded', // Important
+    },
+    body: JSON.stringify({
+        url: url,
     })
+  })
+  .then((response) => {
+    return response.json()
+  })
+  .then((data) => {
+    return data
+  })
+}
+
+export const editMark = (markId) => dispatch => {
+  dispatch({
+    type: actionTypes.EDIT_MARK,
+    payload: {
+      markId: markId,
+    }
   })
 }
 
@@ -59,23 +77,26 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
 
   const urls = state.marks.markInputter.split('\n')
 
-  urls.map(url => {
-    newMark = {
-      'createdAt': createdAt,
-      'modifiedAt': modifiedAt,
-      'category': '',
-      'description': '',
-      'tags': '',
-      'title': 'TMP NAME',
-      'type': '',
-      'url': url,
-    }
-    services.marks.create(newMark, (mark) => {
-      dispatch({
-        type: actionTypes.ADD_MARK,
-        payload: {
-          'mark': mark
-        }
+  urls.forEach(url => {
+    scrapeWebsite(url)
+    .then((scrapedData) => {
+      newMark = {
+        'createdAt': createdAt,
+        'modifiedAt': modifiedAt,
+        'category': '',
+        'description': '',
+        'tags': '',
+        'title': scrapedData.title,
+        'type': '',
+        'url': url,
+      }
+      services.marks.create(newMark, (mark) => {
+        dispatch({
+          type: actionTypes.ADD_MARK,
+          payload: {
+            'mark': mark
+          }
+        })
       })
     })
   })
@@ -88,15 +109,49 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
   // })
 }
 
-export const handleChange = (e) => dispatch => {
+export const handleChange = (e, markId) => dispatch => {
   const { name, value } = e.target
+
   dispatch({
     type: actionTypes.UPDATE_MARK_FIELD,
     payload: {
       name: name,
       value: value,
+      markId: markId,
     }
   })
+}
+
+export const handleSubmit = (e, markId) => (dispatch, getState) => {
+  e.preventDefault()
+
+  const state = getState()
+  // If there's a markId, then edit the mark & do update action, else create it
+  console.log('markId: ', markId)
+  if(!markId) {
+    services.marks.create(state.marks.nextMark, (mark) => {
+      dispatch({
+        type: actionTypes.ADD_NEXT_MARK,
+        payload: {
+          'mark': mark
+        }
+      })
+    })
+  } else {
+    const marksData = state.marks.list.filter((mark) => {
+      if(mark.id === markId) {
+        return mark
+      }
+    })
+    services.marks.update(markId, marksData[0], (mark) => {
+      dispatch({
+        type: actionTypes.UPDATE_MARK,
+        payload: {
+          'mark': mark
+        }
+      })
+    })
+  }
 }
 
 export const load = (e) => dispatch => {
@@ -142,6 +197,7 @@ const markActions = {
   load: load,
   setCurrentMark: setCurrentMark,
   destroy: destroy,
+  editMark: editMark,
   handleOpenManyMarkInput: handleOpenManyMarkInput,
   handleMarkInputterChange: handleMarkInputterChange,
   handleManyMarkInputterSubmit: handleManyMarkInputterSubmit,

@@ -89,7 +89,7 @@ class MarkService {
     // Get mark ref, then update it
     this.collection.doc(id).update(markData)
     .then((e) => {
-       onSuccess(e)
+       onSuccess(markData)
     })
   }
 

@@ -3,29 +3,6 @@ import MarkForm from './MarkForm'
 import MarkList from './MarkList'
 import { connect } from 'react-redux'
 import actions from '../actions/'
-// I'll have to probably create a node server w/ a simple route that scrapes the data
-import { load } from 'cheerio'
-import { get } from 'request'
-
-
-function getWebsiteTitle(url) {
-  fetch('/scrape_url/', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded', // Important
-    },
-    body: JSON.stringify({
-        url: url,
-    })
-  })
-  .then((response) => {
-    return response.json()
-  })
-  .then((data) => {
-    console.log(data)
-  })
-}
 
 
 class MarkContainer extends React.Component{
@@ -34,8 +11,8 @@ class MarkContainer extends React.Component{
       this.props.load()
     }
     // var url = 'https://medium.com/data-scraper-tips-tricks/scraping-data-with-javascript-in-3-minutes-8a7cf8275b31'
-    var url = 'https://github.com/'
-    getWebsiteTitle(url)
+    // var url = 'https://github.com/'
+    // getWebsiteTitle(url)
   }
 
   render() {
@@ -60,12 +37,16 @@ class MarkContainer extends React.Component{
 
     return (
       <div>
-        <MarkForm nextMark={this.props.nextMark}
+        <MarkForm mark={this.props.nextMark}
                   handleChange={this.props.handleChange}
                   handleSubmit={this.props.handleSubmit} />
         {manyMarkInputter}
         <MarkList marks={this.props.marks} 
-                  destroyHandler={this.props.destroyHandler} />
+                  displaySettings={this.props.displaySettings}
+                  destroyHandler={this.props.destroyHandler}
+                  editMark={this.props.editMark}
+                  handleChange={this.props.handleChange}
+                  handleSubmit={this.props.handleSubmit} />
       </div>
     )
   }
@@ -83,9 +64,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     load: () => dispatch(actions.marks.load()),
-    handleSubmit: (e) => dispatch(actions.marks.handleSubmit(e)),
-    handleChange: (e) => dispatch(actions.marks.handleChange(e)),
+    handleSubmit: (e, markId) => dispatch(actions.marks.handleSubmit(e, markId)),
+    handleChange: (e, markId) => dispatch(actions.marks.handleChange(e, markId)),
     destroyHandler: (id) => dispatch(actions.marks.destroy(id)),
+    editMark: (id) => dispatch(actions.marks.editMark(id)),
     handleOpenManyMarkInput: () => dispatch(actions.marks.handleOpenManyMarkInput()),
     handleCloseManyMarkInput: () => dispatch(actions.marks.handleCloseManyMarkInput()),
     handleMarkInputterChange: (e) => dispatch(actions.marks.handleMarkInputterChange(e)),

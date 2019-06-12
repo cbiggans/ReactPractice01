@@ -17,13 +17,15 @@ const initialState = {
   markInputter: '',
   displaySettings: {
     manyMarkInputIsOpen: false,
+    editing: new Set(),
   }
 }
 
 
 const marks = (state = initialState, action) => {
   var newMarks = []
-  var urls
+  var editingDisplaySetting
+  // var urls
 
   switch(action.type) {
     case actionTypes.OPEN_MANY_MARK_INPUT:
@@ -56,6 +58,18 @@ const marks = (state = initialState, action) => {
       return {
         ...state
       }
+    case actionTypes.EDIT_MARK:
+      editingDisplaySetting = new Set(state.displaySettings.editing)
+      editingDisplaySetting.add(action.payload.markId)
+      console.log(editingDisplaySetting)
+
+      return {
+        ...state,
+        displaySettings: {
+          ...state.displaySettings,
+          editing: editingDisplaySetting,
+        }
+      }
     case actionTypes.LOAD_MARK:
       newMarks = state.list.slice()
       newMarks.push(action.payload.mark)
@@ -76,14 +90,49 @@ const marks = (state = initialState, action) => {
         currentMark: action.payload.mark,
       }
     case actionTypes.UPDATE_MARK_FIELD:
-      const newNextMark = Object.assign({}, state.nextMark)
-      newNextMark[action.payload.name] = action.payload.value
+      if(!action.payload.markId) {
+        const newNextMark = Object.assign({}, state.nextMark)
+        newNextMark[action.payload.name] = action.payload.value
+
+        return {
+          ...state,
+          nextMark: newNextMark,
+        }
+      }
+
+      newMarks = state.list.slice()
+      newMarks = newMarks.map((mark) => {
+        if(mark.id === action.payload.markId) {
+          mark[action.payload.name] = action.payload.value
+          return mark
+        }
+        return mark
+      })
+      return {
+        ...state,
+        list: newMarks,
+      }
+    case actionTypes.UPDATE_MARK:
+      newMarks = state.list.slice()
+
+      newMarks = newMarks.map((mark) => {
+        if(mark.id === action.payload.mark.id) {
+          return action.payload.mark
+        }
+        return mark
+      })
+
+      editingDisplaySetting = new Set(state.displaySettings.editing)
+      editingDisplaySetting.delete(action.payload.mark.id)
 
       return {
         ...state,
-        nextMark: newNextMark,
+        list: newMarks,
+        displaySettings: {
+          ...state.displaySettings,
+          editing: editingDisplaySetting,
+        }
       }
-    // UPDATE_MARK
     case actionTypes.ADD_MARK:
       newMarks = state.list.slice()
 
@@ -96,6 +145,7 @@ const marks = (state = initialState, action) => {
     case actionTypes.ADD_NEXT_MARK:
       newMarks = state.list.slice()
 
+      console.log(action.payload.mark)
       newMarks.push(Object.assign({},
                                   state.nextMark,
                                   {id: action.payload.mark.id}))
