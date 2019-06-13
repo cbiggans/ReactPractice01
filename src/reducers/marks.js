@@ -1,4 +1,5 @@
 import actionTypes from '../actions/constants'
+import { currentUTCTime } from '../lib/time'
 
 const emptyMark = {
   'category': '',
@@ -172,6 +173,29 @@ const marks = (state = initialState, action) => {
       return {
         ...state,
         list: newMarks
+      }
+    case actionTypes.MARKS.ORGANIZE_MARKS:
+      let key = 'createdAt'
+      let order = 'descending'
+
+      newMarks = state.list.slice()
+      newMarks = newMarks.sort((a, b) => {
+        if(!a[key]) {
+          a[key] = 0
+        }
+        if(!b[key]) {
+          b[key] = 0
+        }
+        if(order === 'descending') {
+          return b[key] - a[key]
+        } else {
+          return a[key] - b[key]
+        }
+      })
+
+      return {
+        ...state,
+        list: newMarks,
       }
     default:
       return state

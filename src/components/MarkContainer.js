@@ -10,9 +10,6 @@ class MarkContainer extends React.Component{
     if(this.props.marks.length ===  0) {
       this.props.load()
     }
-    // var url = 'https://medium.com/data-scraper-tips-tricks/scraping-data-with-javascript-in-3-minutes-8a7cf8275b31'
-    // var url = 'https://github.com/'
-    // getWebsiteTitle(url)
   }
 
   render() {

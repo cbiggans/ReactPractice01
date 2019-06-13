@@ -36,39 +36,19 @@ class MarkService {
     this.collection.get()
     .then((snapshotDocs) => {
       const marks = []
-      // Need to wait for this to completely finish, resolve only on last one
-      // Because the function getNotes runs asynchronously, this needs to store
-      //  all the promises in an array then wait for all of them to resolve
-      //  before continuing. This is needed because we're trying to retreive
-      //  all of the data we need before continuing to simulate a relational db
-      // I probably shouldn't sync the data, but instead just get the data as needed then send it
-      // Call from the action to load in the notes separately
-      //  Can do conditional rendering from there
-      // TODO XXX: Want to remove most of this, call the notes service to grab the notes
-      //  Call action to grab the notes, should do this asynchronously
-      // let promises = []
+      let mark
+
       snapshotDocs.forEach((doc) => {
-        marks.push(Object.assign({id: doc.id}, doc.data()))
-        // promises.push(new Promise(resolve => {
-        //   this.getNotes(doc)
-        //   .then((mark) => {
-        //     mark.id = doc.id
-        //     resolve(mark)
-        //     marks.push(mark)
-        //   })
-        // }))
+        mark = Object.assign({}, doc.data())
+        mark.id = doc.id
+        marks.push(mark)
       })
       return marks
-      // Promise.all(promises).then(() => {
-      //   // console.log('Promise.all COMPLETE------------------------------')
-      //   onSuccess(marks)
-      // })
 
     })
     .then((marks) => {
       onSuccess(marks)
       return marks
-      // return marks
     })
   }
 
@@ -81,6 +61,9 @@ class MarkService {
   }
 
   create(mark, onSuccess) {
+    mark.createdAt = currentUTCTime()
+    mark.modifiedAt = currentUTCTime()
+
     this.collection.add(mark)
     .then((ref) => {
       mark.id = ref.id

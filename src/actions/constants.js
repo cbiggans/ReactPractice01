@@ -1,5 +1,8 @@
 // TODO XXX: Should separate these into sections By Resource
 const actionTypes = {
+  MARK_SESSIONS: {
+    UPDATE_FIELD: 'UPDATE_MARK_SESSION_FIELD',
+  },
   MARKS: {
     ADD_MARK: 'ADD_MARK',
     ADD_NEXT_MARK: 'ADD_NEXT_MARK',
@@ -16,6 +19,7 @@ const actionTypes = {
     EDIT_MARK: 'EDIT_MARK',
     CLOSE_MARK_FORM: 'CLOSE_MARK_FORM',
     SET_CURRENT_MARK: 'SET_CURRENT_MARK',
+    ORGANIZE_MARKS: 'ORGANIZE_MARKS',
   },
   NOTES: {
     LOAD_NOTE: 'LOAD_NOTE',

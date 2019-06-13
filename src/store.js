@@ -1,11 +1,13 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import thunk from 'redux-thunk'
+import markSessions from './reducers/markSessions'
 import marks from './reducers/marks'
 import notes from './reducers/notes'
 import noteTakerSettings from './reducers/noteTakerSettings'
 
 
 const rootReducer = combineReducers({
+  markSessions,
   marks,
   notes,
   noteTakerSettings,

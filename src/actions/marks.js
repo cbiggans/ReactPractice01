@@ -49,12 +49,14 @@ export const closeForm = (markId) => dispatch => {
   })
 }
 
+// TODO XXX: This shouldn't have handle
 export const handleOpenManyMarkInput = () => (dispatch) => {
   dispatch({
     type: actionTypes.MARKS.OPEN_MANY_MARK_INPUT,
   })
 }
 
+// TODO XXX: This shouldn't have handle
 export const handleCloseManyMarkInput = () => (dispatch) => {
   dispatch({
     type: actionTypes.MARKS.CLEAR_MANY_MARK_INPUT,
@@ -64,6 +66,7 @@ export const handleCloseManyMarkInput = () => (dispatch) => {
   })
 }
 
+// TODO XXX: Should combine this with the other handleChange function
 export const handleMarkInputterChange = (e) => dispatch => {
   const { name, value } = e.target
 
@@ -81,6 +84,7 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
 
   var newMark
   const state = getState()
+  // TODO XXX: Should move these auto-generated properties to services class
   const createdAt = currentUTCTime()
   const modifiedAt = currentUTCTime()
 
@@ -105,6 +109,9 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
           payload: {
             'mark': mark
           }
+        })
+        dispatch({
+          type: actionTypes.MARKS.ORGANIZE_MARKS
         })
         return mark
       })
@@ -151,12 +158,14 @@ export const handleSubmit = (e, markId) => (dispatch, getState) => {
       })
     })
   } else {
-    const marksData = state.marks.list.filter((mark) => {
+    let markData
+
+    state.marks.list.forEach((mark) => {
       if(mark.id === markId) {
-        return mark
+        markData = mark
       }
     })
-    services.marks.update(markId, marksData[0], (mark) => {
+    services.marks.update(markId, markData, (mark) => {
       dispatch({
         type: actionTypes.MARKS.UPDATE_MARK,
         payload: {
@@ -165,6 +174,9 @@ export const handleSubmit = (e, markId) => (dispatch, getState) => {
       })
     })
   }
+  dispatch({
+    type: actionTypes.MARKS.ORGANIZE_MARKS
+  })
 }
 
 export const load = (e) => dispatch => {
@@ -175,6 +187,9 @@ export const load = (e) => dispatch => {
         payload: {
           mark: mark,
         }
+      })
+      dispatch({
+        type: actionTypes.MARKS.ORGANIZE_MARKS
       })
       return mark
     })
