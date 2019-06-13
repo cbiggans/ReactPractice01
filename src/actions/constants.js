@@ -1,7 +1,12 @@
 // TODO XXX: Should separate these into sections By Resource
 const actionTypes = {
+  // TODO XXX: Update typically signifies that it's been updated in the DB,
+  //  Should change `Update` to probably `Change` to signify that it's
+  //  just a local change and hasn't been persisted to DB yet
   MARK_SESSIONS: {
+    LOAD: 'LOAD_MARK_SESSIONS',
     UPDATE_FIELD: 'UPDATE_MARK_SESSION_FIELD',
+    CREATE: 'CREATE_MARK_SESSION_FIELD',
   },
   MARKS: {
     ADD_MARK: 'ADD_MARK',

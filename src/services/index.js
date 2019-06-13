@@ -1,8 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import MarkSessionService from './markSessions'
+import MarkWidgetService from './markWidgets'
 import MarkService from './marks'
 import NoteService from './notes'
-import MarkWidgetService from './markWidgets'
 
 
 const firebaseConfig = {
@@ -21,6 +22,7 @@ export const db = firebase.firestore()
 
 
 const services = {
+	markSessions: new MarkSessionService(),
 	marks: new MarkService(),
   markWidgets: new MarkWidgetService(),
   notes: new NoteService(),

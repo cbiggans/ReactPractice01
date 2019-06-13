@@ -1,6 +1,7 @@
 import { db } from './'
 import { currentUTCTime } from '../lib/time'
 
+
 class MarkService {
 	constructor() {
     this.collectionName = 'marks'

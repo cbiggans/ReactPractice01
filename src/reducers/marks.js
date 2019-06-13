@@ -1,5 +1,4 @@
 import actionTypes from '../actions/constants'
-import { currentUTCTime } from '../lib/time'
 
 const emptyMark = {
   'category': '',
