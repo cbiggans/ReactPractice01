@@ -1,4 +1,5 @@
 import React from 'react'
+import HomeContainer from './components/HomeContainer'
 import MarkSessionContainer from './components/MarkSessionContainer'
 import MarkContainer from './components/MarkContainer'
 import Header from './components/Header'
@@ -14,8 +15,9 @@ class App extends React.Component{
       <Router>
         <Provider store={store}>
           <Header />
-          <Route exact path="/" component={MarkSessionContainer} />
-          <Route exact path="/marks/" component={MarkContainer} />
+          <Route exact path="/" component={HomeContainer} />
+          <Route path="/session/:id" component={MarkSessionContainer} />
+          <Route path="/marks/" component={MarkContainer} />
           <Route path="/take-notes/:id" component={NoteTakerContainer} />
         </Provider>
       </Router>

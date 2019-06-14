@@ -29,6 +29,16 @@ class MarkSessionService {
     })
   }
 
+  get(id, callback) {
+    this.collection.doc(id).get()
+    .then((docRef) => {
+      const session = Object.assign(docRef.data())
+      session.id = docRef.id
+
+      callback(session)
+    })
+  }
+
   create(markSession, onSuccess) {
     markSession.created = currentUTCTime()
     markSession.modified = currentUTCTime()
@@ -37,6 +47,15 @@ class MarkSessionService {
     .then((ref) => {
       markSession.id = ref.id
       onSuccess(markSession)
+    })
+  }
+
+  update(id, data, callback) {
+    data.modified = currentUTCTime()
+
+    this.collection.doc(id).update(data)
+    .then((e) => {
+      callback(data)
     })
   }
 }

@@ -4,9 +4,13 @@ const actionTypes = {
   //  Should change `Update` to probably `Change` to signify that it's
   //  just a local change and hasn't been persisted to DB yet
   MARK_SESSIONS: {
+    SET_CURRENT: 'SET_CURRENT_MARK_SESSION',
+    OPEN_CURRENT_EDITOR: 'OPEN_CURRENT_EDITOR_MARK_SESSION',
+    CLOSE_CURRENT_EDITOR: 'CLOSE_CURRENT_EDITOR_MARK_SESSION',
     LOAD: 'LOAD_MARK_SESSIONS',
     UPDATE_FIELD: 'UPDATE_MARK_SESSION_FIELD',
-    CREATE: 'CREATE_MARK_SESSION_FIELD',
+    UPDATE: 'UPDATE_MARK_SESSION',
+    CREATE: 'CREATE_MARK_SESSION',
   },
   MARKS: {
     ADD_MARK: 'ADD_MARK',

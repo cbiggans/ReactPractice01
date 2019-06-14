@@ -1,9 +1,11 @@
 import React from 'react'
+import MarkSessionItem from './MarkSessionItem'
 
 
 function MarkSessionList(props) {
-  const sessionItems = props.list.map((item) => {
-    return <div key={item.id}>{item.title}</div>
+  const sessionItems = []
+  Object.values(props.collection).forEach((item) => {
+    sessionItems.push(<MarkSessionItem key={item.id} session={item} />)
   })
   return (
     <div>

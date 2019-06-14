@@ -56,7 +56,8 @@ class MarkService {
   get(id, onSuccess) {
     this.collection.doc(id).get()
     .then((docRef) => {
-      const mark = Object.assign({id: id}, docRef.data())
+      const mark = Object.assign(docRef.data())
+      mark.id = id
       onSuccess(mark)
     })
   }
