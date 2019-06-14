@@ -1,5 +1,4 @@
 import actionTypes from '../actions/constants'
-// import { currentUTCTime } from '../lib/time'
 
 
 // TODO XXX: These empty ones should be defined in their session classes
@@ -99,7 +98,7 @@ const markSessions = (state = initialState, action) => {
       }
     case actionTypes.MARK_SESSIONS.CREATE:
       tmpCollection = Object.assign({}, state.collection)
-      tmpCollection[action.payload.session.id] = tmpCollection
+      tmpCollection[action.payload.session.id] = action.payload.session
 
       return {
         ...state,

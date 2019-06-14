@@ -18,7 +18,7 @@ export const setCurrent = (id) => dispatch => {
   })
 }
 
-export const OpenCurrentEditor = () => dispatch => {
+export const openCurrentEditor = () => dispatch => {
   dispatch({
     type: actionTypes.MARK_SESSIONS.OPEN_CURRENT_EDITOR,
   })
@@ -83,7 +83,7 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
 
 const markSessionActions = {
   setCurrent: setCurrent,
-  OpenCurrentEditor: OpenCurrentEditor,
+  openCurrentEditor: openCurrentEditor,
   fetch: fetch,
   handleChange: handleChange,
   handleSubmit: handleSubmit,

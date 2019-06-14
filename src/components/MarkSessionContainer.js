@@ -14,7 +14,6 @@ class MarkSessionContainer extends React.Component {
   }
 
   render() {
-    // TODO XXX: Be able to edit the current Mark Session w/ button
     // TODO XXX: Create Widgets w/ form
     // TODO XXX: Display Widgets in list
     //            Make marks clickable to go to NoteTaker
@@ -25,7 +24,7 @@ class MarkSessionContainer extends React.Component {
       currentMarkSessionDisplay = (
         <div>
           <h1>{this.props.current.title}</h1>
-          <button onClick={this.props.OpenCurrentEditor}>EDIT SESSION DETAILS</button>
+          <button onClick={this.props.openCurrentEditor}>EDIT SESSION DETAILS</button>
         </div>
       )
     } else {
@@ -44,6 +43,7 @@ class MarkSessionContainer extends React.Component {
       <div>
         {currentMarkSessionDisplay}
         <div>Widgets</div>
+        <button onClick={this.props.openAddWidgetEditor}>ADD WIDGET</button>
       </div>
     )
   }
@@ -67,7 +67,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     setCurrent: (id) => dispatch(actions.markSessions.setCurrent(id)),
-    OpenCurrentEditor: () => dispatch(actions.markSessions.OpenCurrentEditor()),
+    openCurrentEditor: () => dispatch(actions.markSessions.openCurrentEditor()),
     fetch: () => dispatch(actions.markSessions.fetch()),
     handleChange: (e, id) => dispatch(actions.markSessions.handleChange(e, id)),
     handleSubmit: (e, id) => dispatch(actions.markSessions.handleSubmit(e, id)),
