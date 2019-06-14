@@ -11,7 +11,7 @@ class MarkSessionContainer extends React.Component {
     const markSessionId = this.props.match.params.id
 
     this.props.setCurrent(markSessionId)
-    this.props.fetchWidgets()
+    this.props.fetchWidgets(markSessionId)
   }
 
   render() {

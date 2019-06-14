@@ -1,18 +1,29 @@
 import BaseService from './BaseService'
 
-/*
-{
-  id: '',
-  title: 'RecentlyCreated',
-  searchTerm: '',
-  order: 'descending',
-  maxTotal: 10,
-}
-*/
 
 class MarkWidgetService extends BaseService {
   constructor() {
     super('markWidgets')
+  }
+
+  index(markSessionId, callback) {
+    this.collection.where('markSessionIds', 'array-contains', markSessionId)
+    .get()
+    .then((snapshotDocs) => {
+      const objList = []
+      let item
+
+      snapshotDocs.forEach((doc) => {
+        item = Object.assign({}, doc.data())
+        item.id = doc.id
+        objList.push(item)
+      })
+      return objList
+    })
+    .then((objList) => {
+      callback(objList)
+      return objList
+    })
   }
 }
 

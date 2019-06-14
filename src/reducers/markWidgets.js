@@ -6,6 +6,7 @@ const emptyMarkWidget = {
   searchTerm: '',
   order: '',      // descending vs. ascending
   maxTotal: 0,    // 10
+  markSessionIds: [],
 }
 
 const initialState = {

@@ -9,28 +9,51 @@ class MarkService {
     this.collection = this.db.collection(this.collectionName)
   }
 
-  getNotes(doc) {
-    // Returns a Promise
-    let note
-    let notes = []
+  // getNotes(doc) {
+  //   // Returns a Promise
+  //   let note
+  //   let notes = []
 
-    return new Promise(resolve => {
-      this.collection.doc(doc.id).collection('notes').get()
-      .then((noteSnapshotDocs) => {
-        if(noteSnapshotDocs && noteSnapshotDocs.docs.length > 0) {
-          noteSnapshotDocs.forEach((noteDoc) => {
-            note = noteDoc.data()
-            note.id = noteDoc.id
-            notes.push(note)
-          })
-        }
-        return notes
-      })
-      .then((notes) => {
-        let mark = Object.assign({id: doc.id, notes: notes}, doc.data())
-        resolve(mark)
-      })
-    })
+  //   return new Promise(resolve => {
+  //     this.collection.doc(doc.id).collection('notes').get()
+  //     .then((noteSnapshotDocs) => {
+  //       if(noteSnapshotDocs && noteSnapshotDocs.docs.length > 0) {
+  //         noteSnapshotDocs.forEach((noteDoc) => {
+  //           note = noteDoc.data()
+  //           note.id = noteDoc.id
+  //           notes.push(note)
+  //         })
+  //       }
+  //       return notes
+  //     })
+  //     .then((notes) => {
+  //       let mark = Object.assign({id: doc.id, notes: notes}, doc.data())
+  //       resolve(mark)
+  //     })
+  //   })
+  // }
+
+  getFromWidget(widget, callback) {
+    // Uses where term based on widget
+    // widget.searchTerm
+    // widget.order
+    // widget.maxTotal
+    // e.g. searchTerm -> ''
+    // e.g. searchTerm -> domain:youtube
+    // const key, value
+    const maxTotal = widget.maxTotal || 10
+    const order = widget.order || 'descending'
+    const orderBy = widget.order || 'created'
+    const comparisonOp = '=='
+    // TODO XXX: Will need to add things like domain and such to firestore in order
+    //  to search by it, firestore doesn't support substrings
+
+    // if(widget.searchTerm) {
+    //   key,value = widget.searchTerm.split(':')
+    // }
+
+    this.collection.where()
+
   }
 
   index(onSuccess) {

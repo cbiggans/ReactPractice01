@@ -8,6 +8,7 @@ function MarkWidgetItem(props) {
       <Link to={'/widget/' + props.widget.id}>
         {props.widget.title}
       </Link>
+
     </div>
   )
 }
