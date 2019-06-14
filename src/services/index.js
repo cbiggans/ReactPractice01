@@ -23,8 +23,8 @@ export const db = firebase.firestore()
 
 const services = {
 	markSessions: new MarkSessionService(),
-	marks: new MarkService(),
   markWidgets: new MarkWidgetService(),
+	marks: new MarkService(),
   notes: new NoteService(),
 }
 

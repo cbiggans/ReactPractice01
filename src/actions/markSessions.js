@@ -54,9 +54,6 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
 
   const state = getState()
 
-  // TODO XXX: Need to edit this for if editing existing markSession,
-  //  then call update
-
   if(id) {
     const markSession = state.markSessions.collection[id]
 
@@ -78,7 +75,6 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
       })
     })
   }
-
 }
 
 const markSessionActions = {

@@ -16,7 +16,7 @@ const emptyMarkSession = {
 
 const initialState = {
   collection: {},
-  current: Object.assign({}, emptyMarkSession),
+  currentId: null,
   widgets: [],
   next: Object.assign({}, emptyMarkSession),
   displayOptions: {
@@ -48,7 +48,6 @@ const markSessions = (state = initialState, action) => {
     case actionTypes.MARK_SESSIONS.SET_CURRENT:
       tmpCollection = Object.assign({}, state.collection)
       tmpCollection[action.payload.session.id] = action.payload.session
-      console.log(tmpCollection)
 
       return {
         ...state,
@@ -68,10 +67,7 @@ const markSessions = (state = initialState, action) => {
         collection: tmpCollection,
       }
     case actionTypes.MARK_SESSIONS.UPDATE_FIELD:
-      // TODO XXX: Check if there's an ID, if there is update that specific session
       if(action.payload.id) {
-        // TODO XXX: Can optimize this later by just copying the entry to be edited, but
-        //  this is fine for now
         tmpMarkSession = Object.assign({}, state.collection[action.payload.id])
         tmpMarkSession[action.payload.name] = action.payload.value
         state.collection[action.payload.id] = tmpMarkSession

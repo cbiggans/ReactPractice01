@@ -2,7 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import actions from '../actions/'
 import MarkSessionForm from './MarkSessionForm'
-// import MarkSessionList from './MarkSessionList'
+import MarkWidgetList from './MarkWidgetList'
+import MarkWidgetForm from './MarkWidgetForm'
 
 
 class MarkSessionContainer extends React.Component {
@@ -10,7 +11,7 @@ class MarkSessionContainer extends React.Component {
     const markSessionId = this.props.match.params.id
 
     this.props.setCurrent(markSessionId)
-    // this.props.fetchWidgets()
+    this.props.fetchWidgets()
   }
 
   render() {
@@ -39,11 +40,26 @@ class MarkSessionContainer extends React.Component {
                          handleSubmit={this.props.handleSubmit} />
       )
     }
+
+    var widgetSectionHeader
+    if(this.props.widgets.displayOptions.newMarkWidgetEditorIsOpen) {
+      widgetSectionHeader = (
+        <MarkWidgetForm markWidget={this.props.widgets.next}
+                        handleChange={this.props.handleWidgetChange}
+                        handleSubmit={this.props.handleWidgetSubmit} />
+      )
+    } else {
+      widgetSectionHeader = (
+        <button onClick={this.props.openWidgetEditor}>ADD WIDGET</button>
+      )
+    }
+
     return (
       <div>
         {currentMarkSessionDisplay}
         <div>Widgets</div>
-        <button onClick={this.props.openAddWidgetEditor}>ADD WIDGET</button>
+        {widgetSectionHeader}
+        <MarkWidgetList collection={this.props.widgets.collection} />
       </div>
     )
   }
@@ -58,7 +74,11 @@ function mapStateToProps(state) {
 
   return {
     current: getCurrentMarkSession(state),
-    widgets: state.markSessions.widgets,
+    widgets: {
+      collection: state.markWidgets.collection,
+      next: state.markWidgets.next,
+      displayOptions: state.markWidgets.displayOptions,
+    },
     next: state.markSessions.next,
     displayOptions: state.markSessions.displayOptions,
   }
@@ -66,11 +86,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    openWidgetEditor: (id) => dispatch(actions.markWidgets.openEditor(id)),
     setCurrent: (id) => dispatch(actions.markSessions.setCurrent(id)),
     openCurrentEditor: () => dispatch(actions.markSessions.openCurrentEditor()),
     fetch: () => dispatch(actions.markSessions.fetch()),
+    fetchWidgets: (sessionId) => dispatch(actions.markWidgets.fetch(sessionId)),
     handleChange: (e, id) => dispatch(actions.markSessions.handleChange(e, id)),
     handleSubmit: (e, id) => dispatch(actions.markSessions.handleSubmit(e, id)),
+    handleWidgetChange: (e, id) => dispatch(actions.markWidgets.handleChange(e, id)),
+    handleWidgetSubmit: (e, id) => dispatch(actions.markWidgets.handleSubmit(e, id)),
   }
 }
 
