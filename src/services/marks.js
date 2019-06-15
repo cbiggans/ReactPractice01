@@ -1,6 +1,6 @@
 import { db } from './'
 import { currentUTCTime } from '../lib/time'
-import { parseSearchTerm } from '../lib/searchTerms'
+import { buildWhereClause } from '../lib/searchTerms'
 
 
 class MarkService {
@@ -9,30 +9,6 @@ class MarkService {
     this.db = db
     this.collection = this.db.collection(this.collectionName)
   }
-
-  // getNotes(doc) {
-  //   // Returns a Promise
-  //   let note
-  //   let notes = []
-
-  //   return new Promise(resolve => {
-  //     this.collection.doc(doc.id).collection('notes').get()
-  //     .then((noteSnapshotDocs) => {
-  //       if(noteSnapshotDocs && noteSnapshotDocs.docs.length > 0) {
-  //         noteSnapshotDocs.forEach((noteDoc) => {
-  //           note = noteDoc.data()
-  //           note.id = noteDoc.id
-  //           notes.push(note)
-  //         })
-  //       }
-  //       return notes
-  //     })
-  //     .then((notes) => {
-  //       let mark = Object.assign({id: doc.id, notes: notes}, doc.data())
-  //       resolve(mark)
-  //     })
-  //   })
-  // }
 
   getFromWidget(widget, callback) {
     // Uses where term based on widget
@@ -45,12 +21,31 @@ class MarkService {
     const maxTotal = widget.maxTotal || 10
     const order = widget.order || 'descending'
     const orderBy = widget.order || 'created'
-    // const comparisonOp = '=='
-    const {left, op, right} = parseSearchTerm(widget.searchTerm)
-    console.log(left)
-    console.log(op)
-    console.log(right)
-    debugger
+    const marks = []
+    let mark
+
+    const whereClause = buildWhereClause(widget.searchTerm)
+    let query
+
+    if(!whereClause.isEmpty) {
+      query = this.collection.where(whereClause.left, whereClause.op, whereClause.right)
+    } else {
+      query = this.collection
+    }
+    query = query.orderBy('created')
+    query = query.limit(10)
+
+    query.get()
+    .then((snapshotDocs) => {
+      // This is common, should put this into another function
+      snapshotDocs.forEach((doc) => {
+        mark = doc.data()
+        mark.id = doc.id
+        marks.push(mark)
+      })
+      callback(marks)
+      return marks
+    })
     // TODO XXX: Will need to add things like domain and such to firestore in order
     //  to search by it, firestore doesn't support substrings
 

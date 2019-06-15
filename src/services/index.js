@@ -36,6 +36,30 @@ const services = {
 //     markSnapshotDocs.forEach((markDoc) => {
 //       mark = markDoc.data()
 // 
+//       if(mark.CreatedAt) {
+//         mark.created = mark.CreatedAt
+//       } else if(mark.createdAt) {
+//         mark.created = mark.createdAt
+//       }
+// 
+//       console.log('Mark To Update: ', mark)
+//       services.marks.update(markDoc.id, mark, (mark) => {
+//         console.log('Mark Updated: ', mark)
+//       })
+//     })
+//   })
+// }
+// 
+// updateMarkFields()
+
+// const updateMarkFields = () => {
+//   var mark
+// 
+//   services.marks.collection.get()
+//   .then((markSnapshotDocs) => {
+//     markSnapshotDocs.forEach((markDoc) => {
+//       mark = markDoc.data()
+// 
 //       mark.accessTimes = []
 //       mark.CreatedAt = Date.now()
 //       mark.ModifiedAt = Date.now()

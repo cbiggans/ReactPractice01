@@ -1,30 +1,44 @@
-export const parseSearchTerm = (searchTerm) => {
+export const buildWhereClause = (searchTerm) => {
   console.log(searchTerm)
   var left='', op='', right=''
+  var splitKey=''
 
   if(!searchTerm) {
-    return {left, op, right}
+    return {left, op, right, isEmpty:true}
   }
 
   // This isn't supported in firestore, will need to use `<` and `>` to get around this
   if(searchTerm.includes('<>')) {
+    splitKey = '<>'
     op = '<>'
   } else if(searchTerm.includes('>=')) {
+    splitKey = '>='
     op = '>='
   } else if(searchTerm.includes('<=')) {
+    splitKey = '<='
     op = '<='
   } else if(searchTerm.includes('==')) {
+    splitKey = '=='
     op = '=='
   } else if(searchTerm.includes('=')) {
+    splitKey = '='
     op = '=='
   } else if(searchTerm.includes('<')) {
+    splitKey = '<'
     op = '<'
   } else if(searchTerm.includes('>')) {
+    splitKey = '>'
     op = '>'
   }
 
-  left = searchTerm.split(op)[0]
-  right = searchTerm.split(op)[1]
+  left = searchTerm.split(splitKey)[0]
+  right = searchTerm.split(splitKey)[1]
 
-  return {left, op, right}
+  // Separate this out to a mapping w/ a switch statement
+  if(left === 'domain') {
+    left = 'details.domain'
+  }
+
+  return {left, op, right, isEmpty:false}
 }
+

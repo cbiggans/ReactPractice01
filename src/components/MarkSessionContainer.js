@@ -59,7 +59,9 @@ class MarkSessionContainer extends React.Component {
         {currentMarkSessionDisplay}
         <div>Widgets</div>
         {widgetSectionHeader}
-        <MarkWidgetList collection={this.props.widgets.collection} />
+        <MarkWidgetList collection={this.props.widgets.collection}
+                        markCollection={this.props.marks.collection}
+                        markIdOrderMap={this.props.widgets.markIdOrderMap} />
       </div>
     )
   }
@@ -71,10 +73,17 @@ function getCurrentMarkSession(state) {
 
 function mapStateToProps(state) {
   // Will want to set current here, but will need to handle the undefined case
+  const getMarksFromIds = (collection, markIds) => {
+    
+  }
 
   return {
     current: getCurrentMarkSession(state),
+    marks: {
+      collection: state.marks.collection,
+    },
     widgets: {
+      markIdOrderMap: state.markWidgets.markIdOrderMap,
       collection: state.markWidgets.collection,
       next: state.markWidgets.next,
       displayOptions: state.markWidgets.displayOptions,

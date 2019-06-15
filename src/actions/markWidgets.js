@@ -17,7 +17,23 @@ export const closeEditor = (id) => dispatch => {
 export const fetch = (sessionId) => dispatch => {
   services.markWidgets.index(sessionId, (widgets) => {
     widgets.forEach((widget) => {
-      services.marks.getFromWidget(widget)
+      services.marks.getFromWidget(widget, (marks) => {
+        // TODO XXX: MARK_WIDGETS.LOAD_MARKS
+        // Need to provide callback
+        dispatch({
+          type: actionTypes.MARKS.LOAD_MARKS,
+          payload: {
+            marks: marks,
+          },
+        })
+        dispatch({
+          type: actionTypes.MARK_WIDGETS.LOAD_MARKS,
+          payload: {
+            marks: marks,
+            widgetId: widget.id,
+          },
+        })
+      })
     })
 
     dispatch({

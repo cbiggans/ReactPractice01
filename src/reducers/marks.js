@@ -12,6 +12,7 @@ const emptyMark = {
 
 const initialState = {
   list: [],
+  collection: {},
   nextMark: Object.assign({}, emptyMark),
   currentMark: Object.assign({}, emptyMark),
   markInputter: '',
@@ -25,6 +26,7 @@ const initialState = {
 
 const marks = (state = initialState, action) => {
   var newMarks = []
+  var newCollection = {}
   var editingDisplaySetting
   // var urls
 
@@ -85,15 +87,22 @@ const marks = (state = initialState, action) => {
       newMarks = state.list.slice()
       newMarks.push(action.payload.mark)
 
+      newCollection = Object.assign({}, state.collection)
+      newCollection[action.payload.mark.id] = action.payload.mark
+
       return {
         ...state,
         list: newMarks,
+        collection: newCollection,
       }
     case actionTypes.MARKS.LOAD_MARKS:
-      // DEPRECATED currently
+      newCollection = Object.assign({}, state.collection)
+      action.payload.marks.forEach((mark) => {
+        newCollection[mark.id] = mark
+      })
       return {
         ...state,
-        list: action.payload.marks
+        collection: newCollection,
       }
     case actionTypes.MARKS.SET_CURRENT_MARK:
       return {
@@ -149,9 +158,13 @@ const marks = (state = initialState, action) => {
 
       newMarks.push(Object.assign({},
                                   action.payload.mark))
+
+      newCollection = Object.assign({}, state.collection)
+      newCollection[action.payload.mark.id] = action.payload.mark
       return {
         ...state,
         list: newMarks,
+        collection: newCollection,
       }
     case actionTypes.MARKS.ADD_NEXT_MARK:
       newMarks = state.list.slice()
@@ -160,15 +173,21 @@ const marks = (state = initialState, action) => {
       newMarks.push(Object.assign({},
                                   state.nextMark,
                                   {id: action.payload.mark.id}))
+
+      newCollection = Object.assign({}, state.collection)
+      newCollection[action.payload.mark.id] = action.payload.mark
+
       return {
         ...state,
         list: newMarks,
+        collection: newCollection,
         nextMark: Object.assign({}, initialState.nextMark),
       }
     case actionTypes.MARKS.DESTROY_MARK:
       newMarks = state.list.filter((item) => {
         return item.id !== action.payload.id
       })
+      // TODO XXX: Handle collection
       return {
         ...state,
         list: newMarks

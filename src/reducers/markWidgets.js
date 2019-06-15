@@ -12,6 +12,7 @@ const emptyMarkWidget = {
 const initialState = {
   collection: {},
   next: Object.assign({}, emptyMarkWidget),
+  markIdOrderMap: {},
   displayOptions: {
     newMarkWidgetEditorIsOpen: false,
   },
@@ -20,6 +21,7 @@ const initialState = {
 const markWidgets = (state = initialState, action) => {
   let tmpMarkWidget
   let tmpCollection
+  let markIdOrderMap
 
   switch(action.type) {
     case actionTypes.MARK_WIDGETS.OPEN_NEW_EDITOR:
@@ -49,6 +51,17 @@ const markWidgets = (state = initialState, action) => {
       return {
         ...state,
         collection: tmpCollection,
+      }
+    case actionTypes.MARK_WIDGETS.LOAD_MARKS:
+      markIdOrderMap = Object.assign({}, state.markIdOrderMap)
+      
+      markIdOrderMap[action.payload.widgetId] = action.payload.marks.map((mark) => {
+        return mark.id
+      })
+
+      return {
+        ...state,
+        markIdOrderMap: markIdOrderMap,
       }
     case actionTypes.MARK_WIDGETS.UPDATE_FIELD:
       if(action.payload.id) {
