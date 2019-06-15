@@ -1,5 +1,6 @@
 import { db } from './'
 import { currentUTCTime } from '../lib/time'
+import { parseSearchTerm } from '../lib/searchTerms'
 
 
 class MarkService {
@@ -44,7 +45,12 @@ class MarkService {
     const maxTotal = widget.maxTotal || 10
     const order = widget.order || 'descending'
     const orderBy = widget.order || 'created'
-    const comparisonOp = '=='
+    // const comparisonOp = '=='
+    const {left, op, right} = parseSearchTerm(widget.searchTerm)
+    console.log(left)
+    console.log(op)
+    console.log(right)
+    debugger
     // TODO XXX: Will need to add things like domain and such to firestore in order
     //  to search by it, firestore doesn't support substrings
 
@@ -52,7 +58,7 @@ class MarkService {
     //   key,value = widget.searchTerm.split(':')
     // }
 
-    this.collection.where()
+    // this.collection.where()
 
   }
 
