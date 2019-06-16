@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import actions from '../actions/'
+import actions from '../duck/actions/'
 import YoutubePlayerContainer from './YoutubePlayerContainer'
-import NoteTakerNoteForm from '../components/NoteTakerNoteForm'
-import NoteList from '../components/NoteList'
-import VideoPlayerWrapper from '../lib/VideoPlayerWrapper'
+import NoteTakerNoteForm from '../common/notes/NoteTakerNoteForm'
+import NoteList from '../common/notes/NoteList'
+import VideoPlayerWrapper from '../duck/lib/VideoPlayerWrapper'
 
 class NoteTakerContainer extends React.Component {
 

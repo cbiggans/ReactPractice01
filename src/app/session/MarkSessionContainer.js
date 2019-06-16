@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import actions from '../actions/'
-import MarkSessionForm from '../components/MarkSessionForm'
-import MarkWidgetList from '../components/MarkWidgetList'
-import MarkWidgetForm from '../components/MarkWidgetForm'
+import actions from '../duck/actions/'
+import MarkSessionForm from '../common/markSession/MarkSessionForm'
+import MarkWidgetContainer from './MarkWidgetContainer'
+import MarkWidgetForm from '../common/markWidget/MarkWidgetForm'
 
 
 class MarkSessionContainer extends React.Component {
@@ -59,9 +59,7 @@ class MarkSessionContainer extends React.Component {
         {currentMarkSessionDisplay}
         <div>Widgets</div>
         {widgetSectionHeader}
-        <MarkWidgetList collection={this.props.widgets.collection}
-                        markCollection={this.props.marks.collection}
-                        markIdOrderMap={this.props.widgets.markIdOrderMap} />
+        <MarkWidgetContainer />
       </div>
     )
   }

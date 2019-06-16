@@ -1,8 +1,8 @@
 import React from 'react'
-import MarkForm from '../components/MarkForm'
-import MarkList from '../components/MarkList'
+import MarkForm from '../common/marks/MarkForm'
+import MarkList from '../common/marks/MarkList'
 import { connect } from 'react-redux'
-import actions from '../actions/'
+import actions from '../duck/actions/'
 
 
 class MarkContainer extends React.Component{

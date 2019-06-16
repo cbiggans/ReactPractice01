@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import MarkItem from './MarkItem'
+import MarkItem from '../marks/Item'
+import '../../duck/styles/markWidgetWindow.css'
 
 
 function MarkWidgetWindow(props) {
@@ -17,7 +18,7 @@ function MarkWidgetWindow(props) {
   }
 
   return (
-    <div>
+    <div className='widgetWindow'>
       <h2>
         {props.widget.title}
       </h2>

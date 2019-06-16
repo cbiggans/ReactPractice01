@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import EventKeyMapper from '../lib/eventKeyMapper'
-import { extractVideoId } from '../lib/VideoPlayerWrapper.js'
+import EventKeyMapper from '../duck/lib/eventKeyMapper'
+import { extractVideoId } from '../duck/lib/VideoPlayerWrapper.js'
 
 
 class YoutubePlayerContainer extends React.Component {
