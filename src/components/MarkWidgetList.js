@@ -1,19 +1,19 @@
 import React from 'react'
-import MarkWidgetItem from './MarkWidgetItem'
+import MarkWidgetWindow from './MarkWidgetWindow'
 
 
 function MarkWidgetList(props) {
-  const widgetItems = []
+  const widgetWindows = []
   Object.values(props.collection).forEach((item) => {
-    widgetItems.push(<MarkWidgetItem key={item.id}
-                                     widget={item}
-                                     markIdOrder={props.markIdOrderMap[item.id]}
-                                     markCollection={props.markCollection} />)
+    widgetWindows.push(<MarkWidgetWindow key={item.id}
+                                         widget={item}
+                                         markIdOrder={props.markIdOrderMap[item.id]}
+                                         markCollection={props.markCollection} />)
   })
   return (
     <div>
       <h3>List</h3>
-      {widgetItems}
+      {widgetWindows}
     </div>
   )
 }

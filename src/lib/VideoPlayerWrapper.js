@@ -1,4 +1,4 @@
-function extractVideoId(url) {
+export const extractVideoId = (url) => {
   // e.g. url = https://www.youtube.com/watch?v=VUyBY72mwrQ
   if(url && url.includes('youtube.com')) {
     return url.split('?v=')[1]

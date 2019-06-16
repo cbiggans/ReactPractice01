@@ -99,7 +99,7 @@ export const handleSubmit = (e) => (dispatch, getState) => {
 
 export const changeNoteOrder = (markId, order) => dispatch => {
   dispatch({
-    type: actionTypes.NOTES.CHANGE_NOTE_ORDER,
+    type: actionTypes.NOTE_TAKER.CHANGE_NOTE_ORDER,
     payload: {
       markId: markId,
       order: order,

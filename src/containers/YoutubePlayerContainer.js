@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import EventKeyMapper from '../lib/eventKeyMapper'
+import { extractVideoId } from '../lib/VideoPlayerWrapper.js'
 
 
 class YoutubePlayerContainer extends React.Component {
@@ -15,7 +16,6 @@ class YoutubePlayerContainer extends React.Component {
     this.componentHasMounted = false
     this.currentVideoId = ''
 
-    // var videoId = extractVideoId(this.props.currentMark.url)
     console.log('CurrentURL: ', this.props.currentMark)
     this.playerWrapper = this.props.playerWrapper
 
@@ -70,7 +70,7 @@ class YoutubePlayerContainer extends React.Component {
     //  Would be good to control stepping/jumping time with this as well so the
     //  Key event class wouldn't have to modify this instance directly
     if(this.playerWrapper && this.props.settings.playback.hasNewCurrentTime) {
-      this.setTime(this.props.settings.playback.currentTime)
+      this.playerWrapper.setTime(this.props.settings.playback.currentTime)
       this.props.completedTimeUpdate()
     }
 
@@ -100,16 +100,6 @@ class YoutubePlayerContainer extends React.Component {
     )
   }
 
-}
-
-// TODO XXX: Remove this and import
-function extractVideoId(url) {
-    // e.g. url = https://www.youtube.com/watch?v=VUyBY72mwrQ
-    if(url && url.includes('youtube.com')) {
-      return url.split('?v=')[1]
-    }
-
-    return ''
 }
 
 function mapStateToProps(state) {

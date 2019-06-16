@@ -28,7 +28,7 @@ const notes = (state = initialState, action) => {
   var note, markId
 
   switch(action.type) {
-    case actionTypes.NOTES.CHANGE_NOTE_ORDER:
+    case actionTypes.NOTE_TAKER.CHANGE_NOTE_ORDER:
       // NEED markId to get into mapping
       notesList = state.mapping[action.payload.markId].slice()
 

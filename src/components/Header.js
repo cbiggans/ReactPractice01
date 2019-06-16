@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import '../styles/app.css'
 
 
 function Header(props) {
   return (
-    <div>
+    <div className='foo'>
       <ul>
         <li>
           <Link to="/">Home</Link>

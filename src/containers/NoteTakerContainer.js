@@ -2,8 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import actions from '../actions/'
 import YoutubePlayerContainer from './YoutubePlayerContainer'
-import NoteTakerNoteForm from './NoteTakerNoteForm'
-import NoteList from './NoteList'
+import NoteTakerNoteForm from '../components/NoteTakerNoteForm'
+import NoteList from '../components/NoteList'
 import VideoPlayerWrapper from '../lib/VideoPlayerWrapper'
 
 class NoteTakerContainer extends React.Component {

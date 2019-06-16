@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import actions from '../actions/'
-import MarkSessionForm from './MarkSessionForm'
-import MarkWidgetList from './MarkWidgetList'
-import MarkWidgetForm from './MarkWidgetForm'
+import MarkSessionForm from '../components/MarkSessionForm'
+import MarkWidgetList from '../components/MarkWidgetList'
+import MarkWidgetForm from '../components/MarkWidgetForm'
 
 
 class MarkSessionContainer extends React.Component {
@@ -73,9 +73,9 @@ function getCurrentMarkSession(state) {
 
 function mapStateToProps(state) {
   // Will want to set current here, but will need to handle the undefined case
-  const getMarksFromIds = (collection, markIds) => {
-    
-  }
+  // const getMarksFromIds = (collection, markIds) => {
+  //   
+  // }
 
   return {
     current: getCurrentMarkSession(state),
