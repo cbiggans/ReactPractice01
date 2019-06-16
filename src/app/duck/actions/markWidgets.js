@@ -3,9 +3,18 @@ import services from '../services/'
 
 
 export const openEditor = (id) => dispatch => {
-  dispatch({
-    type: actionTypes.MARK_WIDGETS.OPEN_NEW_EDITOR,
-  })
+  if(!id) {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.OPEN_NEW_EDITOR,
+    })
+  } else {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.OPEN_EDITOR,
+      payload: {
+        id: id,
+      }
+    })
+  }
 }
 
 export const closeEditor = (id) => dispatch => {

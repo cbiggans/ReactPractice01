@@ -16,11 +16,21 @@ function MarkWidgetWindow(props) {
     marks = []
   }
 
-  return (
-    <div className='widgetWindow'>
+  let header
+  if(!props.displayOptions.openEditors[props.widget.id]) {
+    header = (
       <h2>
         {props.widget.title}
+        <button onClick={() => props.openEditor(props.widget.id)}>EDIT</button>
       </h2>
+    )
+  } else {
+    header = <div>EDITOR OPEN</div>
+  }
+
+  return (
+    <div className='widgetWindow'>
+      {header}
       {marks}
     </div>
   )

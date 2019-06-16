@@ -15,6 +15,7 @@ const initialState = {
   markIdOrderMap: {},
   displayOptions: {
     newMarkWidgetEditorIsOpen: false,
+    openEditors: {},
   },
 }
 
@@ -22,6 +23,7 @@ const markWidgets = (state = initialState, action) => {
   let tmpMarkWidget
   let tmpCollection
   let markIdOrderMap
+  let tmpOpenEditors
 
   switch(action.type) {
     case actionTypes.MARK_WIDGETS.OPEN_NEW_EDITOR:
@@ -30,6 +32,17 @@ const markWidgets = (state = initialState, action) => {
         displayOptions: {
           ...state.displayOptions,
           newMarkWidgetEditorIsOpen: true
+        }
+      }
+    case actionTypes.MARK_WIDGETS.OPEN_EDITOR:
+      tmpOpenEditors = Object.assign({}, state.displayOptions.openEditors)
+      tmpOpenEditors[action.payload.id] = true
+
+      return {
+        ...state,
+        displayOptions: {
+          ...state.displayOptions,
+          openEditors: tmpOpenEditors
         }
       }
     case actionTypes.MARK_WIDGETS.CLOSE_NEW_EDITOR:

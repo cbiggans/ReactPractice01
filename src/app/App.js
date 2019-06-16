@@ -1,6 +1,6 @@
 import React from 'react'
 import HomeContainer from './home/HomeContainer'
-import MarkSessionContainer from './session/MarkSessionContainer'
+import MarkSessionContainer from './markSession/MarkSessionContainer'
 import MarkContainer from './marks/MarkContainer'
 import Header from './common/Header'
 import NoteTakerContainer from './noteTaker/NoteTakerContainer'
