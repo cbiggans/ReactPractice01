@@ -4,10 +4,6 @@ import MarkWidgetWindow from '../common/markWidget/MarkWidgetWindow'
 
 
 class MarkWidgetContainer extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     const widgetWindows = []
     Object.values(this.props.collection).forEach((item) => {

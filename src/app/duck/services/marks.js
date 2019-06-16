@@ -18,9 +18,10 @@ class MarkService {
     // e.g. searchTerm -> ''
     // e.g. searchTerm -> domain:youtube
     // const key, value
-    const maxTotal = widget.maxTotal || 10
+
+    const maxTotal = parseInt(widget.maxTotal || 10)
     const order = widget.order || 'descending'
-    const orderBy = widget.order || 'created'
+    const orderBy = widget.orderBy || 'created'
     const marks = []
     let mark
 
@@ -32,8 +33,8 @@ class MarkService {
     } else {
       query = this.collection
     }
-    query = query.orderBy('created')
-    query = query.limit(10)
+    query = query.orderBy(orderBy)
+    query = query.limit(maxTotal)
 
     query.get()
     .then((snapshotDocs) => {
@@ -46,14 +47,6 @@ class MarkService {
       callback(marks)
       return marks
     })
-    // TODO XXX: Will need to add things like domain and such to firestore in order
-    //  to search by it, firestore doesn't support substrings
-
-    // if(widget.searchTerm) {
-    //   key,value = widget.searchTerm.split(':')
-    // }
-
-    // this.collection.where()
 
   }
 

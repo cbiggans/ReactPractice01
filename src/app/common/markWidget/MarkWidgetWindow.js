@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import MarkItem from '../marks/Item'
 import '../../duck/styles/markWidgetWindow.css'
 
