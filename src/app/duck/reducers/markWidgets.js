@@ -36,7 +36,12 @@ const markWidgets = (state = initialState, action) => {
       }
     case actionTypes.MARK_WIDGETS.OPEN_EDITOR:
       tmpOpenEditors = Object.assign({}, state.displayOptions.openEditors)
-      tmpOpenEditors[action.payload.id] = true
+
+      if(action.payload && action.payload.id) {
+        tmpOpenEditors[action.payload.id] = true
+      } else {
+        tmpOpenEditors['newEditor'] = true
+      }
 
       return {
         ...state,
@@ -51,6 +56,22 @@ const markWidgets = (state = initialState, action) => {
         displayOptions: {
           ...state.displayOptions,
           newMarkWidgetEditorIsOpen: false
+        }
+      }
+    case actionTypes.MARK_WIDGETS.CLOSE_EDITOR:
+      tmpOpenEditors = Object.assign({}, state.displayOptions.openEditors)
+
+      if(action.payload && action.payload.id) {
+        tmpOpenEditors[action.payload.id] = false
+      } else {
+        tmpOpenEditors['newEditor'] = false
+      }
+
+      return {
+        ...state,
+        displayOptions: {
+          ...state.displayOptions,
+          openEditors: tmpOpenEditors
         }
       }
     case actionTypes.MARK_WIDGETS.LOAD:

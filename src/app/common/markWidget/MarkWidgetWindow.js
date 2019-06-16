@@ -1,5 +1,7 @@
 import React from 'react'
 import MarkItem from '../marks/Item'
+import MarkWidgetForm from './MarkWidgetForm'
+import MarkWidgetFormContainer from './MarkWidgetFormContainer'
 import '../../duck/styles/markWidgetWindow.css'
 
 
@@ -25,7 +27,7 @@ function MarkWidgetWindow(props) {
       </h2>
     )
   } else {
-    header = <div>EDITOR OPEN</div>
+    header = <MarkWidgetFormContainer id={props.widget.id} />
   }
 
   return (

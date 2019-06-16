@@ -5,7 +5,7 @@ import services from '../services/'
 export const openEditor = (id) => dispatch => {
   if(!id) {
     dispatch({
-      type: actionTypes.MARK_WIDGETS.OPEN_NEW_EDITOR,
+      type: actionTypes.MARK_WIDGETS.OPEN_EDITOR,
     })
   } else {
     dispatch({
@@ -18,9 +18,18 @@ export const openEditor = (id) => dispatch => {
 }
 
 export const closeEditor = (id) => dispatch => {
-  dispatch({
-    type: actionTypes.MARK_WIDGETS.CLOSE_NEW_EDITOR,
-  })
+  if(!id) {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
+    })
+  } else {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
+      payload: {
+        id: id,
+      }
+    })
+  }
 }
 
 export const fetch = (sessionId) => dispatch => {
@@ -83,6 +92,14 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
           widget: widget,
         }
       })
+
+      // Close Editor Window
+      dispatch({
+        type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
+        payload: {
+          id: id,
+        }
+      })
     })
   } else {
     state.markWidgets.next.markSessionIds = [markSessionId]
@@ -93,6 +110,10 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
         payload: {
           widget: widget,
         }
+      })
+
+      dispatch({
+        type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
       })
     })
   }

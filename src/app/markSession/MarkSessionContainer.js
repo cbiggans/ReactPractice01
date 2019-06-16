@@ -42,7 +42,7 @@ class MarkSessionContainer extends React.Component {
     }
 
     var widgetSectionHeader
-    if(this.props.widgets.displayOptions.newMarkWidgetEditorIsOpen) {
+    if(this.props.widgets.displayOptions.openEditors.newEditor) {
       widgetSectionHeader = (
         <MarkWidgetForm markWidget={this.props.widgets.next}
                         handleChange={this.props.handleWidgetChange}
@@ -50,7 +50,7 @@ class MarkSessionContainer extends React.Component {
       )
     } else {
       widgetSectionHeader = (
-        <button onClick={this.props.openWidgetEditor}>ADD WIDGET</button>
+        <button onClick={() => {this.props.openWidgetEditor()}}>ADD WIDGET</button>
       )
     }
 
