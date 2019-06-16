@@ -85,8 +85,8 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
   var newMark
   const state = getState()
   // TODO XXX: Should move these auto-generated properties to services class
-  const createdAt = currentUTCTime()
-  const modifiedAt = currentUTCTime()
+  const created = currentUTCTime()
+  const modified = currentUTCTime()
 
   const urls = state.marks.markInputter.split('\n')
 
@@ -94,8 +94,8 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
     scrapeWebsite(url)
     .then((scrapedData) => {
       newMark = {
-        'createdAt': createdAt,
-        'modifiedAt': modifiedAt,
+        'created': created,
+        'modified': modified,
         'category': '',
         'description': '',
         'tags': '',

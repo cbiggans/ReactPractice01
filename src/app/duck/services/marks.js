@@ -20,9 +20,9 @@ class MarkService {
     // const key, value
 
     const maxTotal = parseInt(widget.maxTotal || 10)
-    const order = widget.order || 'descending'
     const orderBy = widget.orderBy || 'created'
     const marks = []
+    let order = widget.order || 'descending'
     let mark
 
     const whereClause = buildWhereClause(widget.searchTerm)
@@ -33,7 +33,12 @@ class MarkService {
     } else {
       query = this.collection
     }
-    query = query.orderBy(orderBy)
+
+    if(order === 'descending') {
+      query = query.orderBy(orderBy, 'desc')
+    } else {
+      query = query.orderBy(orderBy)
+    }
     query = query.limit(maxTotal)
 
     query.get()
@@ -80,8 +85,8 @@ class MarkService {
   }
 
   create(mark, onSuccess) {
-    mark.createdAt = currentUTCTime()
-    mark.modifiedAt = currentUTCTime()
+    mark.created = currentUTCTime()
+    mark.modified = currentUTCTime()
 
     this.collection.add(mark)
     .then((ref) => {
