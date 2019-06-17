@@ -1,22 +1,33 @@
 import React from 'react'
+import ManyMarkInputter from '../marks/ManualInputter'
 
 
 const MarkWidgetForm = (props) => {
-  let buttons
+  let extraButtons
   if(props.markWidget.id) {
-    buttons = (
+    extraButtons = (
       <div>
         <button onClick={() => {props.destroy(props.markWidget.id)}}>DESTROY</button>
         <button onClick={() => {props.cancel(props.markWidget.id)}}>CANCEL</button>
       </div>
     )
   } else {
-    buttons = (
+    extraButtons = (
       <div>
         <button onClick={() => {console.log('cancel')}}>CANCEL</button>
       </div>
     )
   }
+
+  var manualInputter
+  console.log('IN MARK_WIDGET_FORM RENDER')
+  if(props.displayOptions.manualInputterOpen) {
+    manualInputter = <ManyMarkInputter markInputter={props.markWidget.markInputter}
+                                       handleChange={(e) => {props.handleChange(e, props.markWidget.id)}} />
+  } else {
+    manualInputter = null
+  }
+
   return (
     <div>
       <form onSubmit={(e) => {props.handleSubmit(e, props.markWidget.id)}}>
@@ -45,9 +56,11 @@ const MarkWidgetForm = (props) => {
                value={props.markWidget.maxTotal}
                placeholder='Max Total'
                onChange={(e) => {props.handleChange(e, props.markWidget.id)}} />
+        { manualInputter }
+        <button type='button' onClick={() => props.openManualInputter(props.markWidget.id)}>Add Marks Manually</button>
         <button type='submit'>Add MarkWidget</button>
       </form>
-      { buttons }
+      { extraButtons }
     </div>
   )
 }

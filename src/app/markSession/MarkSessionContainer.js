@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import actions from '../duck/actions/'
 import MarkSessionForm from '../common/markSession/Form'
 import MarkWidgetContainer from './MarkWidgetContainer'
-import MarkWidgetForm from '../common/markWidget/Form'
+// import MarkWidgetForm from '../common/markWidget/Form'
+import MarkWidgetFormContainer from '../common/markWidget/FormContainer'
 
 
 class MarkSessionContainer extends React.Component {
@@ -42,12 +43,8 @@ class MarkSessionContainer extends React.Component {
     }
 
     var widgetSectionHeader
-    if(this.props.widgets.displayOptions.openEditors.newEditor) {
-      widgetSectionHeader = (
-        <MarkWidgetForm markWidget={this.props.widgets.next}
-                        handleChange={this.props.handleWidgetChange}
-                        handleSubmit={this.props.handleWidgetSubmit} />
-      )
+    if(this.props.widgets.displayOptions.openEditors.nextEditor) {
+      widgetSectionHeader = <MarkWidgetFormContainer />
     } else {
       widgetSectionHeader = (
         <button onClick={() => {this.props.openWidgetEditor()}}>ADD WIDGET</button>

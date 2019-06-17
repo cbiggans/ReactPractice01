@@ -31,7 +31,7 @@ class BaseService {
   get(id, callback) {
     this.collection.doc(id).get()
     .then((docRef) => {
-      const item = Object.assign(docRef.data())
+      const item = docRef.data()
       item.id = docRef.id
 
       callback(item)

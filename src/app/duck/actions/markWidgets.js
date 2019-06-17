@@ -2,6 +2,38 @@ import actionTypes from './constants'
 import services from '../services/'
 
 
+// TODO XXX: This should be in something like a markWidgetForm directory instead of here
+export const openFormManualInputter = (id) => dispatch => {
+  if(!id) {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.OPEN_MANUAL_INPUTTER,
+    })
+  } else {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.OPEN_MANUAL_INPUTTER,
+      payload: {
+        id: id,
+      }
+    })
+  }
+}
+
+export const closeFormManualInputter = (id) => dispatch => {
+  if(!id) {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.CLOSE_MANUAL_INPUTTER,
+    })
+  } else {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.CLOSE_MANUAL_INPUTTER,
+      payload: {
+        id: id,
+      }
+    })
+  }
+}
+
+
 export const openEditor = (id) => dispatch => {
   if(!id) {
     dispatch({
@@ -35,7 +67,7 @@ export const closeEditor = (id) => dispatch => {
 export const fetch = (sessionId) => dispatch => {
   services.markWidgets.index(sessionId, (widgets) => {
     widgets.forEach((widget) => {
-      services.marks.getFromWidget(widget, (marks) => {
+      services.marks.indexFromWidget(widget, (marks) => {
         // TODO XXX: MARK_WIDGETS.LOAD_MARKS
         // Need to provide callback
         dispatch({
@@ -82,9 +114,10 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
 
   const state = getState()
   const markSessionId = state.markSessions.currentId
+  let markWidget
 
   if(id) {
-    const markWidget = state.markWidgets.displayOptions.openEditors[id]
+    markWidget = state.markWidgets.displayOptions.openEditors[id].widget
 
     services.markWidgets.update(id, markWidget, (widget) => {
       dispatch({
@@ -101,13 +134,14 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
         }
       })
 
-      // TODO XXX: dispatch refresh just the single widget
+      // TODO XXX: dispatch refresh of just the single widget to save on service call
       dispatch(fetch(markSessionId))
     })
   } else {
-    state.markWidgets.next.markSessionIds = [markSessionId]
+    markWidget = state.markWidgets.displayOptions.openEditors['nextEditor'].widget
+    markWidget.markSessionIds = [markSessionId]
 
-    services.markWidgets.create(state.markWidgets.next, (widget) => {
+    services.markWidgets.create(markWidget, (widget) => {
       dispatch({
         type: actionTypes.MARK_WIDGETS.CREATE,
         payload: {
@@ -136,6 +170,8 @@ export const destroy = (id) => dispatch => {
 const markWidgetActions = {
   openEditor: openEditor,
   closeEditor: closeEditor,
+  openFormManualInputter: openFormManualInputter,
+  closeFormManualInputter: closeFormManualInputter,
   fetch: fetch,
   handleChange: handleChange,
   handleSubmit: handleSubmit,

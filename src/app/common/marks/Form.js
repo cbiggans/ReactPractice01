@@ -2,22 +2,19 @@ import React from 'react'
 
 
 function MarkForm(props) {
-  let buttons
+  let extraButtons
+  let submitButton
 
   if(props.mark.id) {
-    buttons = (
+    submitButton = <button type='submit'>UPDATE</button>
+    extraButtons = (
       <div>
-        <button type='submit'>UPDATE</button>
         <button onClick={() => {props.destroyHandler(props.mark.id)}}>DESTROY</button>
         <button onClick={() => {props.closeForm(props.mark.id)}}>CLOSE</button>
       </div>
     )
   } else {
-    buttons = (
-      <div>
-        <button type='submit'>ADD</button>
-      </div>
-    )
+    submitButton =<button type='submit'>ADD</button>
   }
   return (
     <div>
@@ -52,8 +49,9 @@ function MarkForm(props) {
                value={props.mark.type}
                placeholder='Type'
                onChange={props.handleChange} />
+        {submitButton}
       </form>
-      {buttons}
+      {extraButtons}
     </div>
   )
 }

@@ -1,5 +1,4 @@
 export const buildWhereClause = (searchTerm) => {
-  console.log(searchTerm)
   var left='', op='', right=''
   var splitKey=''
 

@@ -19,22 +19,57 @@ const initialState = {
   },
 }
 
+const emptyEditor = {
+  widget: Object.assign({}, emptyMarkWidget),
+  displayOptions: {
+    manualInputterOpen: false,
+  },
+}
+
 const markWidgets = (state = initialState, action) => {
   let tmpMarkWidget
   let tmpCollection
   let markIdOrderMap
   let tmpOpenEditors
+  let tmpEditor
+  let key
 
   switch(action.type) {
+    case actionTypes.MARK_WIDGETS.OPEN_MANUAL_INPUTTER:
+      tmpOpenEditors = Object.assign({}, state.displayOptions.openEditors)
+
+      if(action.payload && action.payload.id) {
+        key = action.payload.id
+      } else {
+        key = 'nextEditor'
+      }
+
+      tmpEditor = Object.assign({}, tmpOpenEditors[key])
+      tmpEditor.displayOptions = Object.assign({}, tmpEditor.displayOptions, {manualInputterOpen: true})
+      tmpEditor.widget = Object.assign({}, tmpEditor.widget, {markInputter: ''})
+
+      return {
+        ...state,
+        displayOptions: {
+          ...state.displayOptions,
+          openEditors: {
+            ...state.displayOptions.openEditors,
+            [key]: tmpEditor,
+          }
+        }
+      }
+    case actionTypes.MARK_WIDGETS.CLOSE_MANUAL_INPUTTER:
+      return state
     case actionTypes.MARK_WIDGETS.OPEN_EDITOR:
       tmpOpenEditors = Object.assign({}, state.displayOptions.openEditors)
 
       if(action.payload && action.payload.id) {
-        tmpOpenEditors[action.payload.id] = Object.assign(
+        tmpOpenEditors[action.payload.id] = Object.assign({}, emptyEditor)
+        tmpOpenEditors[action.payload.id].widget = Object.assign(
           {}, state.collection[action.payload.id]
         )
       } else {
-        tmpOpenEditors['newEditor'] = Object.assign({}, emptyMarkWidget)
+        tmpOpenEditors['nextEditor'] = Object.assign({}, emptyEditor)
       }
 
       return {
@@ -50,7 +85,7 @@ const markWidgets = (state = initialState, action) => {
       if(action.payload && action.payload.id) {
         tmpOpenEditors[action.payload.id] = false
       } else {
-        tmpOpenEditors['newEditor'] = false
+        tmpOpenEditors['nextEditor'] = false
       }
 
       return {
@@ -84,27 +119,25 @@ const markWidgets = (state = initialState, action) => {
         markIdOrderMap: markIdOrderMap,
       }
     case actionTypes.MARK_WIDGETS.UPDATE_FIELD:
-      if(action.payload.id) {
-        tmpMarkWidget = Object.assign({}, state.displayOptions.openEditors[action.payload.id])
-        tmpMarkWidget[action.payload.name] = action.payload.value
-        // state.displayOptions.openEditors[action.payload.id] = tmpMarkWidget
-
-        return {
-          ...state,
-          displayOptions: {
-            ...state.displayOptions,
-            openEditors: {
-              ...state.displayOptions.openEditors,
-              [action.payload.id]: tmpMarkWidget,
-            },
-          }
-        }
+      var id = action.payload.id
+      if(!id) {
+        id = 'nextEditor'
       }
+
+      tmpMarkWidget = Object.assign({}, state.displayOptions.openEditors[id].widget)
+      tmpMarkWidget[action.payload.name] = action.payload.value
+
       return {
         ...state,
-        next: {
-          ...state.next,
-          [action.payload.name]: action.payload.value,
+        displayOptions: {
+          ...state.displayOptions,
+          openEditors: {
+            ...state.displayOptions.openEditors,
+            [id]: {
+              ...state.displayOptions.openEditors[id],
+              widget: tmpMarkWidget,
+            }
+          },
         }
       }
     case actionTypes.MARK_WIDGETS.UPDATE:
