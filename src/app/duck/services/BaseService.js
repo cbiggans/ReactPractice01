@@ -57,6 +57,12 @@ class BaseService {
       callback(data)
     })
   }
+
+  destroy(id, callback) {
+    // NOTE: Does not delete sub collections
+    this.collection.doc(id).delete()
+    .then((e) => callback(e))
+  }
 }
 
 export default BaseService

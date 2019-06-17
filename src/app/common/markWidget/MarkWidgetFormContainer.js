@@ -12,6 +12,7 @@ class MarkWidgetFormContainer extends React.Component {
 
   render() {
     return <MarkWidgetForm markWidget={this.props.widget}
+                           destroy={this.props.destroy}
                            handleChange={this.props.handleChange}
                            handleSubmit={this.props.handleSubmit} />
   }
@@ -27,6 +28,7 @@ function mapDispatchToProps(dispatch) {
   return {
     handleChange: (e, id) => dispatch(actions.markWidgets.handleChange(e, id)),
     handleSubmit: (e, id) => dispatch(actions.markWidgets.handleSubmit(e, id)),
+    destroy: (id) => dispatch(actions.markWidgets.destroy(id)),
   }
 }
 

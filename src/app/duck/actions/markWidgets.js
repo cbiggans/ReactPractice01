@@ -93,7 +93,6 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
         }
       })
 
-      // Close Editor Window
       dispatch({
         type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
         payload: {
@@ -119,12 +118,24 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
   }
 }
 
+export const destroy = (id) => dispatch => {
+  services.markWidgets.destroy(id, (e) => {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.DESTROY,
+      payload: {
+        id: id,
+      }
+    })
+  })
+}
+
 const markWidgetActions = {
   openEditor: openEditor,
   closeEditor: closeEditor,
   fetch: fetch,
   handleChange: handleChange,
   handleSubmit: handleSubmit,
+  destroy: destroy,
 }
 
 export default markWidgetActions

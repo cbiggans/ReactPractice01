@@ -26,14 +26,6 @@ const markWidgets = (state = initialState, action) => {
   let tmpOpenEditors
 
   switch(action.type) {
-    case actionTypes.MARK_WIDGETS.OPEN_NEW_EDITOR:
-      return {
-        ...state,
-        displayOptions: {
-          ...state.displayOptions,
-          newMarkWidgetEditorIsOpen: true
-        }
-      }
     case actionTypes.MARK_WIDGETS.OPEN_EDITOR:
       tmpOpenEditors = Object.assign({}, state.displayOptions.openEditors)
 
@@ -48,14 +40,6 @@ const markWidgets = (state = initialState, action) => {
         displayOptions: {
           ...state.displayOptions,
           openEditors: tmpOpenEditors
-        }
-      }
-    case actionTypes.MARK_WIDGETS.CLOSE_NEW_EDITOR:
-      return {
-        ...state,
-        displayOptions: {
-          ...state.displayOptions,
-          newMarkWidgetEditorIsOpen: false
         }
       }
     case actionTypes.MARK_WIDGETS.CLOSE_EDITOR:
@@ -126,6 +110,14 @@ const markWidgets = (state = initialState, action) => {
     case actionTypes.MARK_WIDGETS.CREATE:
       tmpCollection = Object.assign({}, state.collection)
       tmpCollection[action.payload.widget.id] = action.payload.widget
+
+      return {
+        ...state,
+        collection: tmpCollection,
+      }
+    case actionTypes.MARK_WIDGETS.DESTROY:
+      tmpCollection = Object.assign({}, state.collection)
+      delete tmpCollection[action.payload.id]
 
       return {
         ...state,

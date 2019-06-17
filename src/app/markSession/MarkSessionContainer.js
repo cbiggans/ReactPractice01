@@ -70,11 +70,6 @@ function getCurrentMarkSession(state) {
 }
 
 function mapStateToProps(state) {
-  // Will want to set current here, but will need to handle the undefined case
-  // const getMarksFromIds = (collection, markIds) => {
-  //   
-  // }
-
   return {
     current: getCurrentMarkSession(state),
     marks: {
