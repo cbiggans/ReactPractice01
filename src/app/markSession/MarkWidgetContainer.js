@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import MarkWidgetWindow from '../common/markWidget/MarkWidgetWindow'
+import MarkWidgetWindow from '../common/markWidget/Window'
 import actions from '../duck/actions/'
 
 

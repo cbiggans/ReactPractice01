@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import actions from '../duck/actions/'
-import MarkSessionForm from '../common/markSession/MarkSessionForm'
+import MarkSessionForm from '../common/markSession/Form'
 import MarkWidgetContainer from './MarkWidgetContainer'
-import MarkWidgetForm from '../common/markWidget/MarkWidgetForm'
+import MarkWidgetForm from '../common/markWidget/Form'
 
 
 class MarkSessionContainer extends React.Component {

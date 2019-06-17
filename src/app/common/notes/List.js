@@ -1,5 +1,5 @@
 import React from 'react'
-import NoteItem from './NoteItem'
+import NoteItem from './Item'
 
 
 function NoteList(props) {

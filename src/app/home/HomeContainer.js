@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import actions from '../duck/actions/'
-import MarkSessionForm from '../common/markSession/MarkSessionForm'
-import MarkSessionList from '../common/markSession/MarkSessionList'
+import MarkSessionForm from '../common/markSession/Form'
+import MarkSessionList from '../common/markSession/List'
 
 
 class HomeContainer extends React.Component {

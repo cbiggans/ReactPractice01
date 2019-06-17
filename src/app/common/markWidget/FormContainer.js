@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import actions from '../../duck/actions'
-import MarkWidgetForm from './MarkWidgetForm'
+import MarkWidgetForm from './Form'
 
 
 class MarkWidgetFormContainer extends React.Component {

@@ -1,6 +1,6 @@
 import React from 'react'
-import MarkForm from '../common/marks/MarkForm'
-import MarkList from '../common/marks/MarkList'
+import MarkForm from '../common/marks/Form'
+import MarkList from '../common/marks/List'
 import { connect } from 'react-redux'
 import actions from '../duck/actions/'
 

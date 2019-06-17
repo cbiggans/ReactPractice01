@@ -1,5 +1,5 @@
 import React from 'react'
-import MarkSessionItem from './MarkSessionItem'
+import MarkSessionItem from './Item'
 
 
 function MarkSessionList(props) {

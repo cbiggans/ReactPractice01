@@ -1,7 +1,6 @@
 import React from 'react'
 import MarkItem from '../marks/Item'
-import MarkWidgetForm from './MarkWidgetForm'
-import MarkWidgetFormContainer from './MarkWidgetFormContainer'
+import MarkWidgetFormContainer from './FormContainer'
 import '../../duck/styles/markWidgetWindow.css'
 
 
