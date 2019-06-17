@@ -11,8 +11,9 @@ class MarkWidgetFormContainer extends React.Component {
   }
 
   render() {
-    return <MarkWidgetForm markWidget={this.props.widget}
+    return <MarkWidgetForm markWidget={this.props.formWidget}
                            destroy={this.props.destroy}
+                           cancel={this.props.closeEditor}
                            handleChange={this.props.handleChange}
                            handleSubmit={this.props.handleSubmit} />
   }
@@ -20,7 +21,8 @@ class MarkWidgetFormContainer extends React.Component {
 
 function mapStateToProps(state, props) {
   return {
-    widget: state.markWidgets.collection[props.id]
+    widget: state.markWidgets.collection[props.id],
+    formWidget: state.markWidgets.displayOptions.openEditors[props.id],
   }
 }
 
@@ -29,6 +31,7 @@ function mapDispatchToProps(dispatch) {
     handleChange: (e, id) => dispatch(actions.markWidgets.handleChange(e, id)),
     handleSubmit: (e, id) => dispatch(actions.markWidgets.handleSubmit(e, id)),
     destroy: (id) => dispatch(actions.markWidgets.destroy(id)),
+    closeEditor: (id) => dispatch(actions.markWidgets.closeEditor(id)),
   }
 }
 

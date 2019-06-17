@@ -76,6 +76,7 @@ export const handleChange = (e, id) => dispatch => {
   })
 }
 
+// TODO XXX: Should pass in markSessionId so this is better
 export const handleSubmit = (e, id) => (dispatch, getState) => {
   e.preventDefault()
 
@@ -83,7 +84,7 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
   const markSessionId = state.markSessions.currentId
 
   if(id) {
-    const markWidget = state.markWidgets.collection[id]
+    const markWidget = state.markWidgets.displayOptions.openEditors[id]
 
     services.markWidgets.update(id, markWidget, (widget) => {
       dispatch({
@@ -99,6 +100,9 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
           id: id,
         }
       })
+
+      // TODO XXX: dispatch refresh just the single widget
+      dispatch(fetch(markSessionId))
     })
   } else {
     state.markWidgets.next.markSessionIds = [markSessionId]

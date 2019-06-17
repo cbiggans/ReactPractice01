@@ -30,9 +30,11 @@ const markWidgets = (state = initialState, action) => {
       tmpOpenEditors = Object.assign({}, state.displayOptions.openEditors)
 
       if(action.payload && action.payload.id) {
-        tmpOpenEditors[action.payload.id] = true
+        tmpOpenEditors[action.payload.id] = Object.assign(
+          {}, state.collection[action.payload.id]
+        )
       } else {
-        tmpOpenEditors['newEditor'] = true
+        tmpOpenEditors['newEditor'] = Object.assign({}, emptyMarkWidget)
       }
 
       return {
@@ -83,13 +85,19 @@ const markWidgets = (state = initialState, action) => {
       }
     case actionTypes.MARK_WIDGETS.UPDATE_FIELD:
       if(action.payload.id) {
-        tmpMarkWidget = Object.assign({}, state.collection[action.payload.id])
+        tmpMarkWidget = Object.assign({}, state.displayOptions.openEditors[action.payload.id])
         tmpMarkWidget[action.payload.name] = action.payload.value
-        state.collection[action.payload.id] = tmpMarkWidget
+        // state.displayOptions.openEditors[action.payload.id] = tmpMarkWidget
 
         return {
           ...state,
-          collection: state.collection,
+          displayOptions: {
+            ...state.displayOptions,
+            openEditors: {
+              ...state.displayOptions.openEditors,
+              [action.payload.id]: tmpMarkWidget,
+            },
+          }
         }
       }
       return {
@@ -100,12 +108,12 @@ const markWidgets = (state = initialState, action) => {
         }
       }
     case actionTypes.MARK_WIDGETS.UPDATE:
+      tmpCollection = Object.assign({}, state.collection)
+      tmpCollection[action.payload.widget.id] = action.payload.widget
+
       return {
         ...state,
-        displayOptions: {
-          ...state.displayOptions,
-          currentMarkWidgetEditorIsOpen: false,
-        }
+        collection: tmpCollection,
       }
     case actionTypes.MARK_WIDGETS.CREATE:
       tmpCollection = Object.assign({}, state.collection)
