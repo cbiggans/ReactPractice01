@@ -5,6 +5,8 @@ import MarkWidgetService from './markWidgets'
 import MarkService from './marks'
 import NoteService from './notes'
 
+// import { addDomainField } from '../../../scripts/update_mark_fields'
+
 
 const firebaseConfig = {
 	apiKey: "AIzaSyBQbPqLqlmMEmI6vPQvIbCO44d_OES8YhI",
@@ -20,12 +22,13 @@ firebase.initializeApp(firebaseConfig)
 
 export const db = firebase.firestore()
 
-
 const services = {
 	markSessions: new MarkSessionService(),
   markWidgets: new MarkWidgetService(),
 	marks: new MarkService(),
   notes: new NoteService(),
 }
+
+// addDomainField(services)
 
 export default services

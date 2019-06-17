@@ -93,15 +93,30 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
   urls.forEach(url => {
     scrapeWebsite(url)
     .then((scrapedData) => {
+      
+      // Should put this into separate function
+      var tmpUrl = new URL(url)
+      var domain
+
+      if(tmpUrl.hostname.includes('www.')) {
+        domain = tmpUrl.hostname.split('www.')[1]
+      } else {
+        domain = tmpUrl.hostname
+      }
+      // ----------------------------------------
+
       newMark = {
-        'created': created,
-        'modified': modified,
-        'category': '',
-        'description': '',
-        'tags': '',
-        'title': scrapedData.title,
-        'type': '',
-        'url': url,
+        created: created,
+        modified: modified,
+        category: '',
+        description: '',
+        tags: '',
+        title: scrapedData.title,
+        type: '',
+        url: url,
+        details: {
+          domain: domain,
+        },
       }
       services.marks.create(newMark, (mark) => {
         dispatch({

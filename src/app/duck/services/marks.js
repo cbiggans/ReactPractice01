@@ -1,13 +1,16 @@
 import { db } from './'
 import { currentUTCTime } from '../lib/time'
 import { buildWhereClause } from '../lib/searchTerms'
+import BaseService from './BaseService'
 
 
-class MarkService {
+class MarkService extends BaseService {
 	constructor() {
-    this.collectionName = 'marks'
-    this.db = db
-    this.collection = this.db.collection(this.collectionName)
+    super('marks')
+
+    // this.collectionName = 'marks'
+    // this.db = db
+    // this.collection = this.db.collection(this.collectionName)
   }
 
   getFromWidget(widget, callback) {
@@ -98,6 +101,7 @@ class MarkService {
   update(id, markData, onSuccess) {
     markData.modifiedAt = currentUTCTime()
 
+    debugger
     // Get mark ref, then update it
     this.collection.doc(id).update(markData)
     .then((e) => {
@@ -105,11 +109,11 @@ class MarkService {
     })
   }
 
-  destroy(id, onSuccess) {
-    // NOTE: Does not delete sub collections
-    this.collection.doc(id).delete()
-    .then((e) => onSuccess(e))
-  }
+  // destroy(id, callback) {
+  //   // NOTE: Does not delete sub collections
+  //   this.collection.doc(id).delete()
+  //   .then((e) => callback(e))
+  // }
 }
 
 export default MarkService

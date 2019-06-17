@@ -1,7 +1,7 @@
 import BaseService from './BaseService'
 
 
-class MarkSessionService extends BaseService{
+class MarkSessionService extends BaseService {
   constructor() {
     super('markSessions')
   }

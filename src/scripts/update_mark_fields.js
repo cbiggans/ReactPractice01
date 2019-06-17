@@ -1,3 +1,38 @@
+// export const addDomainField = (services) => {
+//   var mark
+// 
+//   services.marks.collection.get()
+//   .then((markSnapshotDocs) => {
+//     markSnapshotDocs.forEach((markDoc) => {
+//       mark = markDoc.data()
+//       var url = new URL(mark.url)
+//       var domain
+// 
+//       if(url.hostname.includes('www.')) {
+//         domain = url.hostname.split('www.')[1]
+//       } else {
+//         domain = url.hostname
+//       }
+// 
+//       mark.details = {
+//         domain: domain
+//       }
+//       console.log(mark.details)
+// 
+//       // if(mark.CreatedAt) {
+//       //   mark.created = mark.CreatedAt
+//       // } else if(mark.createdAt) {
+//       //   mark.created = mark.createdAt
+//       // }
+// 
+//       console.log('Mark To Update: ', mark)
+//       services.marks.update(markDoc.id, mark, (mark) => {
+//         console.log('Mark Updated: ', mark)
+//       })
+//     })
+//   })
+// }
+
 // const updateMarkFields = () => {
 //   var mark
 // 
