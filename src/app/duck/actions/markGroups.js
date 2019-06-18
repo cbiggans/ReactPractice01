@@ -32,10 +32,12 @@ export const createWithUrls = (urls, callback) => (dispatch) => {
     // Create Marks from manyMarkInputter in services
     const promises = []
     urls.forEach((url) => {
-      promises.push(new Promise((resolve) => {
-          dispatch(markActions.createThroughURL(url, resolve))
-        })
-      )
+      if(url) {
+        promises.push(new Promise((resolve) => {
+            dispatch(markActions.createThroughURL(url, resolve))
+          })
+        )
+      }
     })
 
     Promise.all(promises)

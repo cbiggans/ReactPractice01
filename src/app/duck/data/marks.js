@@ -1,0 +1,5 @@
+/*
+  Has all the definitions of the data and validators for making sure things
+  are kept correct
+
+*/

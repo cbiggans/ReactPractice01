@@ -81,6 +81,11 @@ export const handleMarkInputterChange = (e) => dispatch => {
 export const createThroughURL = (url, callback) => (dispatch) => {
   var newMark
 
+  if(!url) {
+    callback(null)
+    return
+  }
+
   scrapeWebsite(url)
     .then((scrapedData) => {
       
