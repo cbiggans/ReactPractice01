@@ -1,8 +1,8 @@
 import actionTypes from './constants'
 import services from '../services/'
 import markActions from './marks'
-// import markGroupActions from './markGroups'
-import { create } from './markGroups'
+import markGroupActions from './markGroups'
+// import { create } from './markGroups'
 
 
 // TODO XXX: This should be in something like a markWidgetForm directory instead of here
@@ -111,6 +111,35 @@ export const handleChange = (e, id) => dispatch => {
   })
 }
 
+export const update = (markWidget, markSessionId, callback) => dispatch => {
+  services.markWidgets.update(markWidget.id, markWidget, (widget) => {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.UPDATE,
+      payload: {
+        widget: widget,
+      }
+    })
+
+    // TODO XXX: dispatch refresh of just the single widget to save on service call
+    dispatch(fetch(markSessionId))
+
+    if(callback) {
+      callback(widget)
+    }
+  })
+}
+
+export const create = (markWidget, callback) => dispatch => {
+  services.markWidgets.create(markWidget, (widget) => {
+    dispatch({
+      type: actionTypes.MARK_WIDGETS.CREATE,
+      payload: {
+        widget: widget,
+      }
+    })
+  })
+}
+
 // TODO XXX: Should pass in markSessionId so this is better
 export const handleSubmit = (e, id) => (dispatch, getState) => {
   e.preventDefault()
@@ -147,12 +176,39 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
         markIds: markIds,
       }
 
-      debugger
       // TODO XXX: Rename create to something else
-      dispatch(create(markGroup, (markGroup) => {
-
-        debugger
-        var a = 12
+      dispatch(markGroupActions.create(markGroup, (markGroup) => {
+        // Add markgroup to markWidget then create markWidget
+        //  Try to make clean
+        if(id) {
+          // markWidget = state.markWidgets.displayOptions.openEditors[id].widget
+          if(!markWidget.markGroupIds) {
+            markWidget.markGroupIds = []
+          }
+          markWidget.markGroupIds.push(markGroup.id)
+          
+          dispatch(update(markWidget, markSessionId, (widget) => {
+            dispatch({
+              type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
+              payload: {
+                id: id,
+              }
+            })
+          }))
+        } else {
+          // markWidget = state.markWidgets.displayOptions.openEditors['nextEditor'].widget
+          markWidget.markSessionIds = [markSessionId]
+          if(!markWidget.markGroupIds) {
+            markWidget.markGroupIds = []
+          }
+          markWidget.markGroupIds.push(markGroup.id)
+          
+          dispatch(create(markWidget, (widget) => {
+            dispatch({
+              type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
+            })
+          }))
+        }
       }))
       // Create the Group
       // Save the groupid for the markWidget
@@ -163,44 +219,6 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
 
   // TODO XXX: Most of this stuff should be in separate action that can call in here
 
-  // if(id) {
-  //   markWidget = state.markWidgets.displayOptions.openEditors[id].widget
-
-  //   services.markWidgets.update(id, markWidget, (widget) => {
-  //     dispatch({
-  //       type: actionTypes.MARK_WIDGETS.UPDATE,
-  //       payload: {
-  //         widget: widget,
-  //       }
-  //     })
-
-  //     dispatch({
-  //       type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
-  //       payload: {
-  //         id: id,
-  //       }
-  //     })
-
-  //     // TODO XXX: dispatch refresh of just the single widget to save on service call
-  //     dispatch(fetch(markSessionId))
-  //   })
-  // } else {
-  //   markWidget = state.markWidgets.displayOptions.openEditors['nextEditor'].widget
-  //   markWidget.markSessionIds = [markSessionId]
-
-  //   services.markWidgets.create(markWidget, (widget) => {
-  //     dispatch({
-  //       type: actionTypes.MARK_WIDGETS.CREATE,
-  //       payload: {
-  //         widget: widget,
-  //       }
-  //     })
-
-  //     dispatch({
-  //       type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
-  //     })
-  //   })
-  // }
 }
 
 export const destroy = (id) => dispatch => {
