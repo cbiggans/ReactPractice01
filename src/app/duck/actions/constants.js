@@ -26,6 +26,9 @@ const actionTypes = {
     CREATE: 'CREATE_MARK_WIDGET',
     DESTROY: 'DESTROY_MARK_WIDGET',
   },
+  MARK_GROUPS: {
+    CREATE: 'CREATE_MARK_GROUP',
+  },
   MARKS: {
     ADD_MARK: 'ADD_MARK',
     ADD_NEXT_MARK: 'ADD_NEXT_MARK',

@@ -79,19 +79,10 @@ export const handleMarkInputterChange = (e) => dispatch => {
   })
 }
 
-export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
-  e.preventDefault()
-
+export const createThroughURL = (url, callback) => (dispatch) => {
   var newMark
-  const state = getState()
-  // TODO XXX: Should move these auto-generated properties to services class
-  const created = currentUTCTime()
-  const modified = currentUTCTime()
 
-  const urls = state.marks.markInputter.split('\n')
-
-  urls.forEach(url => {
-    scrapeWebsite(url)
+  scrapeWebsite(url)
     .then((scrapedData) => {
       
       // Should put this into separate function
@@ -106,8 +97,6 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
       // ----------------------------------------
 
       newMark = {
-        created: created,
-        modified: modified,
         category: '',
         description: '',
         tags: '',
@@ -128,9 +117,23 @@ export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
         dispatch({
           type: actionTypes.MARKS.ORGANIZE_MARKS
         })
+        if(callback) {
+          callback(mark)
+        }
         return mark
       })
     })
+}
+
+export const handleManyMarkInputterSubmit = (e) => (dispatch, getState) => {
+  e.preventDefault()
+
+  const state = getState()
+
+  const urls = state.marks.markInputter.split('\n')
+
+  urls.forEach(url => {
+    dispatch(createThroughURL(url))
   })
 
   dispatch({
@@ -242,6 +245,7 @@ const markActions = {
   destroy: destroy,
   editMark: editMark,
   closeForm: closeForm,
+  createThroughURL: createThroughURL,
   handleOpenManyMarkInput: handleOpenManyMarkInput,
   handleMarkInputterChange: handleMarkInputterChange,
   handleManyMarkInputterSubmit: handleManyMarkInputterSubmit,

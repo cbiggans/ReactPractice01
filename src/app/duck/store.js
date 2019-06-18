@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import thunk from 'redux-thunk'
 import markSessions from './reducers/markSessions'
 import markWidgets from './reducers/markWidgets'
+import markGroups from './reducers/markGroups'
 import marks from './reducers/marks'
 import notes from './reducers/notes'
 import noteTakerSettings from './reducers/noteTakerSettings'
@@ -10,6 +11,7 @@ import noteTakerSettings from './reducers/noteTakerSettings'
 const rootReducer = combineReducers({
   markSessions,
   markWidgets,
+  markGroups,
   marks,
   notes,
   noteTakerSettings,
