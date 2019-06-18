@@ -1,6 +1,5 @@
 import actionTypes from './constants'
 import services from '../services/'
-import { currentUTCTime } from '../lib/time'
 
 
 /*

@@ -1,5 +1,6 @@
 import { buildWhereClause } from '../lib/searchTerms'
 import BaseService from './BaseService'
+import services from './'
 
 
 class MarkService extends BaseService {
@@ -21,35 +22,66 @@ class MarkService extends BaseService {
     const marks = []
     let order = widget.order || 'descending'
     let mark
+    let promises
+    let parentPromises
 
-    const whereClause = buildWhereClause(widget.searchTerm)
-    let query
+    if(widget.markGroupIds) {
+      parentPromises = []
+      widget.markGroupIds.forEach((markGroupId) => {
+        parentPromises.push(new Promise((parentResolve) => {
+          services.markGroups.get(markGroupId, (markGroup) => {
 
-    if(!whereClause.isEmpty) {
-      query = this.collection.where(whereClause.left, whereClause.op, whereClause.right)
-    } else {
-      query = this.collection
-    }
-
-    if(order === 'descending') {
-      query = query.orderBy(orderBy, 'desc')
-    } else {
-      query = query.orderBy(orderBy)
-    }
-    query = query.limit(maxTotal)
-
-    query.get()
-    .then((snapshotDocs) => {
-      // TODO XXX: This is common, should put this into another function
-      snapshotDocs.forEach((doc) => {
-        mark = doc.data()
-        mark.id = doc.id
-
-        marks.push(mark)
+            promises = []
+            markGroup.markIds.forEach((markId) => {
+              promises.push(new Promise((resolve) => {
+                this.get(markId, resolve)
+              }))
+            })
+            Promise.all(promises)
+            .then((marks) => {
+              parentResolve(marks)
+            })
+          })
+        }))
       })
-      callback(marks)
-      return marks
-    })
+      Promise.all(parentPromises)
+      .then((marks) => {
+        var result = []
+        marks.forEach((marks) => {
+          result = result.concat(marks)
+        })
+        callback(result)
+      })
+    } else {
+      const whereClause = buildWhereClause(widget.searchTerm)
+      let query
+
+      if(!whereClause.isEmpty) {
+        query = this.collection.where(whereClause.left, whereClause.op, whereClause.right)
+      } else {
+        query = this.collection
+      }
+
+      if(order === 'descending') {
+        query = query.orderBy(orderBy, 'desc')
+      } else {
+        query = query.orderBy(orderBy)
+      }
+      query = query.limit(maxTotal)
+
+      query.get()
+      .then((snapshotDocs) => {
+        // TODO XXX: This is common, should put this into another function
+        snapshotDocs.forEach((doc) => {
+          mark = doc.data()
+          mark.id = doc.id
+
+          marks.push(mark)
+        })
+        callback(marks)
+        return marks
+      })
+    }
 
   }
 }

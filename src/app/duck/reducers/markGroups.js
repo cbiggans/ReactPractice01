@@ -1,9 +1,9 @@
 import actionTypes from '../actions/constants'
 
 
-const emptyMarkGroup = {
-
-}
+// const emptyMarkGroup = {
+// 
+// }
 
 const initialState = {
   collection: {},

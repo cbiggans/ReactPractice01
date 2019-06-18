@@ -11,7 +11,6 @@ class MarkWidgetFormContainer extends React.Component {
   }
 
   render() {
-    console.log('THIS IS BEING CALLED')
     return <MarkWidgetForm markWidget={this.props.formWidget}
                            displayOptions={this.props.displayOptions}
                            destroy={this.props.destroy}
@@ -28,10 +27,6 @@ function mapStateToProps(state, props) {
     id = 'nextEditor'
   }
 
-  console.log('In mapStateToProps')
-  // console.log(state)
-  // console.log(id)
-  // console.log(state.markWidgets.displayOptions.openEditors[id])
   return {
     widget: state.markWidgets.collection[id],
     formWidget: state.markWidgets.displayOptions.openEditors[id].widget,

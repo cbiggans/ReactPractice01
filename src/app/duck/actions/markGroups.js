@@ -1,5 +1,6 @@
 import actionTypes from './constants'
 import services from '../services/'
+import markActions from './marks'
 
 
 // Thinking about whether to send markGroup or markIds in
@@ -25,8 +26,40 @@ export const create = (newMarkGroup, callback) => (dispatch) => {
   })
 }
 
+export const createWithUrls = (urls, callback) => (dispatch) => {
+
+    // TODO XXX: Should have `createGroup` action
+    // Create Marks from manyMarkInputter in services
+    const promises = []
+    urls.forEach((url) => {
+      promises.push(new Promise((resolve) => {
+          dispatch(markActions.createThroughURL(url, resolve))
+        })
+      )
+    })
+
+    Promise.all(promises)
+    .then((marks) => {
+      let markIds = marks.map((mark) => {
+        return mark.id
+      })
+
+      // TODO XXX: Generate markGroup from factory
+      //  Allows me to control how the data looks on creation
+      let markGroup = {
+        title: '',
+        description: '',
+        tags: [],
+        markIds: markIds,
+      }
+
+      dispatch(markGroupActions.create(markGroup, callback))
+    })
+}
+
 const markGroupActions = {
   create: create,
+  createWithUrls: createWithUrls,
 }
 
 export default markGroupActions

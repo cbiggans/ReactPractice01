@@ -20,7 +20,6 @@ const MarkWidgetForm = (props) => {
   }
 
   var manualInputter
-  console.log('IN MARK_WIDGET_FORM RENDER')
   if(props.displayOptions.manualInputterOpen) {
     manualInputter = <ManyMarkInputter markInputter={props.markWidget.markInputter}
                                        handleChange={(e) => {props.handleChange(e, props.markWidget.id)}} />

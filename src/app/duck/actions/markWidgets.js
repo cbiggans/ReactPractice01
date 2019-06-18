@@ -1,8 +1,6 @@
 import actionTypes from './constants'
 import services from '../services/'
-import markActions from './marks'
 import markGroupActions from './markGroups'
-// import { create } from './markGroups'
 
 
 // TODO XXX: This should be in something like a markWidgetForm directory instead of here
@@ -140,6 +138,34 @@ export const create = (markWidget, callback) => dispatch => {
   })
 }
 
+export const handleFormUpdateOrCreation = (id, markWidget, markSessionId, markGroupId) => (dispatch) => {
+  if(markGroupId) {
+    if(!markWidget.markGroupIds) {
+      markWidget.markGroupIds = []
+    }
+    markWidget.markGroupIds.push(markGroupId)
+  }
+
+  if(id) { 
+    dispatch(update(markWidget, markSessionId, (widget) => {
+      dispatch({
+        type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
+        payload: {
+          id: id,
+        }
+      })
+    }))
+  } else {
+    markWidget.markSessionIds = [markSessionId]
+
+    dispatch(create(markWidget, (widget) => {
+      dispatch({
+        type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
+      })
+    }))
+  }
+}
+
 // TODO XXX: Should pass in markSessionId so this is better
 export const handleSubmit = (e, id) => (dispatch, getState) => {
   e.preventDefault()
@@ -150,75 +176,14 @@ export const handleSubmit = (e, id) => (dispatch, getState) => {
   const markWidget = state.markWidgets.displayOptions.openEditors[key].widget
 
   if(markWidget.markInputter && markWidget.markInputter !== '') {
-    // Parse the Marks into a list here
     const urls = markWidget.markInputter.split('\n')
-    // Create Marks from manyMarkInputter in services
-    const promises = []
-    urls.forEach((url) => {
-      promises.push(new Promise((resolve) => {
-          dispatch(markActions.createThroughURL(url, resolve))
-        })
-      )
-    })
 
-    Promise.all(promises)
-    .then((marks) => {
-      let markIds = marks.map((mark) => {
-        return mark.id
-      })
-
-      // TODO XXX: Generate markGroup from factory
-      //  Allows me to control how the data looks on creation
-      let markGroup = {
-        title: '',
-        description: '',
-        tags: [],
-        markIds: markIds,
-      }
-
-      // TODO XXX: Rename create to something else
-      dispatch(markGroupActions.create(markGroup, (markGroup) => {
-        // Add markgroup to markWidget then create markWidget
-        //  Try to make clean
-        if(id) {
-          // markWidget = state.markWidgets.displayOptions.openEditors[id].widget
-          if(!markWidget.markGroupIds) {
-            markWidget.markGroupIds = []
-          }
-          markWidget.markGroupIds.push(markGroup.id)
-          
-          dispatch(update(markWidget, markSessionId, (widget) => {
-            dispatch({
-              type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
-              payload: {
-                id: id,
-              }
-            })
-          }))
-        } else {
-          // markWidget = state.markWidgets.displayOptions.openEditors['nextEditor'].widget
-          markWidget.markSessionIds = [markSessionId]
-          if(!markWidget.markGroupIds) {
-            markWidget.markGroupIds = []
-          }
-          markWidget.markGroupIds.push(markGroup.id)
-          
-          dispatch(create(markWidget, (widget) => {
-            dispatch({
-              type: actionTypes.MARK_WIDGETS.CLOSE_EDITOR,
-            })
-          }))
-        }
-      }))
-      // Create the Group
-      // Save the groupid for the markWidget
-      //  Add a list of MarkGroupIds to markWidgets, don't worry about search term yet
-    })
+    dispatch(markGroupActions.createWithUrls(urls, (markGroup) => {
+      dispatch(handleFormUpdateOrCreation(id, markWidget, markSessionId, markGroup.id))
+    }))
+  } else {
+    dispatch(handleFormUpdateOrCreation(id, markWidget, markSessionId))
   }
-  // Add the groupId to the markWidget
-
-  // TODO XXX: Most of this stuff should be in separate action that can call in here
-
 }
 
 export const destroy = (id) => dispatch => {
