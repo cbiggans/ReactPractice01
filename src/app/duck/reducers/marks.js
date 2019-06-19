@@ -1,33 +1,16 @@
 import actionTypes from '../actions/constants'
+import markDataConstants from '../data/marks'
+import markFunctions from '../funcs/marks'
 
-const emptyMark = {
-  'category': '',
-  'description': '',
-  'tags': '',
-  'title': '',
-  'type': '',
-  'url': '',
-  'id': '',
-}
 
-const initialState = {
-  list: [],
-  collection: {},
-  nextMark: Object.assign({}, emptyMark),
-  currentMark: Object.assign({}, emptyMark),
-  markInputter: '',
-  displaySettings: {
-    manyMarkInputIsOpen: false,
-    // Recommend not using state for redux: https://github.com/reduxjs/redux/issues/1499
-    editing: {},
-  }
-}
+const initialState = markFunctions.generateInitialState()
 
 
 const marks = (state = initialState, action) => {
-  var newMarks = []
+  var newList = []
   var newCollection = {}
   var editingDisplaySetting
+  var newDisplaySettings
   // var urls
 
   switch(action.type) {
@@ -62,46 +45,43 @@ const marks = (state = initialState, action) => {
         ...state
       }
     case actionTypes.MARKS.CLOSE_MARK_FORM:
-      editingDisplaySetting = Object.assign({}, state.displaySettings.editing)
-      editingDisplaySetting[action.payload.markId] = false
+      newDisplaySettings = markFunctions.displaySettings.setEditor(
+        state.displaySettings, action.payload.markId, false
+      )
 
       return {
         ...state,
-        displaySettings: {
-          ...state.displaySettings,
-          editing: editingDisplaySetting,
-        }
+        displaySettings: newDisplaySettings,
       }
     case actionTypes.MARKS.EDIT_MARK:
-      editingDisplaySetting = Object.assign({}, state.displaySettings.editing)
-      editingDisplaySetting[action.payload.markId] = true
+      newDisplaySettings = markFunctions.displaySettings.setEditor(
+        state.displaySettings, action.payload.markId, true
+      )
 
       return {
         ...state,
-        displaySettings: {
-          ...state.displaySettings,
-          editing: editingDisplaySetting,
-        }
+        displaySettings: newDisplaySettings,
       }
     case actionTypes.MARKS.LOAD_MARK:
-      newMarks = state.list.slice()
-      newMarks.push(action.payload.mark)
-
-      newCollection = Object.assign({}, state.collection)
-      newCollection[action.payload.mark.id] = action.payload.mark
+      newList = markFunctions.list.add(state.list,
+                                        action.payload.mark)
+      newCollection = markFunctions.collection.add(state.collection,
+                                                   action.payload.mark)
 
       return {
         ...state,
-        list: newMarks,
+        list: newList,
         collection: newCollection,
       }
     case actionTypes.MARKS.LOAD_MARKS:
-      newCollection = Object.assign({}, state.collection)
-      action.payload.marks.forEach((mark) => {
-        newCollection[mark.id] = mark
-      })
+      newCollection = markFunctions.collection.addList(state.collection,
+                                                       action.payload.marks)
+
+      newList = markFunctions.list.addList(state.list, action.payload.marks)
+
       return {
         ...state,
+        list: newList,
         collection: newCollection,
       }
     case actionTypes.MARKS.SET_CURRENT_MARK:
@@ -111,8 +91,10 @@ const marks = (state = initialState, action) => {
       }
     case actionTypes.MARKS.UPDATE_MARK_FIELD:
       if(!action.payload.markId) {
-        const newNextMark = Object.assign({}, state.nextMark)
-        newNextMark[action.payload.name] = action.payload.value
+        const newNextMark = markFunctions.mark.copy(
+          state.nextMark, {
+            [action.payload.name]: action.payload.value
+          })
 
         return {
           ...state,
@@ -120,8 +102,11 @@ const marks = (state = initialState, action) => {
         }
       }
 
-      newMarks = state.list.slice()
-      newMarks = newMarks.map((mark) => {
+      // TODO XXX: Should take this out entirely and just have list of id's
+      //  This current implementation is absurd
+      newList = state.list.slice()
+			// TODO XXX: Should create a method the removes item from list
+      newList = newList.map((mark) => {
         if(mark.id === action.payload.markId) {
           mark[action.payload.name] = action.payload.value
           return mark
@@ -130,90 +115,59 @@ const marks = (state = initialState, action) => {
       })
       return {
         ...state,
-        list: newMarks,
+        list: newList,
       }
     case actionTypes.MARKS.UPDATE_MARK:
-      newMarks = state.list.slice()
+      newList = state.list.slice()
 
-      newMarks = newMarks.map((mark) => {
+      newList = newList.map((mark) => {
         if(mark.id === action.payload.mark.id) {
           return action.payload.mark
         }
         return mark
       })
 
-      editingDisplaySetting = Object.assign({}, state.displaySettings.editing)
-      editingDisplaySetting[action.payload.mark.id] = false
+      newDisplaySettings = markFunctions.displaySettings.setEditor(
+        state.displaySettings, action.payload.mark.id, false
+      )
 
       return {
         ...state,
-        list: newMarks,
-        displaySettings: {
-          ...state.displaySettings,
-          editing: editingDisplaySetting,
-        }
+        list: newList,
+        displaySettings: newDisplaySettings,
       }
     case actionTypes.MARKS.ADD_MARK:
-      newMarks = state.list.slice()
+      newList = markFunctions.list.add(state.list,
+                                        action.payload.mark)
 
-      newMarks.push(Object.assign({},
-                                  action.payload.mark))
-
-      newCollection = Object.assign({}, state.collection)
-      newCollection[action.payload.mark.id] = action.payload.mark
+      newCollection = markFunctions.collection.add(state.collection,
+                                                   action.payload.mark)
       return {
         ...state,
-        list: newMarks,
+        list: newList,
         collection: newCollection,
       }
     case actionTypes.MARKS.ADD_NEXT_MARK:
-      newMarks = state.list.slice()
+      newList = markFunctions.list.add(state.list,
+                                        action.payload.mark)
 
-      console.log(action.payload.mark)
-      newMarks.push(Object.assign({},
-                                  state.nextMark,
-                                  {id: action.payload.mark.id}))
-
-      newCollection = Object.assign({}, state.collection)
-      newCollection[action.payload.mark.id] = action.payload.mark
+      newCollection = markFunctions.collection.add(state.collection,
+                                                   action.payload.mark)
 
       return {
         ...state,
-        list: newMarks,
+        list: newList,
         collection: newCollection,
-        nextMark: Object.assign({}, initialState.nextMark),
+        nextMark: markFunctions.mark.copy(initialState.nextMark),
       }
     case actionTypes.MARKS.DESTROY_MARK:
-      newMarks = state.list.filter((item) => {
+      newList = state.list.filter((item) => {
         return item.id !== action.payload.id
       })
       // TODO XXX: Handle collection
       return {
         ...state,
-        list: newMarks
-      }
-    case actionTypes.MARKS.ORGANIZE_MARKS:
-      let key = 'createdAt'
-      let order = 'descending'
-
-      newMarks = state.list.slice()
-      newMarks = newMarks.sort((a, b) => {
-        if(!a[key]) {
-          a[key] = 0
-        }
-        if(!b[key]) {
-          b[key] = 0
-        }
-        if(order === 'descending') {
-          return b[key] - a[key]
-        } else {
-          return a[key] - b[key]
-        }
-      })
-
-      return {
-        ...state,
-        list: newMarks,
+        list: newList
       }
     default:
       return state

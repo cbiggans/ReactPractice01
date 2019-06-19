@@ -118,9 +118,9 @@ export const createThroughURL = (url, callback) => (dispatch) => {
             'mark': mark
           }
         })
-        dispatch({
-          type: actionTypes.MARKS.ORGANIZE_MARKS
-        })
+        // dispatch({
+        //   type: actionTypes.MARKS.ORGANIZE_MARKS
+        // })
         if(callback) {
           callback(mark)
         }
@@ -196,25 +196,31 @@ export const handleSubmit = (e, markId) => (dispatch, getState) => {
       })
     })
   }
-  dispatch({
-    type: actionTypes.MARKS.ORGANIZE_MARKS
-  })
+  // dispatch({
+  //   type: actionTypes.MARKS.ORGANIZE_MARKS
+  // })
 }
 
 export const load = (e) => dispatch => {
   services.marks.index((marks) => {
-    marks.map(mark => {
-      dispatch({
-        type: actionTypes.MARKS.LOAD_MARK,
-        payload: {
-          mark: mark,
-        }
-      })
-      dispatch({
-        type: actionTypes.MARKS.ORGANIZE_MARKS
-      })
-      return mark
+    dispatch({
+      type: actionTypes.MARKS.LOAD_MARKS,
+      payload: {
+        marks: marks,
+      }
     })
+    // marks.map(mark => {
+    //   dispatch({
+    //     type: actionTypes.MARKS.LOAD_MARK,
+    //     payload: {
+    //       mark: mark,
+    //     }
+    //   })
+    //   // dispatch({
+    //   //   type: actionTypes.MARKS.ORGANIZE_MARKS
+    //   // })
+    //   return mark
+    // })
   })
 }
 
