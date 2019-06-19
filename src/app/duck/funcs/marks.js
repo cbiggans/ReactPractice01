@@ -18,7 +18,8 @@ export const generateInitialState = () => {
     markInputter: markDataConstants.INITIAL_MARK_INPUTTER,
     displaySettings: DisplaySettings.copy(
       markDataConstants.INITIAL_DISPLAY_SETTINGS
-    )
+    ),
+    editing: baseFunctions.copyObj(markDataConstants.INITIAL_EDITING),
   }
 }
 
@@ -33,6 +34,12 @@ class DisplaySettings {
 																											 {[markId]: setting})
 		return newDisplaySettings
 	}
+}
+
+class Editing {
+  static copy(editing, extraProperties) {
+		return baseFunctions.copyObj(editing, extraProperties)
+  }
 }
 
 class Order {
@@ -101,6 +108,7 @@ export const markFunctions = {
   collection: Collection,
   order: Order,
   displaySettings: DisplaySettings,
+  editing: Editing,
 }
 
 export default markFunctions

@@ -27,12 +27,13 @@ export const INITIAL_DISPLAY_SETTINGS = {
   // Recommend not using state for redux: https://github.com/reduxjs/redux/issues/1499
   // TODO XXX: editing should not be in DisplaySettings, should be a top property & have the
   //  inProgress editing
-  editing: {},
 }
+
+export const INITIAL_EDITING = {}
 
 
 export const markDataConstants = {
-  INITIAL_MARK, INITIAL_COLLECTION, INITIAL_LIST, INITIAL_DISPLAY_SETTINGS
+  INITIAL_MARK, INITIAL_COLLECTION, INITIAL_LIST, INITIAL_DISPLAY_SETTINGS, INITIAL_EDITING
 }
 
 export default markDataConstants

@@ -11,6 +11,7 @@ const marks = (state = initialState, action) => {
   var newCollection = {}
   var editingDisplaySetting
   var newDisplaySettings
+  var newEditing = {}
   // var urls
 
   switch(action.type) {
@@ -45,22 +46,23 @@ const marks = (state = initialState, action) => {
         ...state
       }
     case actionTypes.MARKS.CLOSE_MARK_FORM:
-      newDisplaySettings = markFunctions.displaySettings.setEditor(
-        state.displaySettings, action.payload.markId, false
+      newEditing = markFunctions.editing.copy(
+        state.editing, {[action.payload.markId]: false}
       )
 
       return {
         ...state,
-        displaySettings: newDisplaySettings,
+        editing: newEditing,
       }
+    // TODO XXX: Should probably be open mark form
     case actionTypes.MARKS.EDIT_MARK:
-      newDisplaySettings = markFunctions.displaySettings.setEditor(
-        state.displaySettings, action.payload.markId, true
+      newEditing = markFunctions.editing.copy(
+        state.editing, {[action.payload.markId]: true}
       )
 
       return {
         ...state,
-        displaySettings: newDisplaySettings,
+        editing: newEditing,
       }
     case actionTypes.MARKS.LOAD_MARK:
       newOrder = markFunctions.order.addMark(state.list,
@@ -129,14 +131,14 @@ const marks = (state = initialState, action) => {
         return mark
       })
 
-      newDisplaySettings = markFunctions.displaySettings.setEditor(
-        state.displaySettings, action.payload.mark.id, false
+      newEditing = markFunctions.editing.copy(
+        state.editing, {[action.payload.mark.id]: false}
       )
 
       return {
         ...state,
         list: newOrder,
-        displaySettings: newDisplaySettings,
+        editing: newEditing,
       }
     case actionTypes.MARKS.ADD_MARK:
       newOrder = markFunctions.order.addMark(state.list,

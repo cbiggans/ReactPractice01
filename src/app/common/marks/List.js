@@ -5,8 +5,8 @@ import MarkForm from './Form'
 
 function MarkList(props) {
   const marks = props.marks.map((item) => {
-    if(item.id in props.displaySettings.editing && 
-       props.displaySettings.editing[item.id]) {
+    if(item.id in props.editing && 
+       props.editing[item.id]) {
       return <MarkForm key={item.id}
                        mark={item}
                        closeForm={props.closeForm}

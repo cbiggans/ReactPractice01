@@ -42,6 +42,7 @@ class MarkContainer extends React.Component{
         {manyMarkInputter}
         <MarkList marks={this.props.marks} 
                   displaySettings={this.props.displaySettings}
+                  editing={this.props.editing}
                   destroyHandler={this.props.destroyHandler}
                   editMark={this.props.editMark}
                   closeForm={this.props.closeForm}
@@ -57,6 +58,7 @@ function mapStateToProps(state) {
     marks: state.marks.list,
     nextMark: state.marks.nextMark,
     displaySettings: state.marks.displaySettings,
+    editing: state.marks.editing,
     markInputter: state.marks.markInputter,
   }
 }
