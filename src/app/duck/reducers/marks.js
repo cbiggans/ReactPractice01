@@ -7,7 +7,7 @@ const initialState = markFunctions.generateInitialState()
 
 
 const marks = (state = initialState, action) => {
-  var newList = []
+  var newOrder = []
   var newCollection = {}
   var editingDisplaySetting
   var newDisplaySettings
@@ -63,25 +63,25 @@ const marks = (state = initialState, action) => {
         displaySettings: newDisplaySettings,
       }
     case actionTypes.MARKS.LOAD_MARK:
-      newList = markFunctions.list.add(state.list,
-                                        action.payload.mark)
+      newOrder = markFunctions.order.addMark(state.list,
+                                             action.payload.mark)
       newCollection = markFunctions.collection.add(state.collection,
                                                    action.payload.mark)
 
       return {
         ...state,
-        list: newList,
+        list: newOrder,
         collection: newCollection,
       }
     case actionTypes.MARKS.LOAD_MARKS:
-      newCollection = markFunctions.collection.addList(state.collection,
-                                                       action.payload.marks)
+      newCollection = markFunctions.collection.addMarks(state.collection,
+                                                        action.payload.marks)
 
-      newList = markFunctions.list.addList(state.list, action.payload.marks)
+      newOrder = markFunctions.order.addMarks(state.list, action.payload.marks)
 
       return {
         ...state,
-        list: newList,
+        list: newOrder,
         collection: newCollection,
       }
     case actionTypes.MARKS.SET_CURRENT_MARK:
@@ -104,23 +104,25 @@ const marks = (state = initialState, action) => {
 
       // TODO XXX: Should take this out entirely and just have list of id's
       //  This current implementation is absurd
-      newList = state.list.slice()
+      newOrder = state.list.slice()
 			// TODO XXX: Should create a method the removes item from list
-      newList = newList.map((mark) => {
+      newOrder = newOrder.map((mark) => {
         if(mark.id === action.payload.markId) {
           mark[action.payload.name] = action.payload.value
           return mark
         }
         return mark
       })
+
+
       return {
         ...state,
-        list: newList,
+        list: newOrder,
       }
     case actionTypes.MARKS.UPDATE_MARK:
-      newList = state.list.slice()
+      newOrder = state.list.slice()
 
-      newList = newList.map((mark) => {
+      newOrder = newOrder.map((mark) => {
         if(mark.id === action.payload.mark.id) {
           return action.payload.mark
         }
@@ -133,41 +135,41 @@ const marks = (state = initialState, action) => {
 
       return {
         ...state,
-        list: newList,
+        list: newOrder,
         displaySettings: newDisplaySettings,
       }
     case actionTypes.MARKS.ADD_MARK:
-      newList = markFunctions.list.add(state.list,
-                                        action.payload.mark)
+      newOrder = markFunctions.order.addMark(state.list,
+                                             action.payload.mark)
 
       newCollection = markFunctions.collection.add(state.collection,
                                                    action.payload.mark)
       return {
         ...state,
-        list: newList,
+        list: newOrder,
         collection: newCollection,
       }
     case actionTypes.MARKS.ADD_NEXT_MARK:
-      newList = markFunctions.list.add(state.list,
-                                        action.payload.mark)
+      newOrder = markFunctions.order.addMark(state.list,
+                                            action.payload.mark)
 
       newCollection = markFunctions.collection.add(state.collection,
                                                    action.payload.mark)
 
       return {
         ...state,
-        list: newList,
+        list: newOrder,
         collection: newCollection,
         nextMark: markFunctions.mark.copy(initialState.nextMark),
       }
     case actionTypes.MARKS.DESTROY_MARK:
-      newList = state.list.filter((item) => {
+      newOrder = state.list.filter((item) => {
         return item.id !== action.payload.id
       })
       // TODO XXX: Handle collection
       return {
         ...state,
-        list: newList
+        list: newOrder
       }
     default:
       return state

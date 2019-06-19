@@ -209,18 +209,10 @@ export const load = (e) => dispatch => {
         marks: marks,
       }
     })
-    // marks.map(mark => {
-    //   dispatch({
-    //     type: actionTypes.MARKS.LOAD_MARK,
-    //     payload: {
-    //       mark: mark,
-    //     }
-    //   })
-    //   // dispatch({
-    //   //   type: actionTypes.MARKS.ORGANIZE_MARKS
-    //   // })
-    //   return mark
+    // dispatch({
+    //   type: actionTypes.MARKS.ORGANIZE_MARKS
     // })
+    
   })
 }
 

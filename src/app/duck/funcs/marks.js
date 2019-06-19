@@ -11,7 +11,7 @@ import markDataConstants from '../data/marks'
 
 export const generateInitialState = () => {
   return  {
-    list: List.copy(markDataConstants.INITIAL_LIST),
+    list: Order.copy(markDataConstants.INITIAL_LIST),
     collection: Collection.copy(markDataConstants.INITIAL_COLLECTION),
     nextMark: Mark.copy(markDataConstants.INITIAL_MARK),
     currentMark: Mark.copy(markDataConstants.INITIAL_MARK),
@@ -35,21 +35,38 @@ class DisplaySettings {
 	}
 }
 
-class List {
-	static copy(markList) {
-		return baseFunctions.copyList(markList)
+class Order {
+  // TODO XXX: Should have a function that takes in the collection
+  //  and can return all of the marks in order
+
+	static copy(markOrder) {
+		return baseFunctions.copyList(markOrder)
 	}
 
-	static add(markList, mark) {
-		const result = baseFunctions.copyList(markList)
+	static addMark(markOrder, mark) {
+		const result = Order.copy(markOrder)
 		result.push(mark)
 
 		return result
 	}
 
-  static addList(markList, marks) {
-    var result = List.copy(markList)
+  static addMarks(markOrder, marks) {
+    var result = Order.copy(markOrder)
     return result.concat(marks)
+  }
+
+	static addId(markOrder, id) {
+		const result = Order.copy(markOrder)
+		result.push(id)
+
+		return result
+	}
+
+  // Theoretically could call Order.addId, but that might be
+  //  a little too unweildy
+  static addIds(markOrder, ids) {
+    var result = Order.copy(markOrder)
+    return result.concat(ids)
   }
 }
 
@@ -68,7 +85,7 @@ class Collection {
     return baseFunctions.copyObj(collection, {[mark.id]: mark})
   }
 
-  static addList(collection, marks) {
+  static addMarks(collection, marks) {
     const newCollection = Collection.copy(collection)
     marks.forEach((mark) => {
       newCollection[mark.id] = mark
@@ -82,7 +99,7 @@ export const markFunctions = {
   generateInitialState: generateInitialState,
 	mark: Mark,
   collection: Collection,
-  list: List,
+  order: Order,
   displaySettings: DisplaySettings,
 }
 
