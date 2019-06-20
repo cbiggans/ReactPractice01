@@ -29,7 +29,9 @@ export const INITIAL_DISPLAY_SETTINGS = {
   //  inProgress editing
 }
 
-export const INITIAL_EDITING = {}
+export const INITIAL_EDITING = {
+  'nextMark': Object.assign({}, INITIAL_MARK),
+}
 
 
 export const markDataConstants = {

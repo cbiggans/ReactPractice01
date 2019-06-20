@@ -3,6 +3,7 @@ import MarkForm from '../common/marks/Form'
 import MarkList from '../common/marks/List'
 import { connect } from 'react-redux'
 import actions from '../duck/actions/'
+import markFunctions from '../duck/funcs/marks'
 
 
 class MarkContainer extends React.Component{
@@ -54,12 +55,12 @@ class MarkContainer extends React.Component{
 }
 
 function mapStateToProps(state) {
-  var marks = state.marks.orderedIds.map(id => {
-    return state.marks.collection[id]
-  })
+  // This should probably be in markFunction
+  var orderedMarks = markFunctions.order.getMarks(state.marks.orderedIds,
+                                                  state.marks.collection)
   return {
-    marks: marks,
-    nextMark: state.marks.nextMark,
+    marks: orderedMarks,
+    nextMark: state.marks.editing['nextMark'],
     displaySettings: state.marks.displaySettings,
     editing: state.marks.editing,
     markInputter: state.marks.markInputter,

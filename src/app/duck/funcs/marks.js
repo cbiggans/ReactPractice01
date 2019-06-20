@@ -13,7 +13,8 @@ export const generateInitialState = () => {
   return  {
     orderedIds: Order.copy(markDataConstants.INITIAL_ORDERED_IDS),
     collection: Collection.copy(markDataConstants.INITIAL_COLLECTION),
-    nextMark: Mark.copy(markDataConstants.INITIAL_MARK),
+    // nextMark: Mark.copy(markDataConstants.INITIAL_MARK),
+    // TODO XXX: This should only be an ID, should not be a mark
     currentMark: Mark.copy(markDataConstants.INITIAL_MARK),
     markInputter: markDataConstants.INITIAL_MARK_INPUTTER,
     displaySettings: DisplaySettings.copy(
@@ -42,13 +43,20 @@ class Editing {
   }
 }
 
-class Order {
-  // TODO XXX: Should have a function that takes in the collection
-  //  and can return all of the marks in order
+/*
+  This file has no state and can be used anywhere in the project
+  It tries to follow the principles of functional programming so it creates
+  copies of all return values and has no side effects and is easily testable
+*/
 
-	static copy(markOrder) {
+class Order {
+  static copy(markOrder) {
 		return baseFunctions.copyList(markOrder)
 	}
+
+  static getMarks(markOrder, collection) {
+    return markOrder.map(id => {return collection[id]})
+  }
 
 	static addMark(markOrder, mark) {
 		const result = Order.copy(markOrder)
@@ -77,6 +85,18 @@ class Order {
   static addIds(markOrder, ids) {
     var result = Order.copy(markOrder)
     return result.concat(ids)
+  }
+
+  static removeIds(markOrder, ids) {
+    var result = markOrder.filter((id) => {
+      return !(ids.includes(id))
+    })
+    return result
+  }
+
+  static removeId(markOrder, id) {
+    var result = Order.removeIds(markOrder, [id])
+    return result
   }
 }
 

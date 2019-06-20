@@ -171,7 +171,7 @@ export const handleSubmit = (e, markId) => (dispatch, getState) => {
   // If there's a markId, then edit the mark & do update action, else create it
   console.log('markId: ', markId)
   if(!markId) {
-    services.marks.create(state.marks.nextMark, (mark) => {
+    services.marks.create(state.marks.editing['nextMark'], (mark) => {
       dispatch({
         type: actionTypes.MARKS.ADD_NEXT_MARK,
         payload: {
