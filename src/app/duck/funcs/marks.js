@@ -11,7 +11,7 @@ import markDataConstants from '../data/marks'
 
 export const generateInitialState = () => {
   return  {
-    list: Order.copy(markDataConstants.INITIAL_LIST),
+    orderedIds: Order.copy(markDataConstants.INITIAL_ORDERED_IDS),
     collection: Collection.copy(markDataConstants.INITIAL_COLLECTION),
     nextMark: Mark.copy(markDataConstants.INITIAL_MARK),
     currentMark: Mark.copy(markDataConstants.INITIAL_MARK),
@@ -52,14 +52,17 @@ class Order {
 
 	static addMark(markOrder, mark) {
 		const result = Order.copy(markOrder)
-		result.push(mark)
+		result.push(mark.id)
 
 		return result
 	}
 
   static addMarks(markOrder, marks) {
     var result = Order.copy(markOrder)
-    return result.concat(marks)
+    marks.forEach(mark => {
+      result.push(mark.id)
+    })
+    return result
   }
 
 	static addId(markOrder, id) {
@@ -118,7 +121,7 @@ export default markFunctions
 //   let key = 'createdAt'
 //   let order = 'descending'
 // 
-//   newMarks = state.list.slice()
+//   newMarks = state.orderedIds.slice()
 //   newMarks = newMarks.sort((a, b) => {
 //     if(!a[key]) {
 //       a[key] = 0
@@ -135,5 +138,5 @@ export default markFunctions
 // 
 //   return {
 //     ...state,
-//     list: newMarks,
+//     orderedIds: newMarks,
 //   }

@@ -180,13 +180,8 @@ export const handleSubmit = (e, markId) => (dispatch, getState) => {
       })
     })
   } else {
-    let markData
+    let markData = state.marks.editing[markId]
 
-    state.marks.list.forEach((mark) => {
-      if(mark.id === markId) {
-        markData = mark
-      }
-    })
     services.marks.update(markId, markData, (mark) => {
       dispatch({
         type: actionTypes.MARKS.UPDATE_MARK,

@@ -12,7 +12,7 @@ const marks = (state = initialState, action) => {
   var editingDisplaySetting
   var newDisplaySettings
   var newEditing = {}
-  // var urls
+  var markForEditing
 
   switch(action.type) {
     case actionTypes.MARKS.OPEN_MANY_MARK_INPUT:
@@ -56,8 +56,10 @@ const marks = (state = initialState, action) => {
       }
     // TODO XXX: Should probably be open mark form
     case actionTypes.MARKS.EDIT_MARK:
+      markForEditing = markFunctions.collection.copy(state.collection[action.payload.markId])
+
       newEditing = markFunctions.editing.copy(
-        state.editing, {[action.payload.markId]: true}
+        state.editing, {[action.payload.markId]: markForEditing}
       )
 
       return {
@@ -65,25 +67,25 @@ const marks = (state = initialState, action) => {
         editing: newEditing,
       }
     case actionTypes.MARKS.LOAD_MARK:
-      newOrder = markFunctions.order.addMark(state.list,
+      newOrder = markFunctions.order.addMark(state.orderedIds,
                                              action.payload.mark)
       newCollection = markFunctions.collection.add(state.collection,
                                                    action.payload.mark)
 
       return {
         ...state,
-        list: newOrder,
+        orderedIds: newOrder,
         collection: newCollection,
       }
     case actionTypes.MARKS.LOAD_MARKS:
       newCollection = markFunctions.collection.addMarks(state.collection,
                                                         action.payload.marks)
 
-      newOrder = markFunctions.order.addMarks(state.list, action.payload.marks)
+      newOrder = markFunctions.order.addMarks(state.orderedIds, action.payload.marks)
 
       return {
         ...state,
-        list: newOrder,
+        orderedIds: newOrder,
         collection: newCollection,
       }
     case actionTypes.MARKS.SET_CURRENT_MARK:
@@ -104,32 +106,17 @@ const marks = (state = initialState, action) => {
         }
       }
 
-      // TODO XXX: Should take this out entirely and just have list of id's
-      //  This current implementation is absurd
-      newOrder = state.list.slice()
-			// TODO XXX: Should create a method the removes item from list
-      newOrder = newOrder.map((mark) => {
-        if(mark.id === action.payload.markId) {
-          mark[action.payload.name] = action.payload.value
-          return mark
-        }
-        return mark
-      })
-
+      newEditing = markFunctions.editing.copy(state.editing)
+      newEditing[action.payload.markId][action.payload.name] = action.payload.value
 
       return {
         ...state,
-        list: newOrder,
+        editing: newEditing,
       }
     case actionTypes.MARKS.UPDATE_MARK:
-      newOrder = state.list.slice()
-
-      newOrder = newOrder.map((mark) => {
-        if(mark.id === action.payload.mark.id) {
-          return action.payload.mark
-        }
-        return mark
-      })
+      // setMarks
+      newCollection = markFunctions.collection.copy(state.collection)
+      newCollection[action.payload.mark.id] = action.payload.mark
 
       newEditing = markFunctions.editing.copy(
         state.editing, {[action.payload.mark.id]: false}
@@ -137,22 +124,22 @@ const marks = (state = initialState, action) => {
 
       return {
         ...state,
-        list: newOrder,
+        collection: newCollection,
         editing: newEditing,
       }
     case actionTypes.MARKS.ADD_MARK:
-      newOrder = markFunctions.order.addMark(state.list,
+      newOrder = markFunctions.order.addMark(state.orderedIds,
                                              action.payload.mark)
 
       newCollection = markFunctions.collection.add(state.collection,
                                                    action.payload.mark)
       return {
         ...state,
-        list: newOrder,
+        orderedIds: newOrder,
         collection: newCollection,
       }
     case actionTypes.MARKS.ADD_NEXT_MARK:
-      newOrder = markFunctions.order.addMark(state.list,
+      newOrder = markFunctions.order.addMark(state.orderedIds,
                                             action.payload.mark)
 
       newCollection = markFunctions.collection.add(state.collection,
@@ -160,18 +147,18 @@ const marks = (state = initialState, action) => {
 
       return {
         ...state,
-        list: newOrder,
+        orderedIds: newOrder,
         collection: newCollection,
         nextMark: markFunctions.mark.copy(initialState.nextMark),
       }
     case actionTypes.MARKS.DESTROY_MARK:
-      newOrder = state.list.filter((item) => {
+      newOrder = state.orderedIds.filter((item) => {
         return item.id !== action.payload.id
       })
       // TODO XXX: Handle collection
       return {
         ...state,
-        list: newOrder
+        orderedIds: newOrder
       }
     default:
       return state

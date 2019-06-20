@@ -18,7 +18,7 @@ export const INITIAL_MARK = {
 //  Probably should have `settings` property on parent object
 export const INITIAL_COLLECTION = {}
 
-export const INITIAL_LIST = []
+export const INITIAL_ORDERED_IDS = []
 
 export const INITIAL_MARK_INPUTTER = ''
 
@@ -33,7 +33,7 @@ export const INITIAL_EDITING = {}
 
 
 export const markDataConstants = {
-  INITIAL_MARK, INITIAL_COLLECTION, INITIAL_LIST, INITIAL_DISPLAY_SETTINGS, INITIAL_EDITING
+  INITIAL_MARK, INITIAL_COLLECTION, INITIAL_ORDERED_IDS, INITIAL_DISPLAY_SETTINGS, INITIAL_EDITING
 }
 
 export default markDataConstants

@@ -54,8 +54,11 @@ class MarkContainer extends React.Component{
 }
 
 function mapStateToProps(state) {
+  var marks = state.marks.orderedIds.map(id => {
+    return state.marks.collection[id]
+  })
   return {
-    marks: state.marks.list,
+    marks: marks,
     nextMark: state.marks.nextMark,
     displaySettings: state.marks.displaySettings,
     editing: state.marks.editing,

@@ -8,7 +8,7 @@ function MarkList(props) {
     if(item.id in props.editing && 
        props.editing[item.id]) {
       return <MarkForm key={item.id}
-                       mark={item}
+                       mark={props.editing[item.id]}
                        closeForm={props.closeForm}
                        destroyHandler={props.destroyHandler}
                        handleChange={(e) => props.handleChange(e, item.id)}
