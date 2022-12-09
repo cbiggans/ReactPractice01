@@ -17,7 +17,7 @@
     "redux-thunk": "^2.3.0",
     "request": "^2.88.0",
     "style-loader": "^0.23.1",
-    "youtube-api": "^2.0.10"
+    "youtube-api": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
